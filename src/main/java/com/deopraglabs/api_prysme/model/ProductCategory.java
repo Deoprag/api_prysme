@@ -9,7 +9,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Data
@@ -17,8 +16,8 @@ import java.util.List;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "team")
-public class Team implements Serializable {
+@Table(name = "product_category")
+public class ProductCategory implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -27,14 +26,6 @@ public class Team implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "manager_id")
-    private User manager;
-
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
-    private List<User> sellers;
-
 }

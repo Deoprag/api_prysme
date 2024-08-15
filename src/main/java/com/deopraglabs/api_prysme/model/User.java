@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -16,14 +18,15 @@ import lombok.Data;
 @Data
 @DynamicUpdate
 @DynamicInsert
-@Table(name = "user")
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "app_user")
 public class User implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
