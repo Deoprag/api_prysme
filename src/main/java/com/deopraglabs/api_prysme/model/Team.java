@@ -1,5 +1,7 @@
 package com.deopraglabs.api_prysme.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +37,8 @@ public class Team implements Serializable {
     private User manager;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JsonBackReference
     private List<User> sellers;
 
 }

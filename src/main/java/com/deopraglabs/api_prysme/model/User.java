@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -60,6 +61,8 @@ public class User implements Serializable {
     private boolean active = false;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "team_id")
     private Team team;
+
 }
