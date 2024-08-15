@@ -11,6 +11,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -40,20 +42,20 @@ public class Customer implements Serializable {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "phone", nullable = false)
-    private String phone;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
-    private Address address;
-
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
     @Column(name = "state_registration")
     private String stateRegistration;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PhoneNumber> phoneNumbers = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    private Address address;
+
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Cart cart;
 }

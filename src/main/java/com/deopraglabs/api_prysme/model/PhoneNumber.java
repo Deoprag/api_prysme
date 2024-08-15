@@ -19,8 +19,8 @@ import java.util.List;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "cart")
-public class Cart implements Serializable {
+@Table(name = "phone_number")
+public class PhoneNumber implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,16 +29,12 @@ public class Cart implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    @JsonBackReference
+    @Column(name = "number")
+    private String number;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cart_products",
-            joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products;
 }
