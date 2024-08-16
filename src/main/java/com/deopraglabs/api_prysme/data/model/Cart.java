@@ -1,6 +1,7 @@
 package com.deopraglabs.api_prysme.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,11 +29,6 @@ public class Cart implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    @JsonBackReference
-    private Customer customer;
-
     @ManyToMany
     @JoinTable(
             name = "cart_products",
@@ -40,4 +36,10 @@ public class Cart implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;
+
+    @JsonIgnore
+    @JsonBackReference
+    @OneToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 }

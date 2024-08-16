@@ -66,8 +66,5 @@ public class User implements Serializable {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @OneToOne
-    @JoinColumn(name = "cart_id", nullable = false)
-    @JsonManagedReference
-    private Cart cart;
+    public String getFullName() { return this.getFirstName() + " " + this.getLastName(); }
 }

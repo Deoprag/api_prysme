@@ -2,6 +2,7 @@ package com.deopraglabs.api_prysme.data.vo;
 
 import com.deopraglabs.api_prysme.data.model.Address;
 import com.deopraglabs.api_prysme.data.model.PhoneNumber;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class CustomerVO implements Serializable {
 
     @Serial
@@ -21,7 +23,8 @@ public class CustomerVO implements Serializable {
     private String email;
     private LocalDate birthFoundationDate;
     private String stateRegistration;
-    private List<PhoneNumber> phoneNumbers = new ArrayList<>();
+    private List<String> phoneNumbers = new ArrayList<>();
     private Address address;
     private CartVO cart;
+
 }

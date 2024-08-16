@@ -5,11 +5,13 @@ import com.deopraglabs.api_prysme.data.model.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+@Data
 public class UserVO implements Serializable {
 
     @Serial

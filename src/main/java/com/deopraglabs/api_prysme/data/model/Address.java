@@ -1,5 +1,6 @@
 package com.deopraglabs.api_prysme.data.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,4 +52,10 @@ public class Address implements Serializable {
 
     @Column(name = "country", nullable = false)
     private String country;
+
+    @JsonIgnore
+    @JsonBackReference
+    @OneToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 }

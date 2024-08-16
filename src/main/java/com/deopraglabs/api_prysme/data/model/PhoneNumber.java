@@ -1,5 +1,6 @@
 package com.deopraglabs.api_prysme.data.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class PhoneNumber implements Serializable {
     private String number;
 
     @JsonIgnore
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;

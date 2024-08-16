@@ -1,11 +1,13 @@
 package com.deopraglabs.api_prysme.data.vo;
 
 import com.deopraglabs.api_prysme.data.model.Product;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
+@Data
 public class CartVO implements Serializable {
 
     @Serial
@@ -16,4 +18,5 @@ public class CartVO implements Serializable {
     private String customer;
     private List<Product> products;
     private double totalPrice;
+
 }
