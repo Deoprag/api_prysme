@@ -1,5 +1,6 @@
-package com.deopraglabs.api_prysme.model;
+package com.deopraglabs.api_prysme.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class Address implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

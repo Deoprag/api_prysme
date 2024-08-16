@@ -1,4 +1,4 @@
-package com.deopraglabs.api_prysme.model;
+package com.deopraglabs.api_prysme.data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,8 +19,8 @@ import java.util.List;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "cart")
-public class Cart implements Serializable {
+@Table(name = "team")
+public class Team implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,16 +29,16 @@ public class Cart implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    @JsonBackReference
-    private Customer customer;
+    @Column(name = "name")
+    private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cart_products",
-            joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "manager_id")
+    private User manager;
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JsonBackReference
+    private List<User> sellers;
+
 }

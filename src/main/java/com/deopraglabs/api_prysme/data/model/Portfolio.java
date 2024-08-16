@@ -1,4 +1,4 @@
-package com.deopraglabs.api_prysme.model;
+package com.deopraglabs.api_prysme.data.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,8 +16,8 @@ import java.io.Serializable;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product_category")
-public class ProductCategory implements Serializable {
+@Table(name = "portfolio")
+public class Portfolio implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -26,6 +26,4 @@ public class ProductCategory implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
 }

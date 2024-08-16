@@ -1,4 +1,4 @@
-package com.deopraglabs.api_prysme.model;
+package com.deopraglabs.api_prysme.data.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

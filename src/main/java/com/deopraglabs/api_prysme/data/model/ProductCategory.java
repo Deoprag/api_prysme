@@ -1,7 +1,5 @@
-package com.deopraglabs.api_prysme.model;
+package com.deopraglabs.api_prysme.data.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +9,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Data
@@ -19,8 +16,8 @@ import java.util.List;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "phone_number")
-public class PhoneNumber implements Serializable {
+@Table(name = "product_category")
+public class ProductCategory implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,12 +26,6 @@ public class PhoneNumber implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "number")
-    private String number;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
 }

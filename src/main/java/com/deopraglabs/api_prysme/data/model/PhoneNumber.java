@@ -1,6 +1,5 @@
-package com.deopraglabs.api_prysme.model;
+package com.deopraglabs.api_prysme.data.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Data
@@ -19,8 +17,8 @@ import java.util.List;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "team")
-public class Team implements Serializable {
+@Table(name = "phone_number")
+public class PhoneNumber implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,16 +27,12 @@ public class Team implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "number")
+    private String number;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "manager_id")
-    private User manager;
-
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
     @JsonIgnore
-    @JsonBackReference
-    private List<User> sellers;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
 }
