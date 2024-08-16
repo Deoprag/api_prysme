@@ -24,7 +24,7 @@ public class ProductCategory implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private long id;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

@@ -28,7 +28,7 @@ public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private long id;
 
     @Column(name = "cpf_cnpj", nullable = false, unique = true)
     private String cpfCnpj;
@@ -42,8 +42,8 @@ public class Customer implements Serializable {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
+    @Column(name = "birth_foundation_date")
+    private LocalDate birthFoundationDate;
 
     @Column(name = "state_registration")
     private String stateRegistration;

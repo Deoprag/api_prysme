@@ -26,7 +26,7 @@ public class Address implements Serializable {
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private long id;
 
     @Column(name = "street", nullable = false)
     private String street;
