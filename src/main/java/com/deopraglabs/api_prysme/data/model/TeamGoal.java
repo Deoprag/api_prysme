@@ -8,7 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -27,7 +27,7 @@ public class TeamGoal implements Serializable {
     private long id;
 
     @Column(name = "goal", nullable = false, precision = 10, scale = 2)
-    private BigInteger goal;
+    private BigDecimal goal;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id", nullable = false)

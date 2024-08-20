@@ -44,5 +44,5 @@ public class Product implements Serializable {
     private ProductCategory category;
 
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    private boolean active;
 }
