@@ -1,6 +1,7 @@
 package com.deopraglabs.api_prysme.controller;
 
 import com.deopraglabs.api_prysme.data.model.User;
+import com.deopraglabs.api_prysme.data.vo.UserVO;
 import com.deopraglabs.api_prysme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,14 +21,14 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> findAll() {
+    public List<UserVO> findAll() {
         return userService.findAll();
     }
 
     @RequestMapping(value = "/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public User findById(@PathVariable(value = "id") long id) {
+    public UserVO findById(@PathVariable(value = "id") long id) {
         return userService.findById(id);
     }
 }
