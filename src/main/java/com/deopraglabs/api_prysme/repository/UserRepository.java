@@ -15,11 +15,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("""
             UPDATE User u SET u.email = CONCAT('deleted_', u.id, '@prysme.com.br'), \
             u.role = '2', \
-            u.birthDate = '1900-01-01', \
+            u.birthDate = local_date, \
             u.gender = 'U', \
             u.phoneNumber = :phoneNumber, \
             u.password = 'deleted', \
             u.active = false, \
             u.team = null WHERE u.id = :id""")
     public boolean softDeleteById(Long id, String phoneNumber);
+
 }
