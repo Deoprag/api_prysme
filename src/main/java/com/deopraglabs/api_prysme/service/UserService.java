@@ -22,8 +22,8 @@ public class UserService {
     private final AtomicLong counter = new AtomicLong();
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
-    public UserVO save(UserVO userVO) {
-        logger.info("Saving user: " + userVO);
+    public UserVO create(UserVO userVO) {
+        logger.info("Creating user: " + userVO);
         return UserMapper.convertToVO(userRepository.save(UserMapper.convertFromVO(userVO)));
     }
 

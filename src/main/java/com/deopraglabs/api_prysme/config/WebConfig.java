@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-//         QUERY PARAM (https://localhost:8080/api/v1/yser?mediaType={TIPO ARQUIVO})
+//         QUERY PARAM (https://localhost:8080/api/v1/user?mediaType={TIPO ARQUIVO})
 //        configurer.favorParameter(true)
 //                .parameterName("mediaType").ignoreAcceptHeader(true)
 //                .useRegisteredExtensionsOnly(true)

@@ -1,14 +1,10 @@
 package com.deopraglabs.api_prysme.controller;
 
-import com.deopraglabs.api_prysme.data.model.User;
 import com.deopraglabs.api_prysme.data.vo.UserVO;
 import com.deopraglabs.api_prysme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,4 +27,12 @@ public class UserController {
     public UserVO findById(@PathVariable(value = "id") long id) {
         return userService.findById(id);
     }
+
+    @RequestMapping(value = "/create",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserVO findById(@RequestBody UserVO user) {
+        return userService.create(user);
+    }
+
 }

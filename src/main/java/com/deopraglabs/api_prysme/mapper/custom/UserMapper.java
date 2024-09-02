@@ -24,7 +24,9 @@ public class UserMapper {
         vo.setPhoneNumber(user.getPhoneNumber());
         vo.setPassword(user.getPassword());
         vo.setActive(user.isActive());
-        vo.setTeam(TeamMapper.convertToVO(user.getTeam()));
+        if (user.getTeam() != null) {
+            vo.setTeam(TeamMapper.convertToVO(user.getTeam()));
+        }
 
         return vo;
     }
@@ -41,7 +43,9 @@ public class UserMapper {
         user.setPhoneNumber(userVO.getPhoneNumber());
         user.setPassword(userVO.getPassword());
         user.setActive(userVO.isActive());
-        user.setTeam(TeamMapper.convertFromVO(userVO.getTeam()));
+        if (userVO.getTeam() != null) {
+            user.setTeam(TeamMapper.convertFromVO(userVO.getTeam()));
+        }
 
         return user;
     }
