@@ -31,8 +31,14 @@ public class UserController {
     @RequestMapping(value = "/create",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserVO findById(@RequestBody UserVO user) {
-        return userService.create(user);
+    public UserVO create(@RequestBody UserVO user) {
+        return userService.save(user);
     }
 
+    @RequestMapping(value = "/save",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserVO update(@RequestBody UserVO user) {
+        return userService.save(user);
+    }
 }

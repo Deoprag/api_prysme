@@ -22,9 +22,16 @@ public class UserService {
     private final AtomicLong counter = new AtomicLong();
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
-    public UserVO create(UserVO userVO) {
-        logger.info("Creating user: " + userVO);
-        return UserMapper.convertToVO(userRepository.save(UserMapper.convertFromVO(userVO)));
+    public UserVO save(UserVO userVO) {
+        logger.info("Saving user: " + userVO);
+        if (userVO.getId() > 0) {
+            return UserMapper.convertToVO(userRepository.save(UserMapper.updateFromVO(
+                    userRepository.findById(userVO.getId()).orElseThrow(),
+                    userVO
+            )));
+        } else {
+            return UserMapper.convertToVO(userRepository.save(UserMapper.convertFromVO(userVO)));
+        }
     }
 
     public void delete(long id) {

@@ -50,6 +50,23 @@ public class UserMapper {
         return user;
     }
 
+    public static User updateFromVO(User user, UserVO userVO) {
+        user.setFirstName(userVO.getFirstName());
+        user.setLastName(userVO.getLastName());
+        user.setEmail(userVO.getEmail());
+        user.setRole(Role.valueOf(userVO.getRole()));
+        user.setBirthDate(userVO.getBirthDate());
+        user.setGender(userVO.getGender());
+        user.setPhoneNumber(userVO.getPhoneNumber());
+        user.setPassword(userVO.getPassword());
+        user.setActive(userVO.isActive());
+        if (userVO.getTeam() != null) {
+            user.setTeam(TeamMapper.convertFromVO(userVO.getTeam()));
+        }
+
+        return user;
+    }
+
     public static List<UserVO> convertToUserVOs(List<User> users) {
         final List<UserVO> listVO = new ArrayList<>();
 
