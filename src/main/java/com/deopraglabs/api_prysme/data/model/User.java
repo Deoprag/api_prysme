@@ -3,6 +3,7 @@ package com.deopraglabs.api_prysme.data.model;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -65,6 +66,11 @@ public class User implements Serializable {
     @JsonManagedReference
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JsonBackReference
+    private List<Task> tasks;
 
     public String getFullName() { return this.getFirstName() + " " + this.getLastName(); }
 }

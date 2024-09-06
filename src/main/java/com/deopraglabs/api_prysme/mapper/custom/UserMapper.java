@@ -27,6 +27,7 @@ public class UserMapper {
         if (user.getTeam() != null) {
             vo.setTeam(TeamMapper.convertToVO(user.getTeam()));
         }
+        vo.setTasks(user.getTasks());
 
         return vo;
     }
@@ -46,6 +47,7 @@ public class UserMapper {
         if (userVO.getTeam() != null) {
             user.setTeam(TeamMapper.convertFromVO(userVO.getTeam()));
         }
+        user.setTasks(userVO.getTasks());
 
         return user;
     }
@@ -63,6 +65,7 @@ public class UserMapper {
         if (userVO.getTeam() != null) {
             user.setTeam(TeamMapper.convertFromVO(userVO.getTeam()));
         }
+        user.setTasks(userVO.getTasks());
 
         return user;
     }

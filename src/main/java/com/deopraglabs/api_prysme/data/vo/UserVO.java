@@ -1,6 +1,7 @@
 package com.deopraglabs.api_prysme.data.vo;
 
 import com.deopraglabs.api_prysme.data.model.Role;
+import com.deopraglabs.api_prysme.data.model.Task;
 import com.deopraglabs.api_prysme.data.model.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -10,6 +11,7 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class UserVO implements Serializable {
@@ -28,5 +30,5 @@ public class UserVO implements Serializable {
     private String password;
     private boolean active;
     private TeamVO team;
-
+    private List<Task> tasks;
 }
