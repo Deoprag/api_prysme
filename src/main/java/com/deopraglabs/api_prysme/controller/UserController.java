@@ -4,8 +4,10 @@ import com.deopraglabs.api_prysme.data.vo.UserVO;
 import com.deopraglabs.api_prysme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
 import java.util.List;
 
 @RestController
@@ -15,30 +17,34 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(method = RequestMethod.GET,
+    @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserVO> findAll() {
         return userService.findAll();
     }
 
-    @RequestMapping(value = "/{id}",
-            method = RequestMethod.GET,
+    @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public UserVO findById(@PathVariable(value = "id") long id) {
         return userService.findById(id);
     }
 
-    @RequestMapping(value = "/create",
-            method = RequestMethod.POST,
+    @PostMapping(value = "/create",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public UserVO create(@RequestBody UserVO user) {
         return userService.save(user);
     }
 
-    @RequestMapping(value = "/save",
-            method = RequestMethod.PUT,
+    @PutMapping(value = "/save",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public UserVO update(@RequestBody UserVO user) {
         return userService.save(user);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable long id) {
+        return userService.delete(id);
     }
 }

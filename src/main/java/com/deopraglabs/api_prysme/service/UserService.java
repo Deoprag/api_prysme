@@ -7,6 +7,7 @@ import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.utils.DatabaseUtils;
 import org.hibernate.dialect.Database;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private final AtomicLong counter = new AtomicLong();
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     public UserVO save(UserVO userVO) {
@@ -34,14 +34,18 @@ public class UserService {
         }
     }
 
-    public void delete(long id) {
+    public ResponseEntity<?> delete(long id) {
         logger.info("Deleting user: " + id);
-        userRepository.softDeleteById(id, DatabaseUtils.generateUniquePhoneNumber(id));
+        return userRepository.isDeleted(id) > 0
+                ? ResponseEntity.notFound().build()
+                : userRepository.softDeleteById(id, DatabaseUtils.generateUniquePhoneNumber(id)) > 0
+                    ? ResponseEntity.noContent().build()
+                    : ResponseEntity.notFound().build();
     }
 
     public List<UserVO> findAll() {
         logger.info("Finding all users");
-        return UserMapper.convertToUserVOs(userRepository.findAll());
+        return UserMapper.convertToUserVOs(userRepository.findAllByActive(true));
     }
 
     public UserVO findById(long id) {

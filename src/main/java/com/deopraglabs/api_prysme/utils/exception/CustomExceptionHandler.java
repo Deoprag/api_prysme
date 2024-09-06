@@ -1,4 +1,4 @@
-package com.deopraglabs.api_prysme.utils;
+package com.deopraglabs.api_prysme.utils.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public final ResponseEntity<ExceptionResponse> handleNoSuchElementException(Exception e, WebRequest request) {
+    public final ResponseEntity<ExceptionResponse> handleNoSuchElementException(NoSuchElementException e, WebRequest request) {
         return new ResponseEntity<>(new ExceptionResponse(
                 new Date(),
                 e.getMessage(),
@@ -35,10 +35,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public final ResponseEntity<ExceptionResponse> methodArgumentTypeMismatchException(Exception e, WebRequest request) {
+    public final ResponseEntity<ExceptionResponse> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, WebRequest request) {
         return new ResponseEntity<>(new ExceptionResponse(
                 new Date(),
-                e.getMessage(),
+                String.format("Value '%s' not allowed for parameter '%s'. Expecting a '%s' type value.", e.getValue(), e.getName(), e.getRequiredType().getSimpleName()),
                 request.getDescription(false)), HttpStatus.BAD_REQUEST
         );
     }

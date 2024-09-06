@@ -1,4 +1,4 @@
-package com.deopraglabs.api_prysme.utils;
+package com.deopraglabs.api_prysme.utils.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
