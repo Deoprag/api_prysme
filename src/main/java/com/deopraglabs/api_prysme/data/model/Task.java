@@ -1,5 +1,6 @@
 package com.deopraglabs.api_prysme.data.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ public class Task implements Serializable {
     private LocalDateTime completedDateTime;
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference
     @JoinColumn(name = "user_id")
     private User user;
 }

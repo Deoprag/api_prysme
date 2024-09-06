@@ -68,8 +68,7 @@ public class User implements Serializable {
     private Team team;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnore
-    @JsonBackReference
+    @JsonManagedReference
     private List<Task> tasks;
 
     public String getFullName() { return this.getFirstName() + " " + this.getLastName(); }
