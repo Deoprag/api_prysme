@@ -1,6 +1,5 @@
 package com.deopraglabs.api_prysme.data.vo;
 
-import com.deopraglabs.api_prysme.data.model.Address;
 import lombok.Data;
 
 import java.io.Serial;

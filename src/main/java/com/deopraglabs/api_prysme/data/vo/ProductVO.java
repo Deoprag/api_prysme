@@ -17,7 +17,7 @@ public class ProductVO implements Serializable {
     private String name;
     private String description;
     private BigDecimal price;
-    private BigDecimal quantity;
+    private BigDecimal stock;
     private ProductCategory category;
     private boolean active;
 

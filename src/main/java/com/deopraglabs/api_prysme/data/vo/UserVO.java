@@ -1,11 +1,6 @@
 package com.deopraglabs.api_prysme.data.vo;
 
-import com.deopraglabs.api_prysme.data.model.Role;
 import com.deopraglabs.api_prysme.data.model.Task;
-import com.deopraglabs.api_prysme.data.model.Team;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serial;
