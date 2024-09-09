@@ -13,7 +13,7 @@ public class ProductMapper {
     public static ProductVO convertToVO(Product product) {
         final ProductVO vo = new ProductVO();
 
-        vo.setId(product.getId());
+        vo.setKey(product.getId());
         vo.setName(product.getName());
         vo.setDescription(product.getDescription());
         vo.setPrice(product.getPrice());
@@ -25,16 +25,7 @@ public class ProductMapper {
     }
 
     public static Product convertFromVO(ProductVO productVO) {
-        final Product product = new Product();
-
-        product.setName(productVO.getName());
-        product.setDescription(productVO.getDescription());
-        product.setPrice(productVO.getPrice());
-        product.setStock(productVO.getStock());
-        product.setCategory(productVO.getCategory());
-        product.setActive(productVO.isActive());
-
-        return product;
+        return updateFromVO(new Product(), productVO);
     }
 
     public static Product updateFromVO(Product product, ProductVO productVO) {

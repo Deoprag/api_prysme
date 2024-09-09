@@ -1,7 +1,12 @@
 package com.deopraglabs.api_prysme.data.vo;
 
 import com.deopraglabs.api_prysme.data.model.Task;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -9,12 +14,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class UserVO implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+@JsonPropertyOrder("id")
+public class UserVO extends RepresentationModel<UserVO> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private long id;
+    @JsonProperty("id")
+    private long key;
     private String firstName;
     private String lastName;
     private String email;
@@ -25,5 +33,5 @@ public class UserVO implements Serializable {
     private String password;
     private boolean active;
     private TeamVO team;
-    private List<Task> tasks;
+//    private List<TaskVO> tasks;
 }

@@ -1,5 +1,6 @@
 package com.deopraglabs.api_prysme.service;
 
+import com.deopraglabs.api_prysme.controller.UserController;
 import com.deopraglabs.api_prysme.data.vo.UserVO;
 import com.deopraglabs.api_prysme.mapper.custom.UserMapper;
 import com.deopraglabs.api_prysme.repository.UserRepository;
@@ -9,7 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class UserService {
@@ -21,14 +26,31 @@ public class UserService {
 
     public UserVO save(UserVO userVO) {
         logger.info("Saving user: " + userVO);
-        if (userVO.getId() > 0) {
+        if (userVO.getKey() > 0) {
             return UserMapper.convertToVO(userRepository.save(UserMapper.updateFromVO(
-                    userRepository.findById(userVO.getId()).orElseThrow(),
+                    userRepository.findById(userVO.getKey())
+                            .orElseThrow(() -> new NoSuchElementException("User not found")),
                     userVO
-            )));
+            ))).add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
         } else {
-            return UserMapper.convertToVO(userRepository.save(UserMapper.convertFromVO(userVO)));
+            return UserMapper.convertToVO(userRepository.save(UserMapper.convertFromVO(userVO)))
+                    .add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
         }
+    }
+
+    public List<UserVO> findAll() {
+        logger.info("Finding all users");
+        final var users = UserMapper.convertToUserVOs(userRepository.findAllByActive(true));
+        users.forEach(user -> user.add(linkTo(methodOn(UserController.class).findById(user.getKey())).withSelfRel()));
+
+        return users;
+    }
+
+    public UserVO findById(long id) {
+        logger.info("Finding user by id: " + id);
+        return UserMapper.convertToVO(userRepository.findById(id)
+                        .orElseThrow(() -> new NoSuchElementException("User not found")))
+                        .add(linkTo(methodOn(UserController.class).findById(id)).withSelfRel());
     }
 
     public ResponseEntity<?> delete(long id) {
@@ -36,17 +58,7 @@ public class UserService {
         return userRepository.isDeleted(id) > 0
                 ? ResponseEntity.notFound().build()
                 : userRepository.softDeleteById(id, DatabaseUtils.generateUniquePhoneNumber(id)) > 0
-                    ? ResponseEntity.noContent().build()
-                    : ResponseEntity.notFound().build();
-    }
-
-    public List<UserVO> findAll() {
-        logger.info("Finding all users");
-        return UserMapper.convertToUserVOs(userRepository.findAllByActive(true));
-    }
-
-    public UserVO findById(long id) {
-        logger.info("Finding user by id: " + id);
-        return UserMapper.convertToVO(userRepository.findById(id).orElseThrow());
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 }

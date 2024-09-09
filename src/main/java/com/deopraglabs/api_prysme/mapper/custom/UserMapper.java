@@ -14,7 +14,7 @@ public class UserMapper {
     public static UserVO convertToVO(User user) {
         final UserVO vo = new UserVO();
 
-        vo.setId(user.getId());
+        vo.setKey(user.getId());
         vo.setFirstName(user.getFirstName());
         vo.setLastName(user.getLastName());
         vo.setEmail(user.getEmail());
@@ -27,29 +27,13 @@ public class UserMapper {
         if (user.getTeam() != null) {
             vo.setTeam(TeamMapper.convertToVO(user.getTeam()));
         }
-        vo.setTasks(user.getTasks());
+//        vo.setTasks(user.getTasks());
 
         return vo;
     }
 
     public static User convertFromVO(UserVO userVO) {
-        final User user = new User();
-
-        user.setFirstName(userVO.getFirstName());
-        user.setLastName(userVO.getLastName());
-        user.setEmail(userVO.getEmail());
-        user.setRole(Role.valueOf(userVO.getRole()));
-        user.setBirthDate(userVO.getBirthDate());
-        user.setGender(userVO.getGender());
-        user.setPhoneNumber(userVO.getPhoneNumber());
-        user.setPassword(userVO.getPassword());
-        user.setActive(userVO.isActive());
-        if (userVO.getTeam() != null) {
-            user.setTeam(TeamMapper.convertFromVO(userVO.getTeam()));
-        }
-        user.setTasks(userVO.getTasks());
-
-        return user;
+        return updateFromVO(new User(), userVO);
     }
 
     public static User updateFromVO(User user, UserVO userVO) {
@@ -65,7 +49,7 @@ public class UserMapper {
         if (userVO.getTeam() != null) {
             user.setTeam(TeamMapper.convertFromVO(userVO.getTeam()));
         }
-        user.setTasks(userVO.getTasks());
+//        user.setTasks(userVO.getTasks());
 
         return user;
     }
@@ -73,7 +57,7 @@ public class UserMapper {
     public static List<UserVO> convertToUserVOs(List<User> users) {
         final List<UserVO> listVO = new ArrayList<>();
 
-        for(final User user : users) {
+        for (final User user : users) {
             listVO.add(UserMapper.convertToVO(user));
         }
 
@@ -83,7 +67,7 @@ public class UserMapper {
     public static List<User> convertFromUserVOs(List<UserVO> userVOs) {
         final List<User> listUser = new ArrayList<>();
 
-        for(final UserVO userVO : userVOs) {
+        for (final UserVO userVO : userVOs) {
             listUser.add(UserMapper.convertFromVO(userVO));
         }
 
