@@ -32,7 +32,7 @@ public class Cart implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "cart_products",
-            joinColumns = @JoinColumn(name = "cart_id"),
+            joinColumns = @JoinColumn(name = "sale_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;

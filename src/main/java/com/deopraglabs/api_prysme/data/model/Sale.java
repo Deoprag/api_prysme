@@ -39,10 +39,17 @@ public class Sale implements Serializable {
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_type", nullable = false)
+    private PaymentType paymentType;
+
+    @Column(name = "installments")
+    private short installments;
+
     @ManyToMany
     @JoinTable(
             name = "sale_products",
-            joinColumns = @JoinColumn(name = "cart_id"),
+            joinColumns = @JoinColumn(name = "sale_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products = new ArrayList<>();

@@ -1,7 +1,5 @@
 package com.deopraglabs.api_prysme.data.vo;
 
-import com.deopraglabs.api_prysme.data.model.Task;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
@@ -33,5 +31,5 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
     private String password;
     private boolean active;
     private TeamVO team;
-//    private List<TaskVO> tasks;
+    private List<TaskVO> tasks;
 }

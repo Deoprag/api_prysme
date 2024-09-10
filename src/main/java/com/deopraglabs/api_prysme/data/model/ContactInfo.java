@@ -1,5 +1,7 @@
 package com.deopraglabs.api_prysme.data.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +18,8 @@ import java.io.Serializable;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "portfolio")
-public class Portfolio implements Serializable {
+@Table(name = "contact_info")
+public class ContactInfo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -26,4 +28,16 @@ public class Portfolio implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "contact_type", nullable = false)
+    private ContactType contactType;
+
+    @Column(name = "value")
+    private String value;
+
+    @JsonIgnore
+    @JsonBackReference
+    @OneToOne
+    @JoinColumn(name = "contact_id", nullable = false)
+    private Contact contact;
 }

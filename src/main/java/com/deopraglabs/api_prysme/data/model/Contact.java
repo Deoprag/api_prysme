@@ -1,6 +1,7 @@
 package com.deopraglabs.api_prysme.data.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,13 +38,13 @@ public class Contact implements Serializable {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "phone_number_id", nullable = false)
-    private PhoneNumber phoneNumber;
+    @JsonManagedReference
+    @OneToOne(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private ContactInfo info;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "contact_status", nullable = false)
-    private ContactStatus contactStatus;
+    private ContactStatus status;
 
     @Column(name = "notes", nullable = false)
     private String notes;
