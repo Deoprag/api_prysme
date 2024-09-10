@@ -2,6 +2,9 @@ package com.deopraglabs.api_prysme.mapper.custom;
 
 import com.deopraglabs.api_prysme.data.model.Product;
 import com.deopraglabs.api_prysme.data.vo.ProductVO;
+import com.deopraglabs.api_prysme.repository.ProductCategoryRepository;
+import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,7 +13,10 @@ import java.util.List;
 @Service
 public class ProductMapper {
 
-    public static ProductVO convertToVO(Product product) {
+    @Autowired
+    ProductCategoryRepository productCategoryRepository;
+
+    public ProductVO convertToVO(Product product) {
         final ProductVO vo = new ProductVO();
 
         vo.setKey(product.getId());
@@ -18,42 +24,42 @@ public class ProductMapper {
         vo.setDescription(product.getDescription());
         vo.setPrice(product.getPrice());
         vo.setStock(product.getStock());
-        vo.setCategory(product.getCategory());
+        vo.setCategoryId(product.getCategory().getId());
+        vo.setCategoryName(product.getCategory().getName());
         vo.setActive(product.isActive());
 
         return vo;
     }
 
-    public static Product convertFromVO(ProductVO productVO) {
-        return updateFromVO(new Product(), productVO);
-    }
+    public Product convertFromVO(ProductVO productVO) { return updateFromVO(new Product(), productVO); }
 
-    public static Product updateFromVO(Product product, ProductVO productVO) {
+    public Product updateFromVO(Product product, ProductVO productVO) {
         product.setName(productVO.getName());
         product.setDescription(productVO.getDescription());
         product.setPrice(productVO.getPrice());
         product.setStock(productVO.getStock());
-        product.setCategory(productVO.getCategory());
+        product.setCategory(productCategoryRepository.findById(productVO.getCategoryId())
+                .orElseThrow(() -> new CustomRuntimeException.ProductCategoryNotFoundException(productVO.getCategoryId())));
         product.setActive(productVO.isActive());
 
         return product;
     }
 
-    public static List<ProductVO> convertToProductVOs(List<Product> products) {
+    public List<ProductVO> convertToProductVOs(List<Product> products) {
         final List<ProductVO> listVO = new ArrayList<>();
 
         for (final Product product : products) {
-            listVO.add(ProductMapper.convertToVO(product));
+            listVO.add(this.convertToVO(product));
         }
 
         return listVO;
     }
 
-    public static List<Product> convertFromProductVOs(List<ProductVO> productVOs) {
+    public List<Product> convertFromProductVOs(List<ProductVO> productVOs) {
         final List<Product> listProduct = new ArrayList<>();
 
         for (final ProductVO productVO : productVOs) {
-            listProduct.add(ProductMapper.convertFromVO(productVO));
+            listProduct.add(this.convertFromVO(productVO));
         }
 
         return listProduct;

@@ -1,10 +1,12 @@
 package com.deopraglabs.api_prysme.mapper;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class Mapper {
 
     private static final ModelMapper mapper = new ModelMapper();

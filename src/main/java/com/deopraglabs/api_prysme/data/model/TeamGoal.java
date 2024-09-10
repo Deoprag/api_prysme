@@ -33,6 +33,9 @@ public class TeamGoal implements Serializable {
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate = LocalDate.now();
+
     @Column(name = "end_date")
     private LocalDate endDate;
 }

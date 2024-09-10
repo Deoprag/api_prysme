@@ -5,12 +5,12 @@ import com.deopraglabs.api_prysme.data.vo.UserVO;
 import com.deopraglabs.api_prysme.mapper.custom.UserMapper;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.utils.DatabaseUtils;
+import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -22,25 +22,28 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserMapper userMapper;
+
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     public UserVO save(UserVO userVO) {
         logger.info("Saving user: " + userVO);
         if (userVO.getKey() > 0) {
-            return UserMapper.convertToVO(userRepository.save(UserMapper.updateFromVO(
+            return userMapper.convertToVO(userRepository.save(userMapper.updateFromVO(
                     userRepository.findById(userVO.getKey())
-                            .orElseThrow(() -> new NoSuchElementException("User not found")),
+                            .orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(userVO.getKey())),
                     userVO
             ))).add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
         } else {
-            return UserMapper.convertToVO(userRepository.save(UserMapper.convertFromVO(userVO)))
+            return userMapper.convertToVO(userRepository.save(userMapper.convertFromVO(userVO)))
                     .add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
         }
     }
 
     public List<UserVO> findAll() {
         logger.info("Finding all users");
-        final var users = UserMapper.convertToUserVOs(userRepository.findAllByActive(true));
+        final var users = userMapper.convertToUserVOs(userRepository.findAllByActive(true));
         users.forEach(user -> user.add(linkTo(methodOn(UserController.class).findById(user.getKey())).withSelfRel()));
 
         return users;
@@ -48,8 +51,8 @@ public class UserService {
 
     public UserVO findById(long id) {
         logger.info("Finding user by id: " + id);
-        return UserMapper.convertToVO(userRepository.findById(id)
-                        .orElseThrow(() -> new NoSuchElementException("User not found")))
+        return userMapper.convertToVO(userRepository.findById(id)
+                        .orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(id)))
                         .add(linkTo(methodOn(UserController.class).findById(id)).withSelfRel());
     }
 

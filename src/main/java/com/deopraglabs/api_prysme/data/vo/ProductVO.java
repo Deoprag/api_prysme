@@ -25,7 +25,10 @@ public class ProductVO extends RepresentationModel<ProductVO> implements Seriali
     private String description;
     private BigDecimal price;
     private BigDecimal stock;
-    private ProductCategory category;
+    @JsonProperty("category_id")
+    private long categoryId;
+    @JsonProperty("category_name")
+    private String categoryName;
     private boolean active;
 
 }

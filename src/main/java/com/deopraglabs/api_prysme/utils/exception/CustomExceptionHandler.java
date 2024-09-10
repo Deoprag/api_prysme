@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 @RestController
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
+    // CUSTOM EXCEPTION HANDLER
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception e, WebRequest request) {
         return new ResponseEntity<>(new ExceptionResponse(
@@ -42,4 +43,5 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)), HttpStatus.BAD_REQUEST
         );
     }
+
 }

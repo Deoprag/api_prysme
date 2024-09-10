@@ -3,6 +3,7 @@ package com.deopraglabs.api_prysme.mapper.custom;
 import com.deopraglabs.api_prysme.data.model.Role;
 import com.deopraglabs.api_prysme.data.model.User;
 import com.deopraglabs.api_prysme.data.vo.UserVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,7 +12,10 @@ import java.util.List;
 @Service
 public class UserMapper {
 
-    public static UserVO convertToVO(User user) {
+    @Autowired
+    private TeamMapper teamMapper;
+
+    public UserVO convertToVO(User user) {
         final UserVO vo = new UserVO();
 
         vo.setKey(user.getId());
@@ -25,18 +29,18 @@ public class UserMapper {
         vo.setPassword(user.getPassword());
         vo.setActive(user.isActive());
         if (user.getTeam() != null) {
-            vo.setTeam(TeamMapper.convertToVO(user.getTeam()));
+            vo.setTeam(teamMapper.convertToVO(user.getTeam()));
         }
 //        vo.setTasks(user.getTasks());
 
         return vo;
     }
 
-    public static User convertFromVO(UserVO userVO) {
+    public User convertFromVO(UserVO userVO) {
         return updateFromVO(new User(), userVO);
     }
 
-    public static User updateFromVO(User user, UserVO userVO) {
+    public User updateFromVO(User user, UserVO userVO) {
         user.setFirstName(userVO.getFirstName());
         user.setLastName(userVO.getLastName());
         user.setEmail(userVO.getEmail());
@@ -47,28 +51,28 @@ public class UserMapper {
         user.setPassword(userVO.getPassword());
         user.setActive(userVO.isActive());
         if (userVO.getTeam() != null) {
-            user.setTeam(TeamMapper.convertFromVO(userVO.getTeam()));
+            user.setTeam(teamMapper.convertFromVO(userVO.getTeam()));
         }
 //        user.setTasks(userVO.getTasks());
 
         return user;
     }
 
-    public static List<UserVO> convertToUserVOs(List<User> users) {
+    public List<UserVO> convertToUserVOs(List<User> users) {
         final List<UserVO> listVO = new ArrayList<>();
 
         for (final User user : users) {
-            listVO.add(UserMapper.convertToVO(user));
+            listVO.add(this.convertToVO(user));
         }
 
         return listVO;
     }
 
-    public static List<User> convertFromUserVOs(List<UserVO> userVOs) {
+    public List<User> convertFromUserVOs(List<UserVO> userVOs) {
         final List<User> listUser = new ArrayList<>();
 
         for (final UserVO userVO : userVOs) {
-            listUser.add(UserMapper.convertFromVO(userVO));
+            listUser.add(this.convertFromVO(userVO));
         }
 
         return listUser;

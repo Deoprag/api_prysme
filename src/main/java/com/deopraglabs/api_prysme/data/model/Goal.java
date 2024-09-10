@@ -33,6 +33,9 @@ public class Goal implements Serializable {
     @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
 
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate = LocalDate.now();
+
     @Column(name = "end_date")
     private LocalDate endDate;
 }
