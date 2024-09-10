@@ -48,6 +48,10 @@ public class Customer implements Serializable {
     @Column(name = "state_registration")
     private String stateRegistration;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "customer_status")
+    private CustomerStatus customerStatus;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "customer", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();

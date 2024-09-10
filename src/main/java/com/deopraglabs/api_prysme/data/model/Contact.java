@@ -43,8 +43,8 @@ public class Contact implements Serializable {
     private ContactInfo info;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "contact_status", nullable = false)
-    private ContactStatus status;
+    @Column(name = "customer_status", nullable = false)
+    private CustomerStatus customerStatus;
 
     @Column(name = "notes", nullable = false)
     private String notes;
