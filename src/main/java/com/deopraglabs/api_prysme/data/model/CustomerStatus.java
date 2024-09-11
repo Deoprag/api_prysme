@@ -1,12 +1,13 @@
 package com.deopraglabs.api_prysme.data.model;
 
 public enum CustomerStatus {
-    NOT_STARTED,
+    NEW,
     CONTACT,
     PRESENTATION,
     PROPOSAL,
     NEGOTIATION,
     CLOSURE,
     FINALIZED,
-    LOST
+    LOST,
+    DELETED
 }

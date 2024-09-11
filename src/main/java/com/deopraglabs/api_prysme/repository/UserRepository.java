@@ -5,15 +5,17 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Transactional
     @Query("""
-        UPDATE User u SET u.email = CONCAT('deleted_', u.id, '@prysme.com.br'), \
+        UPDATE User u SET u.email = CONCAT('deleted_user_', u.id, '@prysme.com.br'), \
         u.role = 'DELETED', \
         u.birthDate = local_date, \
         u.gender = 'U', \

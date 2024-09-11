@@ -28,7 +28,7 @@ public class PhoneNumber implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "number")
+    @Column(name = "number", nullable = false)
     private String number;
 
     @JsonIgnore

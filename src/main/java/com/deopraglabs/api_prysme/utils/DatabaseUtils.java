@@ -4,14 +4,14 @@ import java.util.Random;
 
 public class DatabaseUtils {
 
-    public static String generateUniquePhoneNumber(long id) {
-        final StringBuilder phoneNumber = new StringBuilder("00");
+    public static String generateRandomValue(long id, int size) {
+        final StringBuilder random = new StringBuilder("00");
 
-        for (int i = 0; i < 9; i++) {
-            phoneNumber.append(new Random(id).nextInt(10));
+        for (int i = 0; i < size - 2; i++) {
+            random.append(new Random(id).nextInt(size - 1));
         }
 
-        return phoneNumber.toString();
+        return random.toString();
     }
 
 }

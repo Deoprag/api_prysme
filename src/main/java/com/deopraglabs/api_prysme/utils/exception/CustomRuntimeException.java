@@ -8,14 +8,20 @@ public class CustomRuntimeException {
     }
 
     public static class TeamNotFoundException extends RuntimeException {
-        public TeamNotFoundException(Long id) {
+        public TeamNotFoundException(long id) {
             super("Team with ID " + id + " not found");
         }
     }
 
     public static class ProductCategoryNotFoundException extends RuntimeException {
-        public ProductCategoryNotFoundException(Long id) {
+        public ProductCategoryNotFoundException(long id) {
             super("Product Category with ID " + id + " not found");
+        }
+    }
+
+    public static class CustomerNotFoundException extends RuntimeException {
+        public CustomerNotFoundException(long id) {
+            super("Customer with ID " + id + " not found");
         }
     }
 }

@@ -60,7 +60,7 @@ public class UserService {
         logger.info("Deleting user: " + id);
         return userRepository.isDeleted(id) > 0
                 ? ResponseEntity.notFound().build()
-                : userRepository.softDeleteById(id, DatabaseUtils.generateUniquePhoneNumber(id)) > 0
+                : userRepository.softDeleteById(id, DatabaseUtils.generateRandomValue(id, 11)) > 0
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }
