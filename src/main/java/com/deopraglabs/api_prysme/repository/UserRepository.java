@@ -33,4 +33,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int isDeleted(long id);
 
     List<User> findAllByActive(boolean active);
+
+    User findByEmail(String email);
+
+    User findByPhoneNumber(String phoneNumber);
 }
