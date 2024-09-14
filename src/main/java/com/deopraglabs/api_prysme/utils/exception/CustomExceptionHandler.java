@@ -44,4 +44,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(CustomRuntimeException.UserBRValidationException.class)
+    public final ResponseEntity<ExceptionResponseList> handleUserBRValidationException(CustomRuntimeException.UserBRValidationException e, WebRequest request) {
+        return new ResponseEntity<>(new ExceptionResponseList(
+                new Date(),
+                e.getBusinessRules(),
+                request.getDescription(false)), HttpStatus.BAD_REQUEST
+        );
+    }
 }

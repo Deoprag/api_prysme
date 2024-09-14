@@ -7,6 +7,7 @@ import com.deopraglabs.api_prysme.mapper.custom.CustomerMapper;
 import com.deopraglabs.api_prysme.repository.CustomerRepository;
 import com.deopraglabs.api_prysme.utils.DatabaseUtils;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
+@Transactional
 public class CustomerService {
 
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private CustomerMapper customerMapper;
-
     private final Logger logger = Logger.getLogger(CustomerService.class.getName());
+
+    private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
+
+    @Autowired
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+        this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
+    }
 
     public CustomerVO save(CustomerVO customerVO) {
         logger.info("Saving customer: " + customerVO);

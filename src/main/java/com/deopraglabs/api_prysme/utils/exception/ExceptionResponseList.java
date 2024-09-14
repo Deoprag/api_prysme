@@ -12,13 +12,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExceptionResponse implements Serializable {
+public class ExceptionResponseList implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     private Date timestamp;
-    private String message;
+    private List<String> message;
     private String details;
-
 }

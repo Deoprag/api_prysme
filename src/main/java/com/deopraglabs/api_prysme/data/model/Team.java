@@ -29,11 +29,11 @@ public class Team implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "manager_id")
+    @JoinColumn(name = "manager_id", unique = true, nullable = false)
     private User manager;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)

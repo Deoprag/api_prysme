@@ -13,8 +13,12 @@ import java.util.List;
 @RequestMapping("/api/v1/productCategory")
 public class ProductCategoryController {
 
+    private final ProductCategoryService productCategoryService;
+
     @Autowired
-    private ProductCategoryService productCategoryService;
+    public ProductCategoryController(ProductCategoryService productCategoryService) {
+        this.productCategoryService = productCategoryService;
+    }
 
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})

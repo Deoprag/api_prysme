@@ -1,26 +1,27 @@
 package com.deopraglabs.api_prysme.utils.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.util.List;
 
 public class CustomRuntimeException {
+    public static class GenericException extends RuntimeException {
+        public GenericException(String message) {
+            super(message);
+        }
+    }
+
     public static class UserNotFoundException extends RuntimeException {
         public UserNotFoundException(long id) {
             super("User with ID " + id + " not found");
         }
     }
 
+    @Getter
+    @AllArgsConstructor
     public static class UserBRValidationException extends RuntimeException {
-        public UserBRValidationException(List<String> businessRules) {
-            super(buildBRMessage(businessRules));
-        }
-
-        protected static String buildBRMessage(List<String> businessRules) {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("User information validation failed: \n");
-            businessRules.forEach(br -> sb.append(br).append("\n"));
-            sb.append(".");
-            return sb.toString();
-        }
+        private final List<String> businessRules;
     }
 
     public static class TeamNotFoundException extends RuntimeException {

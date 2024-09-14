@@ -4,6 +4,7 @@ import com.deopraglabs.api_prysme.controller.ProductController;
 import com.deopraglabs.api_prysme.data.vo.ProductVO;
 import com.deopraglabs.api_prysme.mapper.custom.ProductMapper;
 import com.deopraglabs.api_prysme.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
+@Transactional
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private ProductMapper productMapper;
-
     private final Logger logger = Logger.getLogger(ProductService.class.getName());
+
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
+
+    @Autowired
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productMapper = productMapper;
+    }
 
     public ProductVO save(ProductVO productVO) {
         logger.info("Saving product: " + productVO);
@@ -50,7 +55,7 @@ public class ProductService {
     public ProductVO findById(long id) {
         logger.info("Finding product by id: " + id);
         return productMapper.convertToVO(productRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Product not found")))
+                        .orElseThrow(() -> new NoSuchElementException("Product not found")))
                 .add(linkTo(methodOn(ProductController.class).findById(id)).withSelfRel());
     }
 

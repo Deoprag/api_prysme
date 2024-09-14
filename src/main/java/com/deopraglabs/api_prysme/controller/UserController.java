@@ -1,5 +1,6 @@
 package com.deopraglabs.api_prysme.controller;
 
+import com.deopraglabs.api_prysme.data.model.User;
 import com.deopraglabs.api_prysme.data.vo.UserVO;
 import com.deopraglabs.api_prysme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,12 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})

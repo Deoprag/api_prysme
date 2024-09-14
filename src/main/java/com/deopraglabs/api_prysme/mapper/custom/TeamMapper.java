@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeamMapper {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public TeamMapper(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public TeamVO convertToVO(Team team) {
         final TeamVO teamVO = new TeamVO();

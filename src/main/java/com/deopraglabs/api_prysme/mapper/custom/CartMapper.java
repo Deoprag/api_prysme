@@ -14,11 +14,14 @@ import java.util.List;
 @Service
 public class CartMapper {
 
-    @Autowired
-    private ProductMapper productMapper;
+    private final ProductMapper productMapper;
+    private final CustomerRepository customerRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    public CartMapper(ProductMapper productMapper, CustomerRepository customerRepository) {
+        this.productMapper = productMapper;
+        this.customerRepository = customerRepository;
+    }
 
     public CartVO convertToVO(Cart cart) {
         final CartVO vo = new CartVO();

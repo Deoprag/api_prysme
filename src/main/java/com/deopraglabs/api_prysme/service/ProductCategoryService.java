@@ -5,6 +5,7 @@ import com.deopraglabs.api_prysme.data.model.ProductCategory;
 import com.deopraglabs.api_prysme.data.vo.ProductCategoryVO;
 import com.deopraglabs.api_prysme.mapper.custom.ProductCategoryMapper;
 import com.deopraglabs.api_prysme.repository.ProductCategoryRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
+@Transactional
 public class ProductCategoryService {
 
-    @Autowired
-    private ProductCategoryRepository productCategoryRepository;
-
-    @Autowired
-    private ProductCategoryMapper productCategoryMapper;
-
     private final Logger logger = Logger.getLogger(ProductService.class.getName());
+
+    private final ProductCategoryRepository productCategoryRepository;
+    private final ProductCategoryMapper productCategoryMapper;
+
+    @Autowired
+    public ProductCategoryService(ProductCategoryRepository productCategoryRepository, ProductCategoryMapper productCategoryMapper) {
+        this.productCategoryRepository = productCategoryRepository;
+        this.productCategoryMapper = productCategoryMapper;
+    }
 
     public ProductCategoryVO save(ProductCategoryVO productVO) {
         logger.info("Saving product: " + productVO);

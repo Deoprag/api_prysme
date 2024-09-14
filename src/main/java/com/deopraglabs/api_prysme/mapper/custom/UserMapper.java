@@ -12,8 +12,12 @@ import java.util.List;
 @Service
 public class UserMapper {
 
+    private final TeamMapper teamMapper;
+
     @Autowired
-    private TeamMapper teamMapper;
+    public UserMapper(TeamMapper teamMapper) {
+        this.teamMapper = teamMapper;
+    }
 
     public UserVO convertToVO(User user) {
         final UserVO vo = new UserVO();

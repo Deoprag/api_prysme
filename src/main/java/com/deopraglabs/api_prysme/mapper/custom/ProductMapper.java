@@ -13,8 +13,12 @@ import java.util.List;
 @Service
 public class ProductMapper {
 
+    private final ProductCategoryRepository productCategoryRepository;
+
     @Autowired
-    ProductCategoryRepository productCategoryRepository;
+    public ProductMapper(ProductCategoryRepository productCategoryRepository) {
+        this.productCategoryRepository = productCategoryRepository;
+    }
 
     public ProductVO convertToVO(Product product) {
         final ProductVO vo = new ProductVO();
