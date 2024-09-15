@@ -13,34 +13,34 @@ import java.util.List;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    Customer findByCpfCnpj(String cpfCnpj);
+    Customer findByCpfCnpjAndIdNot(String cpfCnpj, long id);
 
-    Customer findByEmail(String email);
+    Customer findByEmailAndIdNot(String email, long id);
 
-    Customer findByStateRegistration(String stateRegistration);
+    Customer findByStateRegistrationAndIdNot(String stateRegistration, long id);
 
     List<Customer> findAllByCustomerStatusNot(CustomerStatus customerStatus);
 
     @Modifying
     @Transactional
     @Query("""
-        UPDATE Customer c SET c.cpfCnpj = :cpf, \
-        c.name = "", \
-        c.tradeName = "DELETED", \
-        c.email = CONCAT('deleted_client_', c.id, '@prysme.com.br'), \
-        c.birthFoundationDate = local_date, \
-        c.stateRegistration = null, \
-        c.customerStatus = 'DELETED', \
-        c.phoneNumbers = null, \
-        c.address = null, \
-        c.cart = null WHERE c.id = :id""")
+            UPDATE Customer c SET c.cpfCnpj = :cpf, \
+            c.name = "", \
+            c.tradeName = "DELETED", \
+            c.email = CONCAT('deleted_client_', c.id, '@prysme.com.br'), \
+            c.birthFoundationDate = local_date, \
+            c.stateRegistration = null, \
+            c.customerStatus = 'DELETED', \
+            c.phoneNumbers = null, \
+            c.address = null, \
+            c.cart = null WHERE c.id = :id""")
     int softDeleteById(long id, String cpf);
 
     @Query("""
-        SELECT COUNT(c) \
-        FROM Customer c \
-        WHERE c.id = :id \
-        AND c.customerStatus = 'DELETED'""")
+            SELECT COUNT(c) \
+            FROM Customer c \
+            WHERE c.id = :id \
+            AND c.customerStatus = 'DELETED'""")
     int isDeleted(long id);
 
 }

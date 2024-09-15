@@ -107,12 +107,13 @@ public class UserService {
         Utils.checkField(validations, Utils.isEmpty(userVO.getPassword()), "Password is required");
     }
 
-    // TODO ARRUMAR PROBLEMA DE VERIFICAÇÃO DAS CONSULTAS
     private void validateUniqueFields(UserVO userVO, List<String> validations) {
-        if (!Utils.isEmpty(userVO.getEmail()) && userRepository.findByEmail(userVO.getEmail()) != null) {
+        if (!Utils.isEmpty(userVO.getEmail())
+                && userRepository.findByEmailAndIdNot(userVO.getEmail(), userVO.getKey()) != null) {
             validations.add("Email is already associated with another account");
         }
-        if (!Utils.isEmpty(userVO.getPhoneNumber()) && userRepository.findByPhoneNumber(userVO.getPhoneNumber()) != null) {
+        if (!Utils.isEmpty(userVO.getPhoneNumber())
+                && userRepository.findByPhoneNumberAndIdNot(userVO.getPhoneNumber(), userVO.getKey()) != null) {
             validations.add("Phone number is already associated with another account");
         }
     }

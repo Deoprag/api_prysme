@@ -15,26 +15,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Transactional
     @Query("""
-        UPDATE User u SET u.email = CONCAT('deleted_user_', u.id, '@prysme.com.br'), \
-        u.role = 'DELETED', \
-        u.birthDate = local_date, \
-        u.gender = 'U', \
-        u.phoneNumber = :phoneNumber, \
-        u.password = 'deleted', \
-        u.active = false, \
-        u.team = null WHERE u.id = :id""")
+            UPDATE User u SET u.email = CONCAT('deleted_user_', u.id, '@prysme.com.br'), \
+            u.role = 'DELETED', \
+            u.birthDate = local_date, \
+            u.gender = 'U', \
+            u.phoneNumber = :phoneNumber, \
+            u.password = 'deleted', \
+            u.active = false, \
+            u.team = null WHERE u.id = :id""")
     int softDeleteById(long id, String phoneNumber);
 
     @Query("""
-        SELECT COUNT(u) \
-        FROM User u \
-        WHERE u.id = :id \
-        AND u.role = 'DELETED'""")
+            SELECT COUNT(u) \
+            FROM User u \
+            WHERE u.id = :id \
+            AND u.role = 'DELETED'""")
     int isDeleted(long id);
 
     List<User> findAllByActive(boolean active);
 
-    User findByEmail(String email);
+    User findByEmailAndIdNot(String email, long id);
 
-    User findByPhoneNumber(String phoneNumber);
+    User findByPhoneNumberAndIdNot(String phoneNumber, long id);
 }

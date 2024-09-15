@@ -110,27 +110,20 @@ public class CustomerService {
         Utils.checkField(validations, Utils.isEmpty(customerVO.getAddress().getCountry()), "Country is required.");
     }
 
-    // TODO ARRUMAR PROBLEMA DE VERIFICAÇÃO DAS CONSULTAS
     private void validateUniqueFields(CustomerVO customerVO, List<String> validations) {
-        if (!Utils.isEmpty(customerVO.getCpfCnpj())) {
-            var customer = customerRepository.findByCpfCnpj(customerVO.getCpfCnpj());
-            if (customer != null && customer.getId() != customerVO.getKey()) {
-                validations.add("CPF/CNPJ '" + customerVO.getCpfCnpj() + "' is already associated with another account.");
-            }
+        if (!Utils.isEmpty(customerVO.getCpfCnpj())
+                && customerRepository.findByCpfCnpjAndIdNot(customerVO.getCpfCnpj(), customerVO.getKey()) != null) {
+            validations.add("CPF/CNPJ '" + customerVO.getCpfCnpj() + "' is already associated with another account.");
         }
 
-        if (!Utils.isEmpty(customerVO.getEmail())) {
-            var customer = customerRepository.findByEmail(customerVO.getEmail());
-            if (customer != null && customer.getId() != customerVO.getKey()) {
-                validations.add("Email '" + customerVO.getEmail() + "' is already associated with another account.");
-            }
+        if (!Utils.isEmpty(customerVO.getEmail())
+                && customerRepository.findByEmailAndIdNot(customerVO.getEmail(), customerVO.getKey()) != null) {
+            validations.add("Email '" + customerVO.getEmail() + "' is already associated with another account.");
         }
 
-        if (!Utils.isEmpty(customerVO.getStateRegistration())) {
-            var customer = customerRepository.findByStateRegistration(customerVO.getStateRegistration());
-            if (customer != null && customer.getId() != customerVO.getKey()) {
-                validations.add("State Registration '" + customerVO.getStateRegistration() + "' is already associated with another account.");
-            }
+        if (!Utils.isEmpty(customerVO.getStateRegistration())
+                && customerRepository.findByStateRegistrationAndIdNot(customerVO.getStateRegistration(), customerVO.getKey()) != null) {
+            validations.add("State Registration '" + customerVO.getStateRegistration() + "' is already associated with another account.");
         }
     }
 }
