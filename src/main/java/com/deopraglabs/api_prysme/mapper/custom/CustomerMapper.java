@@ -1,27 +1,31 @@
 package com.deopraglabs.api_prysme.mapper.custom;
 
-import com.deopraglabs.api_prysme.data.model.Cart;
+import com.deopraglabs.api_prysme.data.model.Address;
 import com.deopraglabs.api_prysme.data.model.Customer;
 import com.deopraglabs.api_prysme.data.model.PhoneNumber;
 import com.deopraglabs.api_prysme.data.vo.CustomerVO;
+import com.deopraglabs.api_prysme.repository.AddressRepository;
 import com.deopraglabs.api_prysme.repository.PhoneNumberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CustomerMapper {
 
     private final AddressMapper addressMapper;
     private final CartMapper cartMapper;
+    private final AddressRepository addressRepository;
     private final PhoneNumberRepository phoneNumberRepository;
 
     @Autowired
-    public CustomerMapper(AddressMapper addressMapper, CartMapper cartMapper, PhoneNumberRepository phoneNumberRepository) {
+    public CustomerMapper(AddressMapper addressMapper, CartMapper cartMapper, AddressRepository addressRepository, PhoneNumberRepository phoneNumberRepository) {
         this.addressMapper = addressMapper;
         this.cartMapper = cartMapper;
+        this.addressRepository = addressRepository;
         this.phoneNumberRepository = phoneNumberRepository;
     }
 
@@ -38,14 +42,16 @@ public class CustomerMapper {
         vo.setCustomerStatus(customer.getCustomerStatus());
         vo.setAddress(addressMapper.convertToVO(customer.getAddress()));
         vo.setCart(cartMapper.convertToVO(customer.getCart()));
-        for (final PhoneNumber number: customer.getPhoneNumbers()) {
-            vo.getPhoneNumbers().add(number.getNumber());
+        for (final PhoneNumber number : customer.getPhoneNumbers()) {
+            if (!vo.getPhoneNumbers().contains(number.getNumber())) vo.getPhoneNumbers().add(number.getNumber());
         }
 
         return vo;
     }
 
-    public Customer convertFromVO(CustomerVO customerVO) { return updateFromVO(new Customer(), customerVO); }
+    public Customer convertFromVO(CustomerVO customerVO) {
+        return updateFromVO(new Customer(), customerVO);
+    }
 
     public Customer updateFromVO(Customer customer, CustomerVO customerVO) {
         customer.setCpfCnpj(customerVO.getCpfCnpj());
@@ -55,16 +61,15 @@ public class CustomerMapper {
         customer.setBirthFoundationDate(customerVO.getBirthFoundationDate());
         customer.setStateRegistration(customerVO.getStateRegistration());
         customer.setCustomerStatus(customerVO.getCustomerStatus());
-        customer.setAddress(addressMapper.convertFromVO(customerVO.getAddress()));
+        final var address = addressRepository.findById(customerVO.getAddress().getKey()).get();
+        customer.setAddress(addressMapper.updateFromVO(
+                Objects.requireNonNullElseGet(
+                        address, () -> Address.builder().customer(customer).build()), customerVO.getAddress()));
         customer.getAddress().setCustomer(customer);
-        for(final String number : customerVO.getPhoneNumbers()) {
-            if(customer.getId() > 0) {
-                customer.getPhoneNumbers().add(phoneNumberRepository.findByNumber(number));
-            } else {
-                customer.getPhoneNumbers().add(new PhoneNumber(0, number, customer));
-            }
+        for (final String number : customerVO.getPhoneNumbers()) {
+            final var phoneNumber = phoneNumberRepository.findByNumber(number);
+            customer.getPhoneNumbers().add(Objects.requireNonNullElseGet(phoneNumber, () -> new PhoneNumber(0, number, customer)));
         }
-        customer.setCart(new Cart(0, new ArrayList<>(), customer));
 
         return customer;
     }

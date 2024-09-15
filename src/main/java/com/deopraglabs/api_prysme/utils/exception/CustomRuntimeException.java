@@ -12,16 +12,22 @@ public class CustomRuntimeException {
         }
     }
 
+    @Getter
+    @AllArgsConstructor
+    public static class BRValidationException extends RuntimeException {
+        private final List<String> businessRules;
+    }
+
     public static class UserNotFoundException extends RuntimeException {
         public UserNotFoundException(long id) {
             super("User with ID " + id + " not found");
         }
     }
 
-    @Getter
-    @AllArgsConstructor
-    public static class UserBRValidationException extends RuntimeException {
-        private final List<String> businessRules;
+    public static class CustomerNotFoundException extends RuntimeException {
+        public CustomerNotFoundException(long id) {
+            super("Customer with ID " + id + " not found");
+        }
     }
 
     public static class TeamNotFoundException extends RuntimeException {
@@ -33,12 +39,6 @@ public class CustomRuntimeException {
     public static class ProductCategoryNotFoundException extends RuntimeException {
         public ProductCategoryNotFoundException(long id) {
             super("Product Category with ID " + id + " not found");
-        }
-    }
-
-    public static class CustomerNotFoundException extends RuntimeException {
-        public CustomerNotFoundException(long id) {
-            super("Customer with ID " + id + " not found");
         }
     }
 }

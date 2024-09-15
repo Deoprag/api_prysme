@@ -2,21 +2,20 @@ package com.deopraglabs.api_prysme.utils.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.DateTimeException;
 import java.util.Date;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
-@ControllerAdvice
-@RestController
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+@RestControllerAdvice
+public class CustomExceptionHandler {
 
-    // CUSTOM EXCEPTION HANDLER
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception e, WebRequest request) {
         return new ResponseEntity<>(new ExceptionResponse(
@@ -36,19 +35,37 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public final ResponseEntity<ExceptionResponse> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, WebRequest request) {
+    public final ResponseEntity<ExceptionResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, WebRequest request) {
         return new ResponseEntity<>(new ExceptionResponse(
                 new Date(),
-                String.format("Value '%s' not allowed for parameter '%s'. Expecting a '%s' type value.", e.getValue(), e.getName(), e.getRequiredType().getSimpleName()),
+                String.format("Value '%s' not allowed for parameter '%s'. Expecting a '%s' type value.", e.getValue(), e.getName(), Objects.requireNonNull(e.getRequiredType()).getSimpleName()),
                 request.getDescription(false)), HttpStatus.BAD_REQUEST
         );
     }
 
-    @ExceptionHandler(CustomRuntimeException.UserBRValidationException.class)
-    public final ResponseEntity<ExceptionResponseList> handleUserBRValidationException(CustomRuntimeException.UserBRValidationException e, WebRequest request) {
+    @ExceptionHandler(CustomRuntimeException.BRValidationException.class)
+    public final ResponseEntity<ExceptionResponseList> handleBRValidationException(CustomRuntimeException.BRValidationException e, WebRequest request) {
         return new ResponseEntity<>(new ExceptionResponseList(
                 new Date(),
                 e.getBusinessRules(),
+                request.getDescription(false)), HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(DateTimeException.class)
+    public final ResponseEntity<ExceptionResponse> handleDateTimeException(DateTimeException e, WebRequest request) {
+        return new ResponseEntity<>(new ExceptionResponse(
+                new Date(),
+                e.getMessage(),
+                request.getDescription(false)), HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException e, WebRequest request) {
+        return new ResponseEntity<>(new ExceptionResponse(
+                new Date(),
+                e.getMostSpecificCause().getMessage(),
                 request.getDescription(false)), HttpStatus.BAD_REQUEST
         );
     }

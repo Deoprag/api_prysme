@@ -39,13 +39,13 @@ public class Customer implements Serializable {
     @Column(name = "trade_name")
     private String tradeName;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "birth_foundation_date")
     private LocalDate birthFoundationDate;
 
-    @Column(name = "state_registration")
+    @Column(name = "state_registration", unique = true)
     private String stateRegistration;
 
     @Enumerated(EnumType.STRING)

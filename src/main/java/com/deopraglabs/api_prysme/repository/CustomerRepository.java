@@ -13,6 +13,14 @@ import java.util.List;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
+    Customer findByCpfCnpj(String cpfCnpj);
+
+    Customer findByEmail(String email);
+
+    Customer findByStateRegistration(String stateRegistration);
+
+    List<Customer> findAllByCustomerStatusNot(CustomerStatus customerStatus);
+
     @Modifying
     @Transactional
     @Query("""
@@ -35,5 +43,4 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
         AND c.customerStatus = 'DELETED'""")
     int isDeleted(long id);
 
-    List<Customer> findAllByCustomerStatusNot(CustomerStatus customerStatus);
 }

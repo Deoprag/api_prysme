@@ -44,7 +44,7 @@ public class UserService {
         final List<String> validations = validateUserInfo(userVO);
 
         if (!validations.isEmpty()) {
-            throw new CustomRuntimeException.UserBRValidationException(validations);
+            throw new CustomRuntimeException.BRValidationException(validations);
         }
 
         if (userVO.getKey() > 0) {
@@ -97,16 +97,17 @@ public class UserService {
     }
 
     private void validateBasicFields(UserVO userVO, List<String> validations) {
-        checkField(validations, Utils.isEmpty(userVO.getFirstName()), "First name is required");
-        checkField(validations, Utils.isEmpty(userVO.getLastName()), "Last name is required");
-        checkField(validations, Utils.isEmpty(userVO.getEmail()), "Email is required");
-        checkField(validations, userVO.getRole().isEmpty() || userVO.getRole().isBlank(), "Role is required");
-        checkField(validations, userVO.getBirthDate() == null, "Birth date is required");
-        checkField(validations, userVO.getGender() == '\u0000', "Gender is required");
-        checkField(validations, Utils.isEmpty(userVO.getPhoneNumber()), "Phone number is required");
-        checkField(validations, Utils.isEmpty(userVO.getPassword()), "Password is required");
+        Utils.checkField(validations, Utils.isEmpty(userVO.getFirstName()), "First name is required");
+        Utils.checkField(validations, Utils.isEmpty(userVO.getLastName()), "Last name is required");
+        Utils.checkField(validations, Utils.isEmpty(userVO.getEmail()), "Email is required");
+        Utils.checkField(validations, userVO.getRole().isEmpty() || userVO.getRole().isBlank(), "Role is required");
+        Utils.checkField(validations, userVO.getBirthDate() == null, "Birth date is required");
+        Utils.checkField(validations, userVO.getGender() == '\u0000', "Gender is required");
+        Utils.checkField(validations, Utils.isEmpty(userVO.getPhoneNumber()), "Phone number is required");
+        Utils.checkField(validations, Utils.isEmpty(userVO.getPassword()), "Password is required");
     }
 
+    // TODO ARRUMAR PROBLEMA DE VERIFICAÇÃO DAS CONSULTAS
     private void validateUniqueFields(UserVO userVO, List<String> validations) {
         if (!Utils.isEmpty(userVO.getEmail()) && userRepository.findByEmail(userVO.getEmail()) != null) {
             validations.add("Email is already associated with another account");
@@ -114,9 +115,5 @@ public class UserService {
         if (!Utils.isEmpty(userVO.getPhoneNumber()) && userRepository.findByPhoneNumber(userVO.getPhoneNumber()) != null) {
             validations.add("Phone number is already associated with another account");
         }
-    }
-
-    private void checkField(List<String> validations, boolean condition, String message) {
-        if (condition) validations.add(message);
     }
 }

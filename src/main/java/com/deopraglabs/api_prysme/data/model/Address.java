@@ -4,16 +4,19 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import javax.management.ConstructorParameters;
 import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
 @Data
+@Builder
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor
