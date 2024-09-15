@@ -5,11 +5,10 @@ import com.deopraglabs.api_prysme.data.model.Product;
 import com.deopraglabs.api_prysme.data.vo.CartVO;
 import com.deopraglabs.api_prysme.data.vo.ProductVO;
 import com.deopraglabs.api_prysme.repository.CustomerRepository;
+import com.deopraglabs.api_prysme.utils.Utils;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CartMapper {
@@ -32,7 +31,7 @@ public class CartMapper {
         }
         vo.setCustomerId(cart.getCustomer().getId());
         vo.setCustomer(cart.getCustomer().getName());
-        vo.setTotalPrice(calculateTotalPrice(cart.getProducts()));
+        vo.setTotalPrice(Utils.calculateTotalCartPrice(cart.getProducts()));
 
         return vo;
     }
@@ -48,13 +47,5 @@ public class CartMapper {
                 .orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(cartVO.getCustomerId())));
 
         return cart;
-    }
-
-    public double calculateTotalPrice(List<Product> products) {
-        double sum = 0;
-        for (final Product product : products) {
-            sum += product.getPrice().doubleValue();
-        }
-        return sum;
     }
 }

@@ -35,7 +35,9 @@ public class ProductMapper {
         return vo;
     }
 
-    public Product convertFromVO(ProductVO productVO) { return updateFromVO(new Product(), productVO); }
+    public Product convertFromVO(ProductVO productVO) {
+        return updateFromVO(new Product(), productVO);
+    }
 
     public Product updateFromVO(Product product, ProductVO productVO) {
         product.setName(productVO.getName());

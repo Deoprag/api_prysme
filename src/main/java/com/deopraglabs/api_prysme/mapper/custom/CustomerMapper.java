@@ -6,6 +6,7 @@ import com.deopraglabs.api_prysme.data.model.PhoneNumber;
 import com.deopraglabs.api_prysme.data.vo.CustomerVO;
 import com.deopraglabs.api_prysme.repository.AddressRepository;
 import com.deopraglabs.api_prysme.repository.PhoneNumberRepository;
+import com.deopraglabs.api_prysme.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,17 +55,18 @@ public class CustomerMapper {
     }
 
     public Customer updateFromVO(Customer customer, CustomerVO customerVO) {
-        customer.setCpfCnpj(customerVO.getCpfCnpj());
-        customer.setName(customerVO.getName());
-        customer.setTradeName(customerVO.getTradeName());
-        customer.setEmail(customerVO.getEmail());
+        customer.setCpfCnpj(Utils.isEmpty(customerVO.getCpfCnpj()) ? null : customerVO.getCpfCnpj());
+        customer.setName(Utils.isEmpty(customerVO.getName()) ? null : customerVO.getName());
+        customer.setTradeName(Utils.isEmpty(customerVO.getTradeName()) ? null : customerVO.getTradeName());
+        customer.setEmail(Utils.isEmpty(customerVO.getEmail()) ? null : customerVO.getEmail());
         customer.setBirthFoundationDate(customerVO.getBirthFoundationDate());
-        customer.setStateRegistration(customerVO.getStateRegistration());
+        customer.setStateRegistration(Utils.isEmpty(customerVO.getStateRegistration()) ? null : customerVO.getStateRegistration());
         customer.setCustomerStatus(customerVO.getCustomerStatus());
-        final var address = addressRepository.findById(customerVO.getAddress().getKey()).get();
         customer.setAddress(addressMapper.updateFromVO(
                 Objects.requireNonNullElseGet(
-                        address, () -> Address.builder().customer(customer).build()), customerVO.getAddress()));
+                        addressRepository.findById(customerVO.getAddress().getKey()).orElseThrow(),
+                        () -> Address.builder().customer(customer).build()), customerVO.getAddress())
+        );
         customer.getAddress().setCustomer(customer);
         for (final String number : customerVO.getPhoneNumbers()) {
             final var phoneNumber = phoneNumberRepository.findByNumber(number);

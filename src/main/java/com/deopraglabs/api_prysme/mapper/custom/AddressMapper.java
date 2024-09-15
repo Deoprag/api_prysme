@@ -2,6 +2,7 @@ package com.deopraglabs.api_prysme.mapper.custom;
 
 import com.deopraglabs.api_prysme.data.model.Address;
 import com.deopraglabs.api_prysme.data.vo.AddressVO;
+import com.deopraglabs.api_prysme.utils.Utils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,12 +27,14 @@ public class AddressMapper {
         return vo;
     }
 
-    public Address convertFromVO(AddressVO addressVO) { return updateFromVO(new Address(), addressVO); }
+    public Address convertFromVO(AddressVO addressVO) {
+        return updateFromVO(new Address(), addressVO);
+    }
 
     public Address updateFromVO(Address address, AddressVO addressVO) {
         address.setStreet(addressVO.getStreet());
         address.setNumber(addressVO.getNumber());
-        address.setComplement(addressVO.getComplement());
+        address.setComplement(Utils.isEmpty(addressVO.getComplement()) ? null : addressVO.getComplement());
         address.setNeighborhood(addressVO.getNeighborhood());
         address.setCity(addressVO.getCity());
         address.setState(addressVO.getState());
