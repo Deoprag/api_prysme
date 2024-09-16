@@ -8,6 +8,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,7 +24,7 @@ public class TeamVO extends RepresentationModel<TeamVO> implements Serializable 
     private String name;
     private long managerId;
     private String manager;
-    private List<Long> sellersIds;
-    private List<String> sellers;
+    private List<Long> sellersIds = new ArrayList<>();
+    private List<String> sellers = new ArrayList<>();
 
 }

@@ -1,6 +1,5 @@
 package com.deopraglabs.api_prysme.mapper.custom;
 
-import com.deopraglabs.api_prysme.data.model.PhoneNumber;
 import com.deopraglabs.api_prysme.data.model.Role;
 import com.deopraglabs.api_prysme.data.model.Task;
 import com.deopraglabs.api_prysme.data.model.User;
@@ -63,7 +62,7 @@ public class UserMapper {
         user.setPassword(Utils.isEmpty(userVO.getPassword()) ? null : userVO.getPassword());
         user.setActive(userVO.isActive());
         if (userVO.getTeam() != null) user.setTeam(teamMapper.convertFromVO(userVO.getTeam()));
-        for (final TaskVO taskVO : userVO.getTasks()) {
+        if (userVO.getTasks() != null) for (final TaskVO taskVO : userVO.getTasks()) {
             final var task = taskRepository.findById(taskVO.getKey());
             user.getTasks().add(task.orElse(new Task(0, taskVO.getTitle(), taskVO.getDescription(), taskVO.getCompletedDateTime(), user)));
         }
