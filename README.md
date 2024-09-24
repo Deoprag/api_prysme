@@ -32,7 +32,7 @@ A API Prysme oferece um conjunto de endpoints RESTful que facilitam a automaçã
 ## Instalação
 
 1. Clone o repositório:
-  git clone https://github.com/seu_usuario/prysme.git
+  git clone https://github.com/Deoprag/api_prysme.git
   cd prysme
    
 2. Configure o banco de dados no arquivo application.properties.
