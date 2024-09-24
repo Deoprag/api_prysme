@@ -36,9 +36,6 @@ public class Product implements Serializable {
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "stock", nullable = false, precision = 10, scale = 2)
-    private BigDecimal stock;
-
     @ManyToOne
     @JoinColumn(name = "category_id")
     private ProductCategory category;

@@ -1,6 +1,6 @@
 package com.deopraglabs.api_prysme.data.model;
 
-public enum SaleStatus {
+public enum ContactStatus {
     NOT_STARTED,
     CONTACT,
     PRESENTATION,

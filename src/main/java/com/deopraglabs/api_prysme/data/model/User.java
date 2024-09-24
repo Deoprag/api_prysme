@@ -1,22 +1,19 @@
 package com.deopraglabs.api_prysme.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Data;
 
 @Entity
 @Data
@@ -72,5 +69,7 @@ public class User implements Serializable {
     @JsonManagedReference
     private List<Task> tasks = new ArrayList<>();
 
-    public String getFullName() { return this.getFirstName() + " " + this.getLastName(); }
+    public String getFullName() {
+        return this.getFirstName() + " " + this.getLastName();
+    }
 }

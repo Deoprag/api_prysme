@@ -27,7 +27,6 @@ public class ProductMapper {
         vo.setName(product.getName());
         vo.setDescription(product.getDescription());
         vo.setPrice(product.getPrice());
-        vo.setStock(product.getStock());
         vo.setCategoryId(product.getCategory().getId());
         vo.setCategoryName(product.getCategory().getName());
         vo.setActive(product.isActive());
@@ -43,7 +42,6 @@ public class ProductMapper {
         product.setName(productVO.getName());
         product.setDescription(productVO.getDescription());
         product.setPrice(productVO.getPrice());
-        product.setStock(productVO.getStock());
         product.setCategory(productCategoryRepository.findById(productVO.getCategoryId())
                 .orElseThrow(() -> new CustomRuntimeException.ProductCategoryNotFoundException(productVO.getCategoryId())));
         product.setActive(productVO.isActive());
