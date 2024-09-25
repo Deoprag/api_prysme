@@ -18,14 +18,12 @@ import java.util.Objects;
 public class CustomerMapper {
 
     private final AddressMapper addressMapper;
-    private final CartMapper cartMapper;
     private final AddressRepository addressRepository;
     private final PhoneNumberRepository phoneNumberRepository;
 
     @Autowired
-    public CustomerMapper(AddressMapper addressMapper, CartMapper cartMapper, AddressRepository addressRepository, PhoneNumberRepository phoneNumberRepository) {
+    public CustomerMapper(AddressMapper addressMapper, AddressRepository addressRepository, PhoneNumberRepository phoneNumberRepository) {
         this.addressMapper = addressMapper;
-        this.cartMapper = cartMapper;
         this.addressRepository = addressRepository;
         this.phoneNumberRepository = phoneNumberRepository;
     }
@@ -42,7 +40,6 @@ public class CustomerMapper {
         vo.setStateRegistration(customer.getStateRegistration());
         vo.setCustomerStatus(customer.getCustomerStatus());
         vo.setAddress(addressMapper.convertToVO(customer.getAddress()));
-        vo.setCart(cartMapper.convertToVO(customer.getCart()));
         for (final PhoneNumber number : customer.getPhoneNumbers()) {
             if (!vo.getPhoneNumbers().contains(number.getNumber())) vo.getPhoneNumbers().add(number.getNumber());
         }

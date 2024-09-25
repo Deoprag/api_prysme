@@ -32,8 +32,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             c.stateRegistration = null, \
             c.customerStatus = 'DELETED', \
             c.phoneNumbers = null, \
-            c.address = null, \
-            c.cart = null WHERE c.id = :id""")
+            c.address = null WHERE c.id = :id""")
     int softDeleteById(long id, String cpf);
 
     @Query("""

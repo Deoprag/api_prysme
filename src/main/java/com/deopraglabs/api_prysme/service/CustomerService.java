@@ -1,11 +1,9 @@
 package com.deopraglabs.api_prysme.service;
 
 import com.deopraglabs.api_prysme.controller.CustomerController;
-import com.deopraglabs.api_prysme.data.model.Cart;
 import com.deopraglabs.api_prysme.data.model.CustomerStatus;
 import com.deopraglabs.api_prysme.data.vo.CustomerVO;
 import com.deopraglabs.api_prysme.mapper.custom.CustomerMapper;
-import com.deopraglabs.api_prysme.repository.CartRepository;
 import com.deopraglabs.api_prysme.repository.CustomerRepository;
 import com.deopraglabs.api_prysme.utils.DatabaseUtils;
 import com.deopraglabs.api_prysme.utils.Utils;
@@ -30,13 +28,11 @@ public class CustomerService {
 
     private final CustomerMapper customerMapper;
     private final CustomerRepository customerRepository;
-    private final CartRepository cartRepository;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper, CartRepository cartRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
-        this.cartRepository = cartRepository;
     }
 
     public CustomerVO save(CustomerVO customerVO) {
@@ -55,7 +51,6 @@ public class CustomerService {
             ))).add(linkTo(methodOn(CustomerController.class).findById(customerVO.getKey())).withSelfRel());
         } else {
             final var customer = customerRepository.save(customerMapper.convertFromVO(customerVO));
-            customer.setCart(cartRepository.save(new Cart()));
             return customerMapper.convertToVO(customerRepository.save(customer))
                     .add(linkTo(methodOn(CustomerController.class).findById(customer.getId())).withSelfRel());
         }

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonPropertyOrder({"id", "cpf_cnpj", "name", "trade_name", "email", "birth_foundation_date", "state_registration", "customer_status", "phone_numbers", "address", "cart"})
+@JsonPropertyOrder({"id", "cpf_cnpj", "name", "trade_name", "email", "birth_foundation_date", "state_registration", "customer_status", "phone_numbers", "address"})
 public class CustomerVO extends RepresentationModel<CustomerVO> implements Serializable {
 
     @Serial
@@ -38,6 +38,4 @@ public class CustomerVO extends RepresentationModel<CustomerVO> implements Seria
     @JsonProperty("phone_numbers")
     private List<String> phoneNumbers = new ArrayList<>();
     private AddressVO address;
-    private CartVO cart;
-
 }
