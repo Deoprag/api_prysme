@@ -11,6 +11,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -23,19 +24,15 @@ public class CustomerVO extends RepresentationModel<CustomerVO> implements Seria
 
     @JsonProperty("id")
     private long key;
-    @JsonProperty("cpf_cnpj")
     private String cpfCnpj;
     private String name;
-    @JsonProperty("trade_name")
     private String tradeName;
     private String email;
-    @JsonProperty("birth_foundation_date")
     private LocalDate birthFoundationDate;
-    @JsonProperty("state_registration")
     private String stateRegistration;
-    @JsonProperty("customer_status")
     private CustomerStatus customerStatus;
-    @JsonProperty("phone_numbers")
     private List<String> phoneNumbers = new ArrayList<>();
     private AddressVO address;
+    private Date createdDate;
+    private Date lastModifiedDate;
 }

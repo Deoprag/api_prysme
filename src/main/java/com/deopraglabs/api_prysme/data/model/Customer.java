@@ -9,12 +9,14 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,6 +25,7 @@ import java.util.List;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "customer")
 public class Customer implements Serializable {
 
@@ -63,9 +66,11 @@ public class Customer implements Serializable {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Address address;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private LocalDateTime createdDate;
+    private Date createdDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
+    private Date lastModifiedDate;
 }

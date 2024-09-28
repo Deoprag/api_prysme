@@ -26,5 +26,4 @@ public class TeamVO extends RepresentationModel<TeamVO> implements Serializable 
     private String manager;
     private List<Long> sellersIds = new ArrayList<>();
     private List<String> sellers = new ArrayList<>();
-
 }

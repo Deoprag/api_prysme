@@ -43,6 +43,8 @@ public class CustomerMapper {
         for (final PhoneNumber number : customer.getPhoneNumbers()) {
             if (!vo.getPhoneNumbers().contains(number.getNumber())) vo.getPhoneNumbers().add(number.getNumber());
         }
+        vo.setCreatedDate(customer.getCreatedDate());
+        vo.setLastModifiedDate(customer.getLastModifiedDate());
 
         return vo;
     }
@@ -69,6 +71,8 @@ public class CustomerMapper {
             final var phoneNumber = phoneNumberRepository.findByNumber(number);
             customer.getPhoneNumbers().add(Objects.requireNonNullElseGet(phoneNumber, () -> new PhoneNumber(0, number, customer)));
         }
+        customer.setCreatedDate(customerVO.getCreatedDate());
+        customer.setLastModifiedDate(customerVO.getLastModifiedDate());
 
         return customer;
     }

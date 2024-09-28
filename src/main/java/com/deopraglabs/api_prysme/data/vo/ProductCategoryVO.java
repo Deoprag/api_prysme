@@ -8,6 +8,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -20,4 +21,6 @@ public class ProductCategoryVO extends RepresentationModel<ProductCategoryVO> im
     @JsonProperty("id")
     private long key;
     private String name;
+    private Date createdDate;
+    private Date lastModifiedDate;
 }

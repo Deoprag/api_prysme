@@ -30,6 +30,8 @@ public class ProductMapper {
         vo.setCategoryId(product.getCategory().getId());
         vo.setCategoryName(product.getCategory().getName());
         vo.setActive(product.isActive());
+        vo.setCreatedDate(product.getCreatedDate());
+        vo.setLastModifiedDate(product.getLastModifiedDate());
 
         return vo;
     }
@@ -45,6 +47,8 @@ public class ProductMapper {
         product.setCategory(productCategoryRepository.findById(productVO.getCategoryId())
                 .orElseThrow(() -> new CustomRuntimeException.ProductCategoryNotFoundException(productVO.getCategoryId())));
         product.setActive(productVO.isActive());
+        product.setCreatedDate(productVO.getCreatedDate());
+        product.setLastModifiedDate(productVO.getLastModifiedDate());
 
         return product;
     }

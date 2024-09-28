@@ -8,10 +8,12 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "product_category")
 public class ProductCategory implements Serializable {
 
@@ -32,9 +35,11 @@ public class ProductCategory implements Serializable {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private LocalDateTime createdDate;
+    private Date createdDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
+    private Date lastModifiedDate;
 }

@@ -9,7 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -33,6 +33,6 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
     private boolean active;
     private TeamVO team;
     private List<TaskVO> tasks;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+    private Date createdDate;
+    private Date lastModifiedDate;
 }

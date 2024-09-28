@@ -9,6 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -25,5 +26,6 @@ public class SaleVO extends RepresentationModel<SaleVO> implements Serializable 
     private CustomerVO customer;
     private BigDecimal totalPrice;
     private List<ProductVO> products;
-
+    private Date createdDate;
+    private Date lastModifiedDate;
 }

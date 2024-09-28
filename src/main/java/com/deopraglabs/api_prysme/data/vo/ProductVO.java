@@ -10,6 +10,7 @@ import org.springframework.hateoas.RepresentationModel;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -25,10 +26,9 @@ public class ProductVO extends RepresentationModel<ProductVO> implements Seriali
     private String description;
     private BigDecimal price;
     private BigDecimal stock;
-    @JsonProperty("category_id")
     private long categoryId;
-    @JsonProperty("category_name")
     private String categoryName;
     private boolean active;
-
+    private Date createdDate;
+    private Date lastModifiedDate;
 }

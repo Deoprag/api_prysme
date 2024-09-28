@@ -24,7 +24,6 @@ public class AddressVO implements Serializable {
     private String neighborhood;
     private String city;
     private String state;
-    @JsonProperty("postal_code")
     private String postalCode;
     private String country;
 }

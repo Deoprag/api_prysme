@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,6 +25,7 @@ import java.util.List;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "nf")
 public class NF implements Serializable {
 
@@ -74,11 +77,13 @@ public class NF implements Serializable {
     @Column(name = "observations")
     private String observations;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private LocalDateTime createdDate;
+    private Date createdDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
+    private Date lastModifiedDate;
 
     public BigDecimal calculateFinalTotal() {
         BigDecimal total = totalValue;

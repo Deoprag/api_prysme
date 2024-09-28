@@ -9,6 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -23,4 +24,6 @@ public class TaskVO extends RepresentationModel<TaskVO> implements Serializable 
     private String title;
     private String description;
     private LocalDateTime completedDateTime;
+    private Date createdDate;
+    private Date lastModifiedDate;
 }

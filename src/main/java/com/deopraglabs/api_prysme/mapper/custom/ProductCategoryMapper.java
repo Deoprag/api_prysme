@@ -15,6 +15,8 @@ public class ProductCategoryMapper {
 
         vo.setKey(category.getId());
         vo.setName(category.getName());
+        vo.setCreatedDate(category.getCreatedDate());
+        vo.setLastModifiedDate(category.getLastModifiedDate());
 
         return vo;
     }
@@ -25,6 +27,8 @@ public class ProductCategoryMapper {
 
     public ProductCategory updateFromVO(ProductCategory category, ProductCategoryVO categoryVO) {
         category.setName(categoryVO.getName());
+        category.setCreatedDate(categoryVO.getCreatedDate());
+        category.setLastModifiedDate(categoryVO.getLastModifiedDate());
 
         return category;
     }

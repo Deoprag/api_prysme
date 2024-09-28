@@ -17,6 +17,8 @@ public class TaskMapper {
         vo.setTitle(task.getTitle());
         vo.setDescription(task.getDescription());
         vo.setCompletedDateTime(task.getCompletedDateTime());
+        vo.setCreatedDate(task.getCreatedDate());
+        vo.setLastModifiedDate(task.getLastModifiedDate());
 
         return vo;
     }
@@ -29,6 +31,8 @@ public class TaskMapper {
         task.setTitle(taskVO.getTitle());
         task.setDescription(taskVO.getDescription());
         task.setCompletedDateTime(taskVO.getCompletedDateTime());
+        task.setCreatedDate(taskVO.getCreatedDate());
+        task.setLastModifiedDate(taskVO.getLastModifiedDate());
 
         return task;
     }
