@@ -47,7 +47,7 @@ public class Quotation implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "budget_status", nullable = false)
-    private QuotationStatus budgetStatus = QuotationStatus.OPEN;
+    private QuotationStatus quotationStatus = QuotationStatus.OPEN;
 
     @OneToMany(mappedBy = "quotation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemProduct> items = new ArrayList<>();

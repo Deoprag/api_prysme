@@ -41,4 +41,10 @@ public class CustomRuntimeException {
             super("Product Category with ID " + id + " not found");
         }
     }
+
+    public static class QuotationNotFoundException extends RuntimeException {
+        public QuotationNotFoundException(long id) {
+            super("Quotation with ID " + id + " not found");
+        }
+    }
 }
