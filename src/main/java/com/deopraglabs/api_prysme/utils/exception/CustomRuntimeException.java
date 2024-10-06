@@ -47,4 +47,10 @@ public class CustomRuntimeException {
             super("Quotation with ID " + id + " not found");
         }
     }
+
+    public static class ContactNotFoundException extends RuntimeException {
+        public ContactNotFoundException(long id) {
+            super("Contact with ID " + id + " not found");
+        }
+    }
 }
