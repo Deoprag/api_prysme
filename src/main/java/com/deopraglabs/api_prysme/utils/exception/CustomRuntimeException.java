@@ -53,4 +53,11 @@ public class CustomRuntimeException {
             super("Contact with ID " + id + " not found");
         }
     }
+
+    public static class SalesOrderNotFoundException extends RuntimeException {
+        public SalesOrderNotFoundException(long id) {
+            super("Sales Order with ID " + id + " not found");
+        }
+    }
+
 }
