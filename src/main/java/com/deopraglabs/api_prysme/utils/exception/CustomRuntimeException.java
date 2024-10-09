@@ -60,4 +60,9 @@ public class CustomRuntimeException {
         }
     }
 
+    public static class NFNotFoundException extends RuntimeException {
+        public NFNotFoundException(long id) {
+            super("NF with ID " + id + " not found");
+        }
+    }
 }

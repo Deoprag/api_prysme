@@ -22,7 +22,7 @@ public class SalesOrderMapper {
     private final CustomerMapper customerMapper;
 
     @Autowired
-    public SalesOrderMapper(CustomerRepository customerRepository, UserRepository userRepository, UserMapper userMapper, QuotationMapper quotationMapper, CustomerMapper customerMapper) {
+    public SalesOrderMapper(UserMapper userMapper, QuotationMapper quotationMapper, CustomerMapper customerMapper) {
         this.userMapper = userMapper;
         this.quotationMapper = quotationMapper;
         this.customerMapper = customerMapper;
