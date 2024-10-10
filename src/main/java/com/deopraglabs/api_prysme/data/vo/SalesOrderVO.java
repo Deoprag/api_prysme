@@ -31,5 +31,4 @@ public class SalesOrderVO extends RepresentationModel<SalesOrderVO> implements S
     private List<ItemProductVO> items;
     private Date createdDate;
     private Date lastModifiedDate;
-
 }

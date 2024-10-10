@@ -1,6 +1,5 @@
 package com.deopraglabs.api_prysme.data.vo;
 
-import com.deopraglabs.api_prysme.data.model.ProductCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;

@@ -1,7 +1,8 @@
 package com.deopraglabs.api_prysme.controller;
 
-import com.deopraglabs.api_prysme.data.vo.UserVO;
-import com.deopraglabs.api_prysme.service.UserService;
+
+import com.deopraglabs.api_prysme.data.vo.TeamVO;
+import com.deopraglabs.api_prysme.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,44 +11,44 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/user")
-public class UserController {
+@RequestMapping("/api/v1/team")
+public class TeamController {
 
-    private final UserService userService;
+    private final TeamService teamService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public TeamController(TeamService teamService) {
+        this.teamService = teamService;
     }
 
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<UserVO> findAll() {
-        return userService.findAll();
+    public List<TeamVO> findAll() {
+        return teamService.findAll();
     }
 
     @GetMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public UserVO findById(@PathVariable(value = "id") long id) {
-        return userService.findById(id);
+    public TeamVO findById(@PathVariable(value = "id") long id) {
+        return teamService.findById(id);
     }
 
     @PostMapping(value = "/create",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public UserVO create(@RequestBody UserVO user) {
-        return userService.save(user);
+    public TeamVO create(@RequestBody TeamVO team) {
+        return teamService.save(team);
     }
 
     @PutMapping(value = "/save",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public UserVO update(@RequestBody UserVO user) {
-        return userService.save(user);
+    public TeamVO update(@RequestBody TeamVO team) {
+        return teamService.save(team);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
-        return userService.delete(id);
+        return teamService.delete(id);
     }
 }

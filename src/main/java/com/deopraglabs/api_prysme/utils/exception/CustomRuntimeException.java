@@ -65,4 +65,10 @@ public class CustomRuntimeException {
             super("NF with ID " + id + " not found");
         }
     }
+
+    public static class TaskNotFoundException extends RuntimeException {
+        public TaskNotFoundException(long id) {
+            super("Task with ID " + id + " not found");
+        }
+    }
 }

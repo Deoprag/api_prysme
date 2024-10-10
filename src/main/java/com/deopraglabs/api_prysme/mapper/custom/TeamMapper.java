@@ -8,6 +8,9 @@ import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class TeamMapper {
 
@@ -34,7 +37,10 @@ public class TeamMapper {
     }
 
     public Team convertFromVO(TeamVO teamVO) {
-        final Team team = new Team();
+        return updateFromVO(new Team(), teamVO);
+    }
+
+    public Team updateFromVO(Team team, TeamVO teamVO) {
 
         team.setId(teamVO.getKey());
         team.setName(teamVO.getName());
@@ -46,5 +52,25 @@ public class TeamMapper {
         }
 
         return team;
+    }
+
+    public List<TeamVO> convertToTeamVOs(List<Team> teams) {
+        final List<TeamVO> listVO = new ArrayList<>();
+
+        for (final Team team : teams) {
+            listVO.add(this.convertToVO(team));
+        }
+
+        return listVO;
+    }
+
+    public List<Team> convertFromTeamVOs(List<TeamVO> teamVOs) {
+        final List<Team> listTeam = new ArrayList<>();
+
+        for (final TeamVO teamVO : teamVOs) {
+            listTeam.add(this.convertFromVO(teamVO));
+        }
+
+        return listTeam;
     }
 }
