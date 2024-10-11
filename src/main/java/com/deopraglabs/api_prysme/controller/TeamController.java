@@ -3,6 +3,7 @@ package com.deopraglabs.api_prysme.controller;
 
 import com.deopraglabs.api_prysme.data.vo.TeamVO;
 import com.deopraglabs.api_prysme.service.TeamService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/team")
+@Tag(name = "Team", description = "Endpoints for managing teams")
 public class TeamController {
 
     private final TeamService teamService;

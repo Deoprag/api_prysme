@@ -2,6 +2,7 @@ package com.deopraglabs.api_prysme.controller;
 
 import com.deopraglabs.api_prysme.data.vo.ProductVO;
 import com.deopraglabs.api_prysme.service.ProductService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/product")
+@Tag(name = "Product", description = "Endpoints for managing products")
 public class ProductController {
 
     private final ProductService productService;
