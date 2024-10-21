@@ -47,7 +47,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ExceptionResponseList> handleBRValidationException(CustomRuntimeException.BRValidationException e, WebRequest request) {
         return new ResponseEntity<>(new ExceptionResponseList(
                 new Date(),
-                e.getBusinessRules(),
+                e.getErrors(),
                 request.getDescription(false)), HttpStatus.BAD_REQUEST
         );
     }

@@ -15,7 +15,7 @@ public class CustomRuntimeException {
     @Getter
     @AllArgsConstructor
     public static class BRValidationException extends RuntimeException {
-        private final List<String> businessRules;
+        private final List<String> errors;
     }
 
     public static class UserNotFoundException extends RuntimeException {

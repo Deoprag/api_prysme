@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -74,7 +77,7 @@ public class CustomerService {
     public ResponseEntity<?> delete(long id) {
         logger.info("Deleting customer: " + id);
         if (customerRepository.isDeleted(id) > 0) return ResponseEntity.notFound().build();
-        return customerRepository.softDeleteById(id, DatabaseUtils.generateRandomValue(id, 11)) > 0
+        return customerRepository.softDeleteById(id, DatabaseUtils.generateRandomValue(id, 14)) > 0
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }

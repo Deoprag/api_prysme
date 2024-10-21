@@ -62,9 +62,9 @@ public class CustomerMapper {
         customer.setStateRegistration(Utils.isEmpty(customerVO.getStateRegistration()) ? null : customerVO.getStateRegistration());
         customer.setCustomerStatus(customerVO.getCustomerStatus());
         customer.setAddress(addressMapper.updateFromVO(
-                Objects.requireNonNullElseGet(
-                        addressRepository.findById(customerVO.getAddress().getKey()).orElseThrow(),
-                        () -> Address.builder().customer(customer).build()), customerVO.getAddress())
+            addressRepository.findById(
+                    customerVO.getAddress().getKey()).orElse(Address.builder().customer(customer).build()), customerVO.getAddress()
+            )
         );
         customer.getAddress().setCustomer(customer);
         for (final String number : customerVO.getPhoneNumbers()) {

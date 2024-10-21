@@ -6,8 +6,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -25,15 +27,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Transactional
     @Query("""
             UPDATE Customer c SET c.cpfCnpj = :cpf, \
-            c.name = "", \
-            c.tradeName = "DELETED", \
-            c.email = CONCAT('deleted_client_', c.id, '@prysme.com.br'), \
-            c.birthFoundationDate = local_date, \
+            c.name = CONCAT('DELETED CUSTOMER (', c.id, ')'), \
+            c.tradeName = CONCAT('DELETED CUSTOMER (', c.id, ')'), \
+            c.email = CONCAT('deleted_customer_', c.id, '@prysme.com.br'), \
+            c.birthFoundationDate = CURRENT_DATE , \
             c.stateRegistration = null, \
-            c.customerStatus = 'DELETED', \
-            c.phoneNumbers = null, \
-            c.address = null WHERE c.id = :id""")
-    int softDeleteById(long id, String cpf);
+            c.customerStatus = 'DELETED' WHERE c.id = :id""")
+    int softDeleteById(@Param("id") long id, @Param("cpf") String cpf);
 
     @Query("""
             SELECT COUNT(c) \
