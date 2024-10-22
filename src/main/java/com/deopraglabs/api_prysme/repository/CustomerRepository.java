@@ -32,6 +32,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             c.email = CONCAT('deleted_customer_', c.id, '@prysme.com.br'), \
             c.birthFoundationDate = CURRENT_DATE , \
             c.stateRegistration = null, \
+            c.lastModifiedDate = CURRENT_TIMESTAMP, \
             c.customerStatus = 'DELETED' WHERE c.id = :id""")
     int softDeleteById(@Param("id") long id, @Param("cpf") String cpf);
 
