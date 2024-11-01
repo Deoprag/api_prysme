@@ -38,7 +38,7 @@ public class AddressMapper {
         address.setNeighborhood(addressVO.getNeighborhood());
         address.setCity(addressVO.getCity());
         address.setState(addressVO.getState());
-        address.setPostalCode(addressVO.getPostalCode());
+        address.setPostalCode(Utils.removeSpecialCharacters(addressVO.getPostalCode()));
         address.setCountry(addressVO.getCountry());
 
         return address;

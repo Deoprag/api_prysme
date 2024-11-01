@@ -111,6 +111,7 @@ public class CustomerService {
     private void validateUniqueFields(CustomerVO customerVO, List<String> validations) {
         if (!Utils.isEmpty(customerVO.getCpfCnpj())
                 && customerRepository.findByCpfCnpjAndIdNot(customerVO.getCpfCnpj(), customerVO.getKey()) != null) {
+            // NÃO TA CAINDO DENTRO DO IF
             validations.add("CPF/CNPJ '" + customerVO.getCpfCnpj() + "' is already associated with another account.");
         }
 

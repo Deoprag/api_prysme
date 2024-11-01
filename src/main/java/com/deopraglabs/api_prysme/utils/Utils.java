@@ -12,11 +12,7 @@ public class Utils {
         if (condition) validations.add(message);
     }
 
-    public static double calculateTotalCartPrice(List<Product> products) {
-        double sum = 0;
-        for (final Product product : products) {
-            sum += product.getPrice().doubleValue();
-        }
-        return sum;
+    public static String removeSpecialCharacters(String str) {
+        return str.replaceAll("[^a-zA-Z0-9]", "");
     }
 }

@@ -54,12 +54,12 @@ public class CustomerMapper {
     }
 
     public Customer updateFromVO(Customer customer, CustomerVO customerVO) {
-        customer.setCpfCnpj(Utils.isEmpty(customerVO.getCpfCnpj()) ? null : customerVO.getCpfCnpj());
+        customer.setCpfCnpj(Utils.isEmpty(customerVO.getCpfCnpj()) ? null : Utils.removeSpecialCharacters(customerVO.getCpfCnpj()));
         customer.setName(Utils.isEmpty(customerVO.getName()) ? null : customerVO.getName());
         customer.setTradeName(Utils.isEmpty(customerVO.getTradeName()) ? null : customerVO.getTradeName());
         customer.setEmail(Utils.isEmpty(customerVO.getEmail()) ? null : customerVO.getEmail());
         customer.setBirthFoundationDate(customerVO.getBirthFoundationDate());
-        customer.setStateRegistration(Utils.isEmpty(customerVO.getStateRegistration()) ? null : customerVO.getStateRegistration());
+        customer.setStateRegistration(Utils.isEmpty(customerVO.getStateRegistration()) ? null : Utils.removeSpecialCharacters(customerVO.getStateRegistration()));
         customer.setCustomerStatus(customerVO.getCustomerStatus());
         customer.setAddress(addressMapper.updateFromVO(
             addressRepository.findById(
@@ -68,8 +68,8 @@ public class CustomerMapper {
         );
         customer.getAddress().setCustomer(customer);
         for (final String number : customerVO.getPhoneNumbers()) {
-            final var phoneNumber = phoneNumberRepository.findByNumber(number);
-            customer.getPhoneNumbers().add(Objects.requireNonNullElseGet(phoneNumber, () -> new PhoneNumber(0, number, customer)));
+            final var phoneNumber = phoneNumberRepository.findByNumber(Utils.removeSpecialCharacters(number));
+            customer.getPhoneNumbers().add(Objects.requireNonNullElseGet(phoneNumber, () -> new PhoneNumber(0, Utils.removeSpecialCharacters(number), customer)));
         }
         customer.setCreatedDate(customerVO.getCreatedDate());
         customer.setLastModifiedDate(customerVO.getLastModifiedDate());
