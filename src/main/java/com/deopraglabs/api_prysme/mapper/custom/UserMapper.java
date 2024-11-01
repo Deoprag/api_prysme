@@ -1,6 +1,5 @@
 package com.deopraglabs.api_prysme.mapper.custom;
 
-import com.deopraglabs.api_prysme.data.model.Role;
 import com.deopraglabs.api_prysme.data.model.Task;
 import com.deopraglabs.api_prysme.data.model.User;
 import com.deopraglabs.api_prysme.data.vo.TaskVO;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class UserMapper {
@@ -35,12 +33,11 @@ public class UserMapper {
         vo.setFirstName(user.getFirstName());
         vo.setLastName(user.getLastName());
         vo.setEmail(user.getEmail());
-        vo.setRole(user.getRole().toString());
         vo.setBirthDate(user.getBirthDate());
         vo.setGender(user.getGender());
         vo.setPhoneNumber(user.getPhoneNumber());
         vo.setPassword(user.getPassword());
-        vo.setActive(user.isActive());
+        vo.setEnabled(user.isEnabled());
         if (user.getTeam() != null) vo.setTeam(teamMapper.convertToVO(user.getTeam()));
         vo.setTasks(taskMapper.convertToTaskVOs(user.getTasks()));
         vo.setCreatedDate(user.getCreatedDate());
@@ -57,12 +54,11 @@ public class UserMapper {
         user.setFirstName(Utils.isEmpty(userVO.getFirstName()) ? null : userVO.getFirstName());
         user.setLastName(Utils.isEmpty(userVO.getLastName()) ? null : userVO.getLastName());
         user.setEmail(Utils.isEmpty(userVO.getEmail()) ? null : userVO.getEmail());
-        user.setRole(Role.valueOf(userVO.getRole()));
         user.setBirthDate(userVO.getBirthDate());
         user.setGender(Utils.isEmpty(String.valueOf(userVO.getGender())) ? 'U' : userVO.getGender());
         user.setPhoneNumber(Utils.isEmpty(userVO.getPhoneNumber()) ? null : userVO.getPhoneNumber());
         user.setPassword(Utils.isEmpty(userVO.getPassword()) ? null : userVO.getPassword());
-        user.setActive(userVO.isActive());
+        user.setEnabled(userVO.isEnabled());
         if (userVO.getTeam() != null) user.setTeam(teamMapper.convertFromVO(userVO.getTeam()));
         if (userVO.getTasks() != null) for (final TaskVO taskVO : userVO.getTasks()) {
             final var task = taskRepository.findById(taskVO.getKey());

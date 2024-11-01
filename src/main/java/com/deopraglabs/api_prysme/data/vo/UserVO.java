@@ -25,12 +25,11 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
     private String firstName;
     private String lastName;
     private String email;
-    private String role;
     private LocalDate birthDate;
     private char gender;
     private String phoneNumber;
     private String password;
-    private boolean active;
+    private boolean enabled;
     private TeamVO team;
     private List<TaskVO> tasks;
     private Date createdDate;

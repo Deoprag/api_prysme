@@ -1,7 +1,6 @@
 package com.deopraglabs.api_prysme.service;
 
 import com.deopraglabs.api_prysme.controller.UserController;
-import com.deopraglabs.api_prysme.data.model.Role;
 import com.deopraglabs.api_prysme.data.model.Team;
 import com.deopraglabs.api_prysme.data.vo.UserVO;
 import com.deopraglabs.api_prysme.mapper.custom.UserMapper;
@@ -55,17 +54,17 @@ public class UserService {
             ))).add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
         } else {
             final var user = userRepository.save(userMapper.convertFromVO(userVO));
-            if (user.getRole().equals(Role.MANAGER)) {
-                final var team = teamRepository.save(new Team(0, user.getFullName(), user, new ArrayList<>()));
-                user.setTeam(team);
-            }
+//            if (user.getRole().equals(Role.MANAGER)) {
+//                final var team = teamRepository.save(new Team(0, user.getFullName(), user, new ArrayList<>()));
+//                user.setTeam(team);
+//            }
             return userMapper.convertToVO(userRepository.save(user)).add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
         }
     }
 
     public List<UserVO> findAll() {
         logger.info("Finding all users");
-        final var users = userMapper.convertToUserVOs(userRepository.findAllByActive(true));
+        final var users = userMapper.convertToUserVOs(userRepository.findAllByEnabled(true));
         users.forEach(user -> user.add(linkTo(methodOn(UserController.class).findById(user.getKey())).withSelfRel()));
 
         return users;
@@ -100,7 +99,6 @@ public class UserService {
         Utils.checkField(validations, Utils.isEmpty(userVO.getFirstName()), "First name is required");
         Utils.checkField(validations, Utils.isEmpty(userVO.getLastName()), "Last name is required");
         Utils.checkField(validations, Utils.isEmpty(userVO.getEmail()), "Email is required");
-        Utils.checkField(validations, userVO.getRole().isEmpty() || userVO.getRole().isBlank(), "Role is required");
         Utils.checkField(validations, userVO.getBirthDate() == null, "Birth date is required");
         Utils.checkField(validations, userVO.getGender() == '\u0000', "Gender is required");
         Utils.checkField(validations, Utils.isEmpty(userVO.getPhoneNumber()), "Phone number is required");

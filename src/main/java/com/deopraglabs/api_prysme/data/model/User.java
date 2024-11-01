@@ -37,6 +37,24 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "username", unique = true, nullable = false, updatable = false, length = 20)
+    private String username;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "account_non_expired", nullable = false)
+    private boolean accountNonExpired = true;
+
+    @Column(name = "account_non_locked", nullable = false)
+    private boolean accountNonLocked = true;
+
+    @Column(name = "credentials_non_expired", nullable = false)
+    private boolean credentialsNonExpired = false;
+
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled = true;
+
     @Column(name = "first_name", length = 50, nullable = false)
     private String firstName;
 
@@ -46,10 +64,6 @@ public class User implements Serializable {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role;
-
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
@@ -58,13 +72,6 @@ public class User implements Serializable {
 
     @Column(name = "phone_number", length = 11, nullable = false, unique = true)
     private String phoneNumber;
-
-    @JsonIgnore
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "active", nullable = false)
-    private boolean active = false;
 
     @ManyToOne
     @JsonManagedReference

@@ -16,12 +16,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("""
             UPDATE User u SET u.email = CONCAT('deleted_user_', u.id, '@prysme.com.br'), \
-            u.role = 'DELETED', \
             u.birthDate = local_date, \
             u.gender = 'U', \
             u.phoneNumber = :phoneNumber, \
             u.password = 'deleted', \
-            u.active = false, \
+            u.enabled = false, \
             u.team = null WHERE u.id = :id""")
     int softDeleteById(long id, String phoneNumber);
 
@@ -29,10 +28,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
             SELECT COUNT(u) \
             FROM User u \
             WHERE u.id = :id \
-            AND u.role = 'DELETED'""")
+            AND u.enabled = true""")
     int isDeleted(long id);
 
-    List<User> findAllByActive(boolean active);
+    List<User> findAllByEnabled(boolean enabled);
 
     User findByEmailAndIdNot(String email, long id);
 
