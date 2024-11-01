@@ -20,6 +20,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             u.gender = 'U', \
             u.phoneNumber = :phoneNumber, \
             u.password = 'deleted', \
+            u.accountNonExpired = false, \
+            u.accountNonLocked = false, \
+            u.credentialsNonExpired = false, \
             u.enabled = false, \
             u.team = null WHERE u.id = :id""")
     int softDeleteById(long id, String phoneNumber);
@@ -34,6 +37,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByEnabled(boolean enabled);
 
     User findByEmailAndIdNot(String email, long id);
+
+    User findByUsername(String username);
 
     User findByPhoneNumberAndIdNot(String phoneNumber, long id);
 }

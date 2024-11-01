@@ -1,24 +1,27 @@
 package com.deopraglabs.api_prysme.data.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -26,9 +29,10 @@ import java.util.List;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "app_user")
-public class User implements Serializable {
+@Table(name = "users")
+public class User implements UserDetails, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -82,6 +86,12 @@ public class User implements Serializable {
     @JsonManagedReference
     private List<Task> tasks = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_permission",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "permission_id")})
+    private List<Permission> permissions;
+
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdDate;
@@ -92,5 +102,16 @@ public class User implements Serializable {
 
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();
+    }
+
+    public List<String> getRoles() {
+        return this.getPermissions().stream()
+                .map(Permission::getDescription)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.permissions;
     }
 }

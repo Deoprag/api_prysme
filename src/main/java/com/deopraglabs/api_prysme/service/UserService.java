@@ -12,6 +12,9 @@ import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
@@ -54,24 +57,26 @@ public class UserService {
             ))).add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
         } else {
             final var user = userRepository.save(userMapper.convertFromVO(userVO));
-//            if (user.getRole().equals(Role.MANAGER)) {
-//                final var team = teamRepository.save(new Team(0, user.getFullName(), user, new ArrayList<>()));
-//                user.setTeam(team);
-//            }
+
+            if (user.getAuthorities().stream().anyMatch("MANAGER"::equals)) {
+                final var team = teamRepository.save(new Team(0, user.getFullName(), user, new ArrayList<>()));
+                user.setTeam(team);
+            }
             return userMapper.convertToVO(userRepository.save(user)).add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
         }
     }
 
     public List<UserVO> findAll() {
         logger.info("Finding all users");
+
         final var users = userMapper.convertToUserVOs(userRepository.findAllByEnabled(true));
         users.forEach(user -> user.add(linkTo(methodOn(UserController.class).findById(user.getKey())).withSelfRel()));
-
         return users;
     }
 
     public UserVO findById(long id) {
         logger.info("Finding user by id: " + id);
+
         return userMapper.convertToVO(userRepository.findById(id)
                         .orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(id)))
                 .add(linkTo(methodOn(UserController.class).findById(id)).withSelfRel());
@@ -79,10 +84,23 @@ public class UserService {
 
     public ResponseEntity<?> delete(long id) {
         logger.info("Deleting user: " + id);
+
         if (userRepository.isDeleted(id) > 0) return ResponseEntity.notFound().build();
         return userRepository.softDeleteById(id, DatabaseUtils.generateRandomValue(id, 11)) > 0
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        logger.info("Loading user by username: " + username);
+        final var user = userRepository.findByUsername(username);
+
+        if (user != null) {
+            return user;
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
     }
 
     // Regras de Negócio

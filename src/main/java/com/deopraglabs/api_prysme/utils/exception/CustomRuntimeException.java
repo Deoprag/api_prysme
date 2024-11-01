@@ -2,7 +2,10 @@ package com.deopraglabs.api_prysme.utils.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 
 public class CustomRuntimeException {
@@ -70,5 +73,10 @@ public class CustomRuntimeException {
         public TaskNotFoundException(long id) {
             super("Task with ID " + id + " not found");
         }
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public static class InvalidJwtAuthenticationException extends AuthenticationException {
+        public InvalidJwtAuthenticationException(String message) {super(message);}
     }
 }

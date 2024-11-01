@@ -69,4 +69,13 @@ public class CustomExceptionHandler {
                 request.getDescription(false)), HttpStatus.BAD_REQUEST
         );
     }
+
+    @ExceptionHandler(CustomRuntimeException.InvalidJwtAuthenticationException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidJwtAuthenticationException(CustomRuntimeException.InvalidJwtAuthenticationException e, WebRequest request) {
+        return new ResponseEntity<>(new ExceptionResponse(
+                new Date(),
+                e.getMessage(),
+                request.getDescription(false)), HttpStatus.FORBIDDEN
+        );
+    }
 }
