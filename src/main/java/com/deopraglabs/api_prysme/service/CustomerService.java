@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -80,6 +81,20 @@ public class CustomerService {
         return customerRepository.softDeleteById(id, DatabaseUtils.generateRandomValue(id, 14)) > 0
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
+    }
+
+    public ResponseEntity<?> getCustomerCount() {
+        logger.info("Counting customers...");
+        final HashMap<String, Long> customerCount = new HashMap<>();
+        customerCount.put("value", customerRepository.countCustomerByCustomerStatusNot(CustomerStatus.DELETED));
+        return ResponseEntity.ok(customerCount);
+    }
+
+    public ResponseEntity<?> getNewCustomersCount() {
+        logger.info("Counting NEW customers...");
+        final HashMap<String, Long> newCustomersCount = new HashMap<>();
+        newCustomersCount.put("value", customerRepository.countCustomerByCustomerStatus(CustomerStatus.NEW));
+        return ResponseEntity.ok(newCustomersCount);
     }
 
     // Regras de Negócio

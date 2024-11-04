@@ -34,6 +34,14 @@ public class CustomerController {
         return customerService.findById(id);
     }
 
+    @GetMapping(value = "/getCustomerCount",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> getCustomerCount() { return customerService.getCustomerCount(); }
+
+    @GetMapping(value = "/getNewCustomersCount",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> getNewCustomersCount() { return customerService.getNewCustomersCount(); }
+
     @PostMapping(value = "/create",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})

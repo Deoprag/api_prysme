@@ -43,4 +43,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             AND c.customerStatus = 'DELETED'""")
     int isDeleted(long id);
 
+    long countCustomerByCustomerStatusNot(CustomerStatus customerStatus);
+
+    long countCustomerByCustomerStatus(CustomerStatus customerStatus);
 }
