@@ -40,10 +40,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers(
-                                        "/auth/signin",
-                                        "/auth/refresh/**",
+                                        "/api/v1/auth/signIn",
+                                        "/api/v1/auth/refresh/**",
                                         "/swagger-ui/**",
-                                        "/v1/api-docs/**"
+                                        "/v3/api-docs/**"
                                 ).permitAll()
                                 .requestMatchers("api/**").authenticated()
                                 .requestMatchers("/user").denyAll()
@@ -62,8 +62,12 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         final Map<String, PasswordEncoder> encoderMap = new HashMap<>();
         final Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder("", 8, 185000, Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
+        encoderMap.put("pbkdf2", encoder);
         final DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoderMap);
         passwordEncoder.setDefaultPasswordEncoderForMatches(encoder);
+
         return passwordEncoder;
     }
+
+
 }

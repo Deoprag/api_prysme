@@ -1,12 +1,24 @@
 package com.deopraglabs.api_prysme.utils;
 
-import com.deopraglabs.api_prysme.data.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class Utils {
 
-    public static boolean isEmpty(String str) { return str == null || str.isEmpty(); }
+    private static PasswordEncoder passwordEncoder;
+
+    @Autowired
+    Utils(PasswordEncoder passwordEncoder) {
+        Utils.passwordEncoder = passwordEncoder;
+    }
+
+    public static boolean isEmpty(String str) {
+        return str == null || str.isEmpty() || str.isBlank();
+    }
 
     public static void checkField(List<String> validations, boolean condition, String message) {
         if (condition) validations.add(message);
@@ -14,5 +26,9 @@ public class Utils {
 
     public static String removeSpecialCharacters(String str) {
         return str.replaceAll("[^a-zA-Z0-9]", "");
+    }
+
+    public static String encryptPassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }
