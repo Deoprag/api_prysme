@@ -1,6 +1,5 @@
 package com.deopraglabs.api_prysme.utils.config;
 
-import jdk.jfr.ContentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -28,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
         configurer.favorParameter(false).ignoreAcceptHeader(false)
                 .useRegisteredExtensionsOnly(false)
                 .defaultContentType(MediaType.APPLICATION_JSON)
-                    .mediaType("json", MediaType.APPLICATION_JSON)
-                    .mediaType("xml", MediaType.APPLICATION_XML);
+                .mediaType("json", MediaType.APPLICATION_JSON)
+                .mediaType("xml", MediaType.APPLICATION_XML);
     }
 }

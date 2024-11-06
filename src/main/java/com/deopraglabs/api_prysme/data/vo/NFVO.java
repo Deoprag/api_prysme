@@ -39,4 +39,6 @@ public class NFVO extends RepresentationModel<NFVO> implements Serializable {
     private String observations;
     private Date createdDate;
     private Date lastModifiedDate;
+    private String createdBy;
+    private String lastModifiedBy;
 }

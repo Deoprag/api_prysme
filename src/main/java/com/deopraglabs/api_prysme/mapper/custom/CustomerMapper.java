@@ -6,6 +6,7 @@ import com.deopraglabs.api_prysme.data.model.PhoneNumber;
 import com.deopraglabs.api_prysme.data.vo.CustomerVO;
 import com.deopraglabs.api_prysme.repository.AddressRepository;
 import com.deopraglabs.api_prysme.repository.PhoneNumberRepository;
+import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,14 @@ public class CustomerMapper {
     private final AddressMapper addressMapper;
     private final AddressRepository addressRepository;
     private final PhoneNumberRepository phoneNumberRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CustomerMapper(AddressMapper addressMapper, AddressRepository addressRepository, PhoneNumberRepository phoneNumberRepository) {
+    public CustomerMapper(AddressMapper addressMapper, AddressRepository addressRepository, PhoneNumberRepository phoneNumberRepository, UserRepository userRepository) {
         this.addressMapper = addressMapper;
         this.addressRepository = addressRepository;
         this.phoneNumberRepository = phoneNumberRepository;
+        this.userRepository = userRepository;
     }
 
     public CustomerVO convertToVO(Customer customer) {
@@ -45,6 +48,8 @@ public class CustomerMapper {
         }
         vo.setCreatedDate(customer.getCreatedDate());
         vo.setLastModifiedDate(customer.getLastModifiedDate());
+        vo.setCreatedBy(customer.getCreatedBy() != null ? customer.getCreatedBy().getUsername() : "");
+        vo.setLastModifiedBy(customer.getLastModifiedBy() != null ? customer.getLastModifiedBy().getUsername() : "");
 
         return vo;
     }
@@ -73,6 +78,8 @@ public class CustomerMapper {
         }
         customer.setCreatedDate(customerVO.getCreatedDate());
         customer.setLastModifiedDate(customerVO.getLastModifiedDate());
+        customer.setCreatedBy(userRepository.findByUsername(customerVO.getCreatedBy()));
+        customer.setLastModifiedBy(userRepository.findByUsername(customerVO.getLastModifiedBy()));
 
         return customer;
     }

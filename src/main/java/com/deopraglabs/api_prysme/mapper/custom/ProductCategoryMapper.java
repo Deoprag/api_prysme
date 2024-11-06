@@ -2,6 +2,8 @@ package com.deopraglabs.api_prysme.mapper.custom;
 
 import com.deopraglabs.api_prysme.data.model.ProductCategory;
 import com.deopraglabs.api_prysme.data.vo.ProductCategoryVO;
+import com.deopraglabs.api_prysme.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,6 +12,13 @@ import java.util.List;
 @Service
 public class ProductCategoryMapper {
 
+    private final UserRepository userRepository;
+
+    @Autowired
+    public ProductCategoryMapper(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public ProductCategoryVO convertToVO(ProductCategory category) {
         final ProductCategoryVO vo = new ProductCategoryVO();
 
@@ -17,6 +26,8 @@ public class ProductCategoryMapper {
         vo.setName(category.getName());
         vo.setCreatedDate(category.getCreatedDate());
         vo.setLastModifiedDate(category.getLastModifiedDate());
+        vo.setCreatedBy(category.getCreatedBy() != null ? category.getCreatedBy().getUsername() : "");
+        vo.setLastModifiedBy(category.getLastModifiedBy() != null ? category.getLastModifiedBy().getUsername() : "");
 
         return vo;
     }
@@ -29,6 +40,8 @@ public class ProductCategoryMapper {
         category.setName(categoryVO.getName());
         category.setCreatedDate(categoryVO.getCreatedDate());
         category.setLastModifiedDate(categoryVO.getLastModifiedDate());
+        category.setCreatedBy(userRepository.findByUsername(categoryVO.getCreatedBy()));
+        category.setLastModifiedBy(userRepository.findByUsername(categoryVO.getLastModifiedBy()));
 
         return category;
     }

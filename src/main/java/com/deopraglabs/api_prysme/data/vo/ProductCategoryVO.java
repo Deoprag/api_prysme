@@ -23,4 +23,6 @@ public class ProductCategoryVO extends RepresentationModel<ProductCategoryVO> im
     private String name;
     private Date createdDate;
     private Date lastModifiedDate;
+    private String createdBy;
+    private String lastModifiedBy;
 }

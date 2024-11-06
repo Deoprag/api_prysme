@@ -30,4 +30,6 @@ public class ContactVO extends RepresentationModel<ContactVO> implements Seriali
     private LocalDateTime contactDate;
     private Date createdDate;
     private Date lastModifiedDate;
+    private String createdBy;
+    private String lastModifiedBy;
 }

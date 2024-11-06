@@ -2,6 +2,8 @@ package com.deopraglabs.api_prysme.mapper.custom;
 
 import com.deopraglabs.api_prysme.data.model.Task;
 import com.deopraglabs.api_prysme.data.vo.TaskVO;
+import com.deopraglabs.api_prysme.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,6 +11,13 @@ import java.util.List;
 
 @Service
 public class TaskMapper {
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public TaskMapper(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public TaskVO convertToVO(Task task) {
         final TaskVO vo = new TaskVO();
@@ -19,6 +28,8 @@ public class TaskMapper {
         vo.setCompletedDateTime(task.getCompletedDateTime());
         vo.setCreatedDate(task.getCreatedDate());
         vo.setLastModifiedDate(task.getLastModifiedDate());
+        vo.setCreatedBy(task.getCreatedBy() != null ? task.getCreatedBy().getUsername() : "");
+        vo.setLastModifiedBy(task.getLastModifiedBy() != null ? task.getLastModifiedBy().getUsername() : "");
 
         return vo;
     }
@@ -33,6 +44,8 @@ public class TaskMapper {
         task.setCompletedDateTime(taskVO.getCompletedDateTime());
         task.setCreatedDate(taskVO.getCreatedDate());
         task.setLastModifiedDate(taskVO.getLastModifiedDate());
+        task.setCreatedBy(userRepository.findByUsername(taskVO.getCreatedBy()));
+        task.setLastModifiedBy(userRepository.findByUsername(taskVO.getLastModifiedBy()));
 
         return task;
     }

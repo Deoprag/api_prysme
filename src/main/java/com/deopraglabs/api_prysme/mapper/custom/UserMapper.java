@@ -5,6 +5,7 @@ import com.deopraglabs.api_prysme.data.model.User;
 import com.deopraglabs.api_prysme.data.vo.TaskVO;
 import com.deopraglabs.api_prysme.data.vo.UserVO;
 import com.deopraglabs.api_prysme.repository.TaskRepository;
+import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,14 @@ public class UserMapper {
     private final TeamMapper teamMapper;
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserMapper(TeamMapper teamMapper, TaskMapper taskMapper, TaskRepository taskRepository) {
+    public UserMapper(TeamMapper teamMapper, TaskMapper taskMapper, TaskRepository taskRepository, UserRepository userRepository) {
         this.teamMapper = teamMapper;
         this.taskMapper = taskMapper;
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
 
     public UserVO convertToVO(User user) {
@@ -42,6 +45,8 @@ public class UserMapper {
         vo.setTasks(taskMapper.convertToTaskVOs(user.getTasks()));
         vo.setCreatedDate(user.getCreatedDate());
         vo.setLastModifiedDate(user.getLastModifiedDate());
+        vo.setCreatedBy(user.getCreatedBy() != null ? user.getCreatedBy().getUsername() : "");
+        vo.setLastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy().getUsername() : "");
 
         return vo;
     }
@@ -62,10 +67,12 @@ public class UserMapper {
         if (userVO.getTeam() != null) user.setTeam(teamMapper.convertFromVO(userVO.getTeam()));
         if (userVO.getTasks() != null) for (final TaskVO taskVO : userVO.getTasks()) {
             final var task = taskRepository.findById(taskVO.getKey());
-            user.getTasks().add(task.orElse(new Task(0, taskVO.getTitle(), taskVO.getDescription(), taskVO.getCompletedDateTime(), user, null, null)));
+            user.getTasks().add(task.orElse(new Task(0, taskVO.getTitle(), taskVO.getDescription(), taskVO.getCompletedDateTime(), user, null, null, null, null)));
         }
-        if (userVO.getCreatedDate() != null) user.setCreatedDate(userVO.getCreatedDate());
-        if (userVO.getLastModifiedDate() != null) user.setLastModifiedDate(userVO.getLastModifiedDate());
+        user.setCreatedDate(userVO.getCreatedDate());
+        user.setLastModifiedDate(userVO.getLastModifiedDate());
+        user.setCreatedBy(userRepository.findByUsername(userVO.getCreatedBy()));
+        user.setLastModifiedBy(userRepository.findByUsername(userVO.getLastModifiedBy()));
 
         return user;
     }

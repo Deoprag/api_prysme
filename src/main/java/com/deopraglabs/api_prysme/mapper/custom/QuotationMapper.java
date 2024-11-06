@@ -6,6 +6,7 @@ import com.deopraglabs.api_prysme.data.model.QuotationStatus;
 import com.deopraglabs.api_prysme.data.vo.ItemProductVO;
 import com.deopraglabs.api_prysme.data.vo.QuotationVO;
 import com.deopraglabs.api_prysme.mapper.Mapper;
+import com.deopraglabs.api_prysme.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +20,13 @@ public class QuotationMapper {
 
     private final CustomerMapper customerMapper;
     private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     @Autowired
-    public QuotationMapper(CustomerMapper customerMapper, UserMapper userMapper) {
+    public QuotationMapper(CustomerMapper customerMapper, UserMapper userMapper, UserRepository userRepository) {
         this.customerMapper = customerMapper;
         this.userMapper = userMapper;
+        this.userRepository = userRepository;
     }
 
     public QuotationVO convertToVO(Quotation quotation) {
@@ -37,6 +40,8 @@ public class QuotationMapper {
         vo.setItems(Mapper.parseListObjects(vo.getItems(), ItemProductVO.class));
         vo.setCreatedDate(quotation.getCreatedDate());
         vo.setLastModifiedDate(quotation.getLastModifiedDate());
+        vo.setCreatedBy(quotation.getCreatedBy() != null ? quotation.getCreatedBy().getUsername() : "");
+        vo.setLastModifiedBy(quotation.getLastModifiedBy() != null ? quotation.getLastModifiedBy().getUsername() : "");
 
         return vo;
     }
@@ -45,14 +50,16 @@ public class QuotationMapper {
         return updateFromVO(new Quotation(), vo);
     }
 
-    public Quotation updateFromVO(Quotation quotation, QuotationVO vo) {
-        quotation.setCustomer(customerMapper.convertFromVO(vo.getCustomer()));
-        quotation.setSeller(userMapper.convertFromVO(vo.getSeller()));
-        quotation.setDateTime(vo.getDateTime() != null ? vo.getDateTime() : LocalDateTime.now());
-        quotation.setQuotationStatus(vo.getQuotationStatus() != null ? vo.getQuotationStatus() : QuotationStatus.OPEN);
-        quotation.setItems(Mapper.parseListObjects(vo.getItems(), ItemProduct.class));
-        quotation.setCreatedDate(vo.getCreatedDate() != null ? vo.getCreatedDate() : new Date());
-        quotation.setLastModifiedDate(vo.getLastModifiedDate() != null ? vo.getLastModifiedDate() : new Date());
+    public Quotation updateFromVO(Quotation quotation, QuotationVO quotationVO) {
+        quotation.setCustomer(customerMapper.convertFromVO(quotationVO.getCustomer()));
+        quotation.setSeller(userMapper.convertFromVO(quotationVO.getSeller()));
+        quotation.setDateTime(quotationVO.getDateTime() != null ? quotationVO.getDateTime() : LocalDateTime.now());
+        quotation.setQuotationStatus(quotationVO.getQuotationStatus() != null ? quotationVO.getQuotationStatus() : QuotationStatus.OPEN);
+        quotation.setItems(Mapper.parseListObjects(quotationVO.getItems(), ItemProduct.class));
+        quotation.setCreatedDate(quotationVO.getCreatedDate());
+        quotation.setLastModifiedDate(quotationVO.getLastModifiedDate());
+        quotation.setCreatedBy(userRepository.findByUsername(quotationVO.getCreatedBy()));
+        quotation.setLastModifiedBy(userRepository.findByUsername(quotationVO.getLastModifiedBy()));
 
         return quotation;
     }

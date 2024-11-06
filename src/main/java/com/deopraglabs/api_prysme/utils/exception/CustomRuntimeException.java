@@ -27,6 +27,12 @@ public class CustomRuntimeException {
         }
     }
 
+    public static class UserNotFoundByUsernameException extends RuntimeException {
+        public UserNotFoundByUsernameException(String username) {
+            super("User with username " + username + " not found");
+        }
+    }
+
     public static class CustomerNotFoundException extends RuntimeException {
         public CustomerNotFoundException(long id) {
             super("Customer with ID " + id + " not found");

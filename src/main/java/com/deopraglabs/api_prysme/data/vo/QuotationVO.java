@@ -30,4 +30,6 @@ public class QuotationVO extends RepresentationModel<QuotationVO> implements Ser
     private List<ItemProductVO> items;
     private Date createdDate;
     private Date lastModifiedDate;
+    private String createdBy;
+    private String lastModifiedBy;
 }

@@ -26,4 +26,6 @@ public class TaskVO extends RepresentationModel<TaskVO> implements Serializable 
     private LocalDateTime completedDateTime;
     private Date createdDate;
     private Date lastModifiedDate;
+    private String createdBy;
+    private String lastModifiedBy;
 }

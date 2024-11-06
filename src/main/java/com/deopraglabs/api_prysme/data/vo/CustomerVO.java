@@ -35,4 +35,6 @@ public class CustomerVO extends RepresentationModel<CustomerVO> implements Seria
     private AddressVO address;
     private Date createdDate;
     private Date lastModifiedDate;
+    private String createdBy;
+    private String lastModifiedBy;
 }

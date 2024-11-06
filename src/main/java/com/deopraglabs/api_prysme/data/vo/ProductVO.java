@@ -30,4 +30,6 @@ public class ProductVO extends RepresentationModel<ProductVO> implements Seriali
     private boolean active;
     private Date createdDate;
     private Date lastModifiedDate;
+    private String createdBy;
+    private String lastModifiedBy;
 }

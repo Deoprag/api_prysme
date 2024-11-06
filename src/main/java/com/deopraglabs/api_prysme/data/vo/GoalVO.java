@@ -27,4 +27,6 @@ public class GoalVO implements Serializable {
     private LocalDate endDate;
     private Date createdDate;
     private Date lastModifiedDate;
+    private String createdBy;
+    private String lastModifiedBy;
 }

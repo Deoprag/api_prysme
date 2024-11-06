@@ -5,26 +5,26 @@ import com.deopraglabs.api_prysme.data.vo.ContactVO;
 import com.deopraglabs.api_prysme.repository.CustomerRepository;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.utils.Utils;
+import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContactMapper {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final ContactInfoMapper contactInfoMapper;
 
     @Autowired
-    public ContactMapper(UserRepository userRepository, UserMapper userMapper, CustomerRepository customerRepository, CustomerMapper customerMapper, ContactInfoMapper contactInfoMapper) {
+    public ContactMapper(UserRepository userRepository, UserMapper userMapper, CustomerMapper customerMapper, ContactInfoMapper contactInfoMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
         this.contactInfoMapper = contactInfoMapper;
     }
@@ -41,6 +41,8 @@ public class ContactMapper {
         vo.setContactDate(contact.getContactDate());
         vo.setCreatedDate(contact.getCreatedDate());
         vo.setLastModifiedDate(contact.getLastModifiedDate());
+        vo.setCreatedBy(contact.getCreatedBy() != null ? contact.getCreatedBy().getUsername() : "");
+        vo.setLastModifiedBy(contact.getLastModifiedBy() != null ? contact.getLastModifiedBy().getUsername() : "");
 
         return vo;
     }
@@ -58,6 +60,8 @@ public class ContactMapper {
         contact.setContactDate(contactVO.getContactDate());
         contact.setCreatedDate(contactVO.getCreatedDate());
         contact.setLastModifiedDate(contactVO.getLastModifiedDate());
+        contact.setCreatedBy(userRepository.findByUsername(contactVO.getCreatedBy()));
+        contact.setLastModifiedBy(userRepository.findByUsername(contactVO.getLastModifiedBy()));
 
         return contact;
     }

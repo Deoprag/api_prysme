@@ -20,12 +20,14 @@ public class SalesOrderMapper {
     private final UserMapper userMapper;
     private final QuotationMapper quotationMapper;
     private final CustomerMapper customerMapper;
+    private final UserRepository userRepository;
 
     @Autowired
-    public SalesOrderMapper(UserMapper userMapper, QuotationMapper quotationMapper, CustomerMapper customerMapper) {
+    public SalesOrderMapper(UserMapper userMapper, QuotationMapper quotationMapper, CustomerMapper customerMapper, UserRepository userRepository) {
         this.userMapper = userMapper;
         this.quotationMapper = quotationMapper;
         this.customerMapper = customerMapper;
+        this.userRepository = userRepository;
     }
 
     public SalesOrderVO convertToVO(SalesOrder salesOrder) {
@@ -39,6 +41,8 @@ public class SalesOrderMapper {
         vo.setItems(Mapper.parseListObjects(vo.getItems(), ItemProductVO.class));
         vo.setCreatedDate(salesOrder.getCreatedDate());
         vo.setLastModifiedDate(salesOrder.getLastModifiedDate());
+        vo.setCreatedBy(salesOrder.getCreatedBy() != null ? salesOrder.getCreatedBy().getUsername() : "");
+        vo.setLastModifiedBy(salesOrder.getLastModifiedBy() != null ? salesOrder.getLastModifiedBy().getUsername() : "");
 
         return vo;
     }
@@ -47,16 +51,18 @@ public class SalesOrderMapper {
         return updateFromVO(new SalesOrder(), vo);
     }
 
-    public SalesOrder updateFromVO(SalesOrder salesOrder, SalesOrderVO vo) {
-        salesOrder.setId(vo.getKey());
-        salesOrder.setQuotation(quotationMapper.convertFromVO(vo.getQuotation()));
-        salesOrder.setCustomer(customerMapper.convertFromVO(vo.getCustomer()));
-        salesOrder.setSeller(userMapper.convertFromVO(vo.getSeller()));
-        salesOrder.setDateTime(vo.getDateTime());
-        salesOrder.setStatus(vo.getStatus());
-        salesOrder.setItems(Mapper.parseListObjects(vo.getItems(), ItemProduct.class));
-        salesOrder.setCreatedDate(vo.getCreatedDate() != null ? vo.getCreatedDate() : new Date());
-        salesOrder.setLastModifiedDate(vo.getLastModifiedDate() != null ? vo.getLastModifiedDate() : new Date());
+    public SalesOrder updateFromVO(SalesOrder salesOrder, SalesOrderVO salerOrderVO) {
+        salesOrder.setId(salerOrderVO.getKey());
+        salesOrder.setQuotation(quotationMapper.convertFromVO(salerOrderVO.getQuotation()));
+        salesOrder.setCustomer(customerMapper.convertFromVO(salerOrderVO.getCustomer()));
+        salesOrder.setSeller(userMapper.convertFromVO(salerOrderVO.getSeller()));
+        salesOrder.setDateTime(salerOrderVO.getDateTime());
+        salesOrder.setStatus(salerOrderVO.getStatus());
+        salesOrder.setItems(Mapper.parseListObjects(salerOrderVO.getItems(), ItemProduct.class));
+        salesOrder.setCreatedDate(salerOrderVO.getCreatedDate());
+        salesOrder.setLastModifiedDate(salerOrderVO.getLastModifiedDate());
+        salesOrder.setCreatedBy(userRepository.findByUsername(salerOrderVO.getCreatedBy()));
+        salesOrder.setLastModifiedBy(userRepository.findByUsername(salerOrderVO.getLastModifiedBy()));
 
         return salesOrder;
     }
