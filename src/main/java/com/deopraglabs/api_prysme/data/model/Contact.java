@@ -45,7 +45,6 @@ public class Contact implements Serializable {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @JsonManagedReference
     @OneToOne(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private ContactInfo info;
 

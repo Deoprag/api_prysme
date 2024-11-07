@@ -38,7 +38,6 @@ public class ContactInfo implements Serializable {
     private String value;
 
     @JsonIgnore
-    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "contact_id", nullable = false)
     private Contact contact;

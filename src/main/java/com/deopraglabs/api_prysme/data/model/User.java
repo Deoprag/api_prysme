@@ -82,7 +82,6 @@ public class User implements UserDetails, Serializable {
     private String phoneNumber;
 
     @ManyToOne
-    @JsonManagedReference
     @JoinColumn(name = "team_id")
     private Team team;
 

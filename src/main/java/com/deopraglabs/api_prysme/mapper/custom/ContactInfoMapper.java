@@ -40,7 +40,7 @@ public class ContactInfoMapper {
     public ContactInfo updateFromVO(ContactInfo contactInfo, ContactInfoVO contactInfoVO) {
         contactInfo.setContactType(contactInfoVO.getContactType());
         contactInfo.setValue(Utils.isEmpty(contactInfoVO.getValue()) ? null : contactInfoVO.getValue());
-        contactInfo.setContact(contactRepository.findById(contactInfoVO.getContactId()).orElseThrow(() -> new CustomRuntimeException.ContactNotFoundException(contactInfoVO.getId())));
+//        contactInfo.setContact(contactRepository.findById(contactInfoVO.getContactId()).orElseThrow(() -> new CustomRuntimeException.ContactNotFoundException(contactInfoVO.getId())));
 
         return contactInfo;
     }

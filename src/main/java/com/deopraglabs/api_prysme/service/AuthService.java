@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -48,7 +50,11 @@ public class AuthService {
                 throw new UsernameNotFoundException("Username " + username + " not found");
             }
 
-            return ResponseEntity.ok(tokenResponse);
+            final HashMap<String, Object> map = new HashMap<>();
+            map.put("token", tokenResponse);
+            map.put("user", user);
+
+            return ResponseEntity.ok(map);
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid username or password.");
         }
@@ -65,7 +71,11 @@ public class AuthService {
             throw new UsernameNotFoundException("Username " + username + " not found");
         }
 
-        return ResponseEntity.ok(tokenResponse);
+        final HashMap<String, Object> map = new HashMap<>();
+        map.put("token", tokenResponse);
+        map.put("user", user);
+
+        return ResponseEntity.ok(map);
 
     }
 }

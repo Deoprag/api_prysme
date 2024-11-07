@@ -32,7 +32,6 @@ public class PhoneNumber implements Serializable {
     private String number;
 
     @JsonIgnore
-    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;

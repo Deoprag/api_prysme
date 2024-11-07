@@ -27,6 +27,12 @@ public class CustomRuntimeException {
         }
     }
 
+    public static class SellerNotFoundException extends RuntimeException {
+        public SellerNotFoundException(long id) {
+            super("Seller with ID " + id + " not found");
+        }
+    }
+
     public static class UserNotFoundByUsernameException extends RuntimeException {
         public UserNotFoundByUsernameException(String username) {
             super("User with username " + username + " not found");

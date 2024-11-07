@@ -56,7 +56,6 @@ public class Address implements Serializable {
     private String country;
 
     @JsonIgnore
-    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;

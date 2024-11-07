@@ -22,8 +22,10 @@ public class ContactVO extends RepresentationModel<ContactVO> implements Seriali
 
     @JsonProperty("id")
     private long key;
-    private UserVO seller;
-    private CustomerVO customer;
+    private long sellerId;
+    private String seller;
+    private long customerId;
+    private String customer;
     private ContactInfoVO info;
     private CustomerStatus customerStatus;
     private String notes;

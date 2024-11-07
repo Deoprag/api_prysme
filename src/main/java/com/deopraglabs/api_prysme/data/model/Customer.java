@@ -60,11 +60,9 @@ public class Customer implements Serializable {
     @Column(name = "customer_status")
     private CustomerStatus customerStatus;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "customer", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
-    @JsonManagedReference
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Address address;
 

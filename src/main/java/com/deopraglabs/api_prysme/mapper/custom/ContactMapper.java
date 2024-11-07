@@ -17,24 +17,26 @@ import java.util.Optional;
 public class ContactMapper {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final ContactInfoMapper contactInfoMapper;
 
     @Autowired
-    public ContactMapper(UserRepository userRepository, UserMapper userMapper, CustomerMapper customerMapper, ContactInfoMapper contactInfoMapper) {
+    public ContactMapper(UserRepository userRepository, CustomerMapper customerMapper, ContactInfoMapper contactInfoMapper, CustomerRepository customerRepository) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
         this.customerMapper = customerMapper;
         this.contactInfoMapper = contactInfoMapper;
+        this.customerRepository = customerRepository;
     }
 
     public ContactVO convertToVO(Contact contact) {
         final ContactVO vo = new ContactVO();
 
         vo.setKey(contact.getId());
-        vo.setSeller(userMapper.convertToVO(contact.getSeller()));
-        vo.setCustomer(customerMapper.convertToVO(contact.getCustomer()));
+        vo.setSellerId(contact.getSeller().getId());
+        vo.setSeller(contact.getSeller().getFullName());
+        vo.setCustomerId(contact.getCustomer().getId());
+        vo.setCustomer(contact.getCustomer().getName());
         vo.setInfo(contactInfoMapper.convertToVO(contact.getInfo()));
         vo.setCustomerStatus(contact.getCustomerStatus());
         vo.setNotes(contact.getNotes());
@@ -52,8 +54,8 @@ public class ContactMapper {
     }
 
     public Contact updateFromVO(Contact contact, ContactVO contactVO) {
-        contact.setSeller(userMapper.convertFromVO(contactVO.getSeller()));
-        contact.setCustomer(customerMapper.convertFromVO(contactVO.getCustomer()));
+        contact.setSeller(userRepository.findById(contactVO.getSellerId()).orElseThrow(() -> new CustomRuntimeException.SellerNotFoundException(contactVO.getSellerId())));
+        contact.setCustomer(customerRepository.findById(contactVO.getCustomerId()).orElseThrow(() -> new CustomRuntimeException.SellerNotFoundException(contactVO.getSellerId())));
         contact.setInfo(contactInfoMapper.convertFromVO(contactVO.getInfo()));
         contact.setCustomerStatus(contactVO.getCustomerStatus());
         contact.setNotes(Utils.isEmpty(contactVO.getNotes()) ? null : contactVO.getNotes());

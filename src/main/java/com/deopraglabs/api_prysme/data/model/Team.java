@@ -36,9 +36,8 @@ public class Team implements Serializable {
     @JoinColumn(name = "manager_id", unique = true, nullable = false)
     private User manager;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
     @JsonIgnore
-    @JsonBackReference
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
     private List<User> sellers;
 
 }
