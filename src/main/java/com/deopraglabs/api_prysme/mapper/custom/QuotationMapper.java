@@ -56,10 +56,6 @@ public class QuotationMapper {
         quotation.setDateTime(quotationVO.getDateTime() != null ? quotationVO.getDateTime() : LocalDateTime.now());
         quotation.setQuotationStatus(quotationVO.getQuotationStatus() != null ? quotationVO.getQuotationStatus() : QuotationStatus.OPEN);
         quotation.setItems(Mapper.parseListObjects(quotationVO.getItems(), ItemProduct.class));
-        quotation.setCreatedDate(quotationVO.getCreatedDate());
-        quotation.setLastModifiedDate(quotationVO.getLastModifiedDate());
-        quotation.setCreatedBy(userRepository.findByUsername(quotationVO.getCreatedBy()));
-        quotation.setLastModifiedBy(userRepository.findByUsername(quotationVO.getLastModifiedBy()));
 
         return quotation;
     }

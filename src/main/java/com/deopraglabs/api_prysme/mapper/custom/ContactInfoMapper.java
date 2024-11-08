@@ -1,5 +1,6 @@
 package com.deopraglabs.api_prysme.mapper.custom;
 
+import com.deopraglabs.api_prysme.data.model.Contact;
 import com.deopraglabs.api_prysme.data.model.ContactInfo;
 import com.deopraglabs.api_prysme.data.vo.ContactInfoVO;
 import com.deopraglabs.api_prysme.repository.ContactRepository;
@@ -37,10 +38,22 @@ public class ContactInfoMapper {
         return updateFromVO(new ContactInfo(), contactInfoVO);
     }
 
+    public ContactInfo convertFromVOWithContact(ContactInfoVO contactInfoVO, Contact contact) {
+        return updateFromVOWithContact(new ContactInfo(), contactInfoVO, contact);
+    }
+
+    public ContactInfo updateFromVOWithContact(ContactInfo contactInfo, ContactInfoVO contactInfoVO, Contact contact) {
+        contactInfo.setContactType(contactInfoVO.getContactType());
+        contactInfo.setValue(Utils.isEmpty(contactInfoVO.getValue()) ? null : contactInfoVO.getValue());
+        contactInfo.setContact(contact);
+
+        return contactInfo;
+    }
+
     public ContactInfo updateFromVO(ContactInfo contactInfo, ContactInfoVO contactInfoVO) {
         contactInfo.setContactType(contactInfoVO.getContactType());
         contactInfo.setValue(Utils.isEmpty(contactInfoVO.getValue()) ? null : contactInfoVO.getValue());
-//        contactInfo.setContact(contactRepository.findById(contactInfoVO.getContactId()).orElseThrow(() -> new CustomRuntimeException.ContactNotFoundException(contactInfoVO.getId())));
+        contactInfo.setContact(contactRepository.findById(contactInfoVO.getContactId()).orElseThrow(() -> new CustomRuntimeException.ContactNotFoundException(contactInfoVO.getId())));
 
         return contactInfo;
     }

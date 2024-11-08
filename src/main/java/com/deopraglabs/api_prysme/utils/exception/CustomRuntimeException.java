@@ -91,4 +91,8 @@ public class CustomRuntimeException {
     public static class InvalidJwtAuthenticationException extends AuthenticationException {
         public InvalidJwtAuthenticationException(String message) {super(message);}
     }
+
+    public static class InvalidUsernameOrPasswordException extends RuntimeException {
+        public InvalidUsernameOrPasswordException(String message) {super(message);}
+    }
 }

@@ -42,10 +42,6 @@ public class TaskMapper {
         task.setTitle(taskVO.getTitle());
         task.setDescription(taskVO.getDescription());
         task.setCompletedDateTime(taskVO.getCompletedDateTime());
-        task.setCreatedDate(taskVO.getCreatedDate());
-        task.setLastModifiedDate(taskVO.getLastModifiedDate());
-        task.setCreatedBy(userRepository.findByUsername(taskVO.getCreatedBy()));
-        task.setLastModifiedBy(userRepository.findByUsername(taskVO.getLastModifiedBy()));
 
         return task;
     }

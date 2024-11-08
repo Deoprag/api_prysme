@@ -56,14 +56,10 @@ public class ContactMapper {
     public Contact updateFromVO(Contact contact, ContactVO contactVO) {
         contact.setSeller(userRepository.findById(contactVO.getSellerId()).orElseThrow(() -> new CustomRuntimeException.SellerNotFoundException(contactVO.getSellerId())));
         contact.setCustomer(customerRepository.findById(contactVO.getCustomerId()).orElseThrow(() -> new CustomRuntimeException.SellerNotFoundException(contactVO.getSellerId())));
-        contact.setInfo(contactInfoMapper.convertFromVO(contactVO.getInfo()));
+        contact.setInfo(contactInfoMapper.convertFromVOWithContact(contactVO.getInfo(), contact));
         contact.setCustomerStatus(contactVO.getCustomerStatus());
         contact.setNotes(Utils.isEmpty(contactVO.getNotes()) ? null : contactVO.getNotes());
         contact.setContactDate(contactVO.getContactDate());
-        contact.setCreatedDate(contactVO.getCreatedDate());
-        contact.setLastModifiedDate(contactVO.getLastModifiedDate());
-        contact.setCreatedBy(userRepository.findByUsername(contactVO.getCreatedBy()));
-        contact.setLastModifiedBy(userRepository.findByUsername(contactVO.getLastModifiedBy()));
 
         return contact;
     }

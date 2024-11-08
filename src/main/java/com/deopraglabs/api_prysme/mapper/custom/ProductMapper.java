@@ -52,10 +52,6 @@ public class ProductMapper {
         product.setCategory(productCategoryRepository.findById(productVO.getCategoryId())
                 .orElseThrow(() -> new CustomRuntimeException.ProductCategoryNotFoundException(productVO.getCategoryId())));
         product.setActive(productVO.isActive());
-        product.setCreatedDate(productVO.getCreatedDate());
-        product.setLastModifiedDate(productVO.getLastModifiedDate());
-        product.setCreatedBy(userRepository.findByUsername(productVO.getCreatedBy()));
-        product.setLastModifiedBy(userRepository.findByUsername(productVO.getLastModifiedBy()));
 
         return product;
     }

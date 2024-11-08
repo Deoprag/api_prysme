@@ -39,9 +39,6 @@ public class ProductCategoryMapper {
     public ProductCategory updateFromVO(ProductCategory category, ProductCategoryVO categoryVO) {
         category.setName(categoryVO.getName());
         category.setCreatedDate(categoryVO.getCreatedDate());
-        category.setLastModifiedDate(categoryVO.getLastModifiedDate());
-        category.setCreatedBy(userRepository.findByUsername(categoryVO.getCreatedBy()));
-        category.setLastModifiedBy(userRepository.findByUsername(categoryVO.getLastModifiedBy()));
 
         return category;
     }

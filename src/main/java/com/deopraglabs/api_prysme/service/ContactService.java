@@ -4,6 +4,7 @@ import com.deopraglabs.api_prysme.controller.ContactController;
 import com.deopraglabs.api_prysme.data.vo.ContactVO;
 import com.deopraglabs.api_prysme.mapper.custom.ContactMapper;
 import com.deopraglabs.api_prysme.repository.ContactRepository;
+import com.deopraglabs.api_prysme.repository.CustomerRepository;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,13 @@ public class ContactService {
 
     private final ContactMapper contactMapper;
     private final ContactRepository contactRepository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
-    public ContactService(ContactRepository contactRepository, ContactMapper contactMapper) {
+    public ContactService(ContactRepository contactRepository, ContactMapper contactMapper, CustomerRepository customerRepository) {
         this.contactRepository = contactRepository;
         this.contactMapper = contactMapper;
+        this.customerRepository = customerRepository;
     }
 
     public ContactVO save(ContactVO contactVO) {
@@ -48,6 +51,7 @@ public class ContactService {
             ))).add(linkTo(methodOn(ContactController.class).findById(contactVO.getKey())).withSelfRel());
         } else {
             final var contact = contactRepository.save(contactMapper.convertFromVO(contactVO));
+            customerRepository.updateCustomerStatus(contact.getCustomer().getId(), contact.getCustomerStatus());
             return contactMapper.convertToVO(contactRepository.save(contact))
                     .add(linkTo(methodOn(ContactController.class).findById(contact.getId())).withSelfRel());
         }

@@ -59,10 +59,6 @@ public class SalesOrderMapper {
         salesOrder.setDateTime(salerOrderVO.getDateTime());
         salesOrder.setStatus(salerOrderVO.getStatus());
         salesOrder.setItems(Mapper.parseListObjects(salerOrderVO.getItems(), ItemProduct.class));
-        salesOrder.setCreatedDate(salerOrderVO.getCreatedDate());
-        salesOrder.setLastModifiedDate(salerOrderVO.getLastModifiedDate());
-        salesOrder.setCreatedBy(userRepository.findByUsername(salerOrderVO.getCreatedBy()));
-        salesOrder.setLastModifiedBy(userRepository.findByUsername(salerOrderVO.getLastModifiedBy()));
 
         return salesOrder;
     }

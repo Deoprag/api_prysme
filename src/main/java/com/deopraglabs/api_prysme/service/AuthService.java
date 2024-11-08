@@ -4,6 +4,7 @@ import com.deopraglabs.api_prysme.data.vo.security.AccountCredentialsVO;
 import com.deopraglabs.api_prysme.data.vo.security.TokenVO;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.security.JwtTokenProvider;
+import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,11 +53,11 @@ public class AuthService {
 
             final HashMap<String, Object> map = new HashMap<>();
             map.put("token", tokenResponse);
-            map.put("user", user);
+            map.put("userId", user.getId());
 
             return ResponseEntity.ok(map);
         } catch (Exception e) {
-            throw new BadCredentialsException("Invalid username or password.");
+            throw new CustomRuntimeException.InvalidUsernameOrPasswordException("Invalid username or password");
         }
     }
 
@@ -73,9 +74,8 @@ public class AuthService {
 
         final HashMap<String, Object> map = new HashMap<>();
         map.put("token", tokenResponse);
-        map.put("user", user);
+        map.put("userId", user.getId());
 
         return ResponseEntity.ok(map);
-
     }
 }

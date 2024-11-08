@@ -67,10 +67,6 @@ public class NFMapper {
         nF.setDiscountType(nFVO.getDiscountType());
         nF.setStatus(nFVO.getStatus());
         nF.setObservations(nFVO.getObservations());
-        nF.setCreatedDate(nFVO.getCreatedDate());
-        nF.setLastModifiedDate(nFVO.getLastModifiedDate());
-        nF.setCreatedBy(userRepository.findByUsername(nFVO.getCreatedBy()));
-        nF.setLastModifiedBy(userRepository.findByUsername(nFVO.getLastModifiedBy()));
 
         return nF;
     }

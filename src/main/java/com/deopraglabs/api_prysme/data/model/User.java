@@ -1,5 +1,6 @@
 package com.deopraglabs.api_prysme.data.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -81,7 +82,8 @@ public class User implements UserDetails, Serializable {
     @Column(name = "phone_number", length = 11, nullable = false, unique = true)
     private String phoneNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonManagedReference
     @JoinColumn(name = "team_id")
     private Team team;
 
@@ -102,16 +104,16 @@ public class User implements UserDetails, Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private Date lastModifiedDate;
-
-    @CreatedBy
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "created_by")
-    private User createdBy;
-
-    @LastModifiedBy
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "last_modified_by")
-    private User lastModifiedBy;
+//
+//    @CreatedBy
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "created_by")
+//    private User createdBy;
+//
+//    @LastModifiedBy
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "last_modified_by")
+//    private User lastModifiedBy;
 
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();

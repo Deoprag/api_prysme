@@ -46,4 +46,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     long countCustomerByCustomerStatusNot(CustomerStatus customerStatus);
 
     long countCustomerByCustomerStatus(CustomerStatus customerStatus);
+
+    @Modifying
+    @Query("UPDATE Customer c SET c.customerStatus = :status WHERE c.id = :id")
+    void updateCustomerStatus(@Param("id") long id, @Param("status") CustomerStatus status);
 }

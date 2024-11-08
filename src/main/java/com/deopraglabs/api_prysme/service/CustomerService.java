@@ -48,14 +48,13 @@ public class CustomerService {
         }
 
         if (customerVO.getKey() > 0) {
-            return customerMapper.convertToVO(customerRepository.save(customerMapper.updateFromVO(
-                    customerRepository.findById(customerVO.getKey())
-                            .orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(customerVO.getKey())),
-                    customerVO
-            ))).add(linkTo(methodOn(CustomerController.class).findById(customerVO.getKey())).withSelfRel());
+            var customer = customerRepository.findById(customerVO.getKey()).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(customerVO.getKey()));
+            customer = customerMapper.updateFromVO(customer, customerVO);
+            customerRepository.save(customer);
+            return customerMapper.convertToVO(customer).add(linkTo(methodOn(CustomerController.class).findById(customerVO.getKey())).withSelfRel());
         } else {
             final var customer = customerRepository.save(customerMapper.convertFromVO(customerVO));
-            return customerMapper.convertToVO(customerRepository.save(customer))
+            return customerMapper.convertToVO(customer)
                     .add(linkTo(methodOn(CustomerController.class).findById(customer.getId())).withSelfRel());
         }
     }

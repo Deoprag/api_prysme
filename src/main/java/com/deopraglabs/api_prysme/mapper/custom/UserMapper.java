@@ -45,8 +45,8 @@ public class UserMapper {
         vo.setTasks(taskMapper.convertToTaskVOs(user.getTasks()));
         vo.setCreatedDate(user.getCreatedDate());
         vo.setLastModifiedDate(user.getLastModifiedDate());
-        vo.setCreatedBy(user.getCreatedBy() != null ? user.getCreatedBy().getUsername() : "");
-        vo.setLastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy().getUsername() : "");
+//        vo.setCreatedBy(user.getCreatedBy() != null ? user.getCreatedBy().getUsername() : "");
+//        vo.setLastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy().getUsername() : "");
 
         return vo;
     }
@@ -69,10 +69,6 @@ public class UserMapper {
             final var task = taskRepository.findById(taskVO.getKey());
             user.getTasks().add(task.orElse(new Task(0, taskVO.getTitle(), taskVO.getDescription(), taskVO.getCompletedDateTime(), user, null, null, null, null)));
         }
-        user.setCreatedDate(userVO.getCreatedDate());
-        user.setLastModifiedDate(userVO.getLastModifiedDate());
-        user.setCreatedBy(userRepository.findByUsername(userVO.getCreatedBy()));
-        user.setLastModifiedBy(userRepository.findByUsername(userVO.getLastModifiedBy()));
 
         return user;
     }

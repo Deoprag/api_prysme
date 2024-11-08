@@ -76,10 +76,6 @@ public class CustomerMapper {
             final var phoneNumber = phoneNumberRepository.findByNumber(Utils.removeSpecialCharacters(number));
             customer.getPhoneNumbers().add(Objects.requireNonNullElseGet(phoneNumber, () -> new PhoneNumber(0, Utils.removeSpecialCharacters(number), customer)));
         }
-        customer.setCreatedDate(customerVO.getCreatedDate());
-        customer.setLastModifiedDate(customerVO.getLastModifiedDate());
-        customer.setCreatedBy(userRepository.findByUsername(customerVO.getCreatedBy()));
-        customer.setLastModifiedBy(userRepository.findByUsername(customerVO.getLastModifiedBy()));
 
         return customer;
     }
