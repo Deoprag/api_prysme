@@ -104,16 +104,16 @@ public class User implements UserDetails, Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private Date lastModifiedDate;
-//
-//    @CreatedBy
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "created_by")
-//    private User createdBy;
-//
-//    @LastModifiedBy
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "last_modified_by")
-//    private User lastModifiedBy;
+
+    @CreatedBy
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
+    @LastModifiedBy
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "last_modified_by")
+    private User lastModifiedBy;
 
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();

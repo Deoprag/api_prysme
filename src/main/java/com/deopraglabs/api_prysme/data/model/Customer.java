@@ -67,6 +67,10 @@ public class Customer implements Serializable {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Address address;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "seller_id")
+    private User seller;
+
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdDate;

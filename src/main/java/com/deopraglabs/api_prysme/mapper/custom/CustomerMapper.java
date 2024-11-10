@@ -46,6 +46,7 @@ public class CustomerMapper {
         for (final PhoneNumber number : customer.getPhoneNumbers()) {
             if (!vo.getPhoneNumbers().contains(number.getNumber())) vo.getPhoneNumbers().add(number.getNumber());
         }
+        vo.setSeller(customer.getSeller().getUsername());
         vo.setCreatedDate(customer.getCreatedDate());
         vo.setLastModifiedDate(customer.getLastModifiedDate());
         vo.setCreatedBy(customer.getCreatedBy() != null ? customer.getCreatedBy().getUsername() : "");
@@ -72,6 +73,7 @@ public class CustomerMapper {
             )
         );
         customer.getAddress().setCustomer(customer);
+        customer.setSeller(userRepository.findByUsername(customerVO.getSeller()));
         for (final String number : customerVO.getPhoneNumbers()) {
             final var phoneNumber = phoneNumberRepository.findByNumber(Utils.removeSpecialCharacters(number));
             customer.getPhoneNumbers().add(Objects.requireNonNullElseGet(phoneNumber, () -> new PhoneNumber(0, Utils.removeSpecialCharacters(number), customer)));
