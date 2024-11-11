@@ -74,6 +74,11 @@ public class CustomerMapper {
         );
         customer.getAddress().setCustomer(customer);
         customer.setSeller(userRepository.findByUsername(customerVO.getSeller()));
+        for (final PhoneNumber phoneNumber : phoneNumberRepository.findAllByCustomerId(customer.getId())) {
+            if (!customerVO.getPhoneNumbers().contains(phoneNumber.getNumber())) {
+                phoneNumber.setCustomer(null);
+            }
+        }
         for (final String number : customerVO.getPhoneNumbers()) {
             final var phoneNumber = phoneNumberRepository.findByNumber(Utils.removeSpecialCharacters(number));
             customer.getPhoneNumbers().add(Objects.requireNonNullElseGet(phoneNumber, () -> new PhoneNumber(0, Utils.removeSpecialCharacters(number), customer)));
