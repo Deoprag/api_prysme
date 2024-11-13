@@ -39,11 +39,11 @@ public class Task implements Serializable {
     @Column(name = "title", length = 50, nullable = false)
     private String title;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 1000)
     private String description;
 
-    @Column(name = "completedDateTime")
-    private LocalDateTime completedDateTime;
+    @Column(name = "due_date")
+    private Date dueDate;
 
     @ManyToOne
     @JsonBackReference

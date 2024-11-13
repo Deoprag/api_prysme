@@ -35,6 +35,12 @@ public class TaskController {
         return taskService.findById(id);
     }
 
+    @GetMapping(value = "findAllByUsername/{username}/{date}",
+        produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<TaskVO> findAllByUsernameAndDate(@PathVariable(value = "username") String username, @PathVariable(value = "date") String date) {
+        return taskService.findAllByUsernameAndDate(username, date);
+    }
+
     @PostMapping(value = "/create",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})

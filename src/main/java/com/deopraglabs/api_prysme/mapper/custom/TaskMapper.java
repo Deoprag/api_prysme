@@ -3,6 +3,7 @@ package com.deopraglabs.api_prysme.mapper.custom;
 import com.deopraglabs.api_prysme.data.model.Task;
 import com.deopraglabs.api_prysme.data.vo.TaskVO;
 import com.deopraglabs.api_prysme.repository.UserRepository;
+import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,8 @@ public class TaskMapper {
         vo.setKey(task.getId());
         vo.setTitle(task.getTitle());
         vo.setDescription(task.getDescription());
-        vo.setCompletedDateTime(task.getCompletedDateTime());
+        vo.setDueDate(task.getDueDate());
+        vo.setUserId(task.getUser().getId());
         vo.setCreatedDate(task.getCreatedDate());
         vo.setLastModifiedDate(task.getLastModifiedDate());
         vo.setCreatedBy(task.getCreatedBy() != null ? task.getCreatedBy().getUsername() : "");
@@ -41,7 +43,8 @@ public class TaskMapper {
     public Task updateFromVO(Task task, TaskVO taskVO) {
         task.setTitle(taskVO.getTitle());
         task.setDescription(taskVO.getDescription());
-        task.setCompletedDateTime(taskVO.getCompletedDateTime());
+        task.setDueDate(taskVO.getDueDate());
+        task.setUser(userRepository.findById(taskVO.getUserId()).orElse(null));
 
         return task;
     }

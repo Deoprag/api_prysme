@@ -4,6 +4,8 @@ import com.deopraglabs.api_prysme.controller.TaskController;
 import com.deopraglabs.api_prysme.data.vo.TaskVO;
 import com.deopraglabs.api_prysme.mapper.custom.TaskMapper;
 import com.deopraglabs.api_prysme.repository.TaskRepository;
+import com.deopraglabs.api_prysme.repository.UserRepository;
+import com.deopraglabs.api_prysme.utils.Utils;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,13 @@ public class TaskService {
 
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper) {
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
+        this.userRepository = userRepository;
     }
 
     public TaskVO save(TaskVO taskVO) {
@@ -66,6 +70,13 @@ public class TaskService {
         return taskMapper.convertToVO(taskRepository.findById(id)
                         .orElseThrow(() -> new CustomRuntimeException.TaskNotFoundException(id)))
                 .add(linkTo(methodOn(TaskController.class).findById(id)).withSelfRel());
+    }
+
+    public List<TaskVO> findAllByUsernameAndDate(String username, String date) {
+        logger.info("Finding all tasks by username: " + username + " and date: " + date);
+        var user = userRepository.findByUsername(username);
+        System.out.println(date);
+        return taskMapper.convertToTaskVOs(taskRepository.findAllByUserIdAndDueDate(user.getId(), Utils.formatStringToDate(date)));
     }
 
     public ResponseEntity<?> delete(long id) {

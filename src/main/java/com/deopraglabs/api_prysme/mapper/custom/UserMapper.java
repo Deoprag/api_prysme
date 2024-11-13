@@ -67,7 +67,7 @@ public class UserMapper {
         if (userVO.getTeam() != null) user.setTeam(teamMapper.convertFromVO(userVO.getTeam()));
         if (userVO.getTasks() != null) for (final TaskVO taskVO : userVO.getTasks()) {
             final var task = taskRepository.findById(taskVO.getKey());
-            user.getTasks().add(task.orElse(new Task(0, taskVO.getTitle(), taskVO.getDescription(), taskVO.getCompletedDateTime(), user, null, null, null, null)));
+            user.getTasks().add(task.orElse(new Task(0, taskVO.getTitle(), taskVO.getDescription(), taskVO.getDueDate(), user, null, null, null, null)));
         }
 
         return user;

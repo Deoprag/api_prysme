@@ -23,7 +23,8 @@ public class TaskVO extends RepresentationModel<TaskVO> implements Serializable 
     private long key;
     private String title;
     private String description;
-    private LocalDateTime completedDateTime;
+    private Date dueDate;
+    private long userId;
     private Date createdDate;
     private Date lastModifiedDate;
     private String createdBy;

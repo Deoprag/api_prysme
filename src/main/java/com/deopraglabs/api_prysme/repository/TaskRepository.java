@@ -6,9 +6,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
+import java.util.List;
+
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Modifying
     @Query("DELETE FROM Task t WHERE t.id = :id")
     int deleteById(@Param("id") long id);
+
+    List<Task> findAllByUserIdAndDueDate(Long userId, Date dueDate);
 }
