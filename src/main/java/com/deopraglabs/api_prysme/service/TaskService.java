@@ -39,6 +39,7 @@ public class TaskService {
     public TaskVO save(TaskVO taskVO) {
         logger.info("Saving task: " + taskVO);
         final List<String> validations = validateTaskInfo(taskVO);
+        taskVO.setDueDate(Utils.resetTime(taskVO.getDueDate()));
 
         if (!validations.isEmpty()) {
             throw new CustomRuntimeException.BRValidationException(validations);
@@ -75,7 +76,6 @@ public class TaskService {
     public List<TaskVO> findAllByUsernameAndDate(String username, String date) {
         logger.info("Finding all tasks by username: " + username + " and date: " + date);
         var user = userRepository.findByUsername(username);
-        System.out.println(date);
         return taskMapper.convertToTaskVOs(taskRepository.findAllByUserIdAndDueDate(user.getId(), Utils.formatStringToDate(date)));
     }
 
