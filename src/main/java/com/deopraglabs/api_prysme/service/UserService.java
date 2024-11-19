@@ -2,6 +2,7 @@ package com.deopraglabs.api_prysme.service;
 
 import com.deopraglabs.api_prysme.controller.UserController;
 import com.deopraglabs.api_prysme.data.model.Team;
+import com.deopraglabs.api_prysme.data.model.User;
 import com.deopraglabs.api_prysme.data.vo.UserVO;
 import com.deopraglabs.api_prysme.mapper.custom.UserMapper;
 import com.deopraglabs.api_prysme.repository.TeamRepository;
@@ -50,11 +51,10 @@ public class UserService implements UserDetailsService {
         }
 
         if (userVO.getKey() > 0) {
-            return userMapper.convertToVO(userRepository.save(userMapper.updateFromVO(
-                    userRepository.findById(userVO.getKey())
-                            .orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(userVO.getKey())),
-                    userVO
-            ))).add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
+            final var user = userRepository.findById(userVO.getKey())
+                    .orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(userVO.getKey()));
+            return userMapper.convertToVO(
+                    userRepository.save(userMapper.updateFromVO(user, userVO))).add(linkTo(methodOn(UserController.class).findById(userVO.getKey())).withSelfRel());
         } else {
             final var user = userRepository.save(userMapper.convertFromVO(userVO));
 
@@ -69,7 +69,15 @@ public class UserService implements UserDetailsService {
     public List<UserVO> findAll() {
         logger.info("Finding all users");
 
-        final var users = userMapper.convertToUserVOs(userRepository.findAllByEnabled(true));
+        final var users = userMapper.convertToUserVOs(userRepository.findAll());
+        users.forEach(user -> user.add(linkTo(methodOn(UserController.class).findById(user.getKey())).withSelfRel()));
+        return users;
+    }
+
+    public List<UserVO> findAllByTeamId(long id) {
+        logger.info("Finding all users by team id");
+        final User auxUser = userRepository.findById(id).orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(id));
+        final var users = userMapper.convertToUserVOs(userRepository.findAllByTeamId(auxUser.getTeam().getId()));
         users.forEach(user -> user.add(linkTo(methodOn(UserController.class).findById(user.getKey())).withSelfRel()));
         return users;
     }
@@ -120,7 +128,7 @@ public class UserService implements UserDetailsService {
         Utils.checkField(validations, userVO.getBirthDate() == null, "Birth date is required");
         Utils.checkField(validations, userVO.getGender() == '\u0000', "Gender is required");
         Utils.checkField(validations, Utils.isEmpty(userVO.getPhoneNumber()), "Phone number is required");
-        Utils.checkField(validations, Utils.isEmpty(userVO.getPassword()), "Password is required");
+//        Utils.checkField(validations, (Utils.isEmpty(userVO.getPassword()) && userVO.getKey() < 1), "Password is required");
     }
 
     private void validateUniqueFields(UserVO userVO, List<String> validations) {

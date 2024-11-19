@@ -34,7 +34,7 @@ public class AuthService {
     }
 
     public ResponseEntity<?> signIn(AccountCredentialsVO data) {
-        logger.info("Signing In: " + data.getUsername());
+        logger.info("Signing In: " + data.getUsername() + " " + data.getPassword());
         try {
             final var username = data.getUsername();
             final var password = data.getPassword();

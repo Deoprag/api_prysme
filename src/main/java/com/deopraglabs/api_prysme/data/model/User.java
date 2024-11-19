@@ -59,7 +59,7 @@ public class User implements UserDetails, Serializable {
     private boolean accountNonLocked = true;
 
     @Column(name = "credentials_non_expired", nullable = false)
-    private boolean credentialsNonExpired = false;
+    private boolean credentialsNonExpired = true;
 
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true;
@@ -88,7 +88,7 @@ public class User implements UserDetails, Serializable {
     private Team team;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -106,11 +106,13 @@ public class User implements UserDetails, Serializable {
     private Date lastModifiedDate;
 
     @CreatedBy
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private User createdBy;
 
     @LastModifiedBy
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_modified_by")
     private User lastModifiedBy;

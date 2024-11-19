@@ -1,5 +1,6 @@
 package com.deopraglabs.api_prysme.utils;
 
+import com.deopraglabs.api_prysme.security.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,6 @@ import java.util.List;
 
 @Service
 public class Utils {
-
-    private static PasswordEncoder passwordEncoder;
-
-    @Autowired
-    Utils(PasswordEncoder passwordEncoder) {
-        Utils.passwordEncoder = passwordEncoder;
-    }
 
     public static boolean isEmpty(String str) {
         return str == null || str.isEmpty() || str.isBlank();
@@ -33,7 +27,7 @@ public class Utils {
     }
 
     public static String encryptPassword(String password) {
-        return passwordEncoder.encode(password);
+        return SecurityConfig.passwordEncoder().encode(password);
     }
 
     public static Date formatStringToDate(String date) {

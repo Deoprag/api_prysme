@@ -87,6 +87,12 @@ public class CustomRuntimeException {
         }
     }
 
+    public static class PermissionNotFoundException extends RuntimeException {
+        public PermissionNotFoundException(long id) {
+            super("Permission with ID " + id + " not found");
+        }
+    }
+
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public static class InvalidJwtAuthenticationException extends AuthenticationException {
         public InvalidJwtAuthenticationException(String message) {super(message);}

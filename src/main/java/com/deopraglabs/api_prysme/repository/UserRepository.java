@@ -36,6 +36,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByEnabled(boolean enabled);
 
+    List<User> findAllByTeamId(long teamId);
+
     User findByEmailAndIdNot(String email, long id);
 
     User findByUsername(String username);
