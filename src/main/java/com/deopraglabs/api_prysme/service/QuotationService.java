@@ -1,6 +1,8 @@
 package com.deopraglabs.api_prysme.service;
 
 import com.deopraglabs.api_prysme.controller.QuotationController;
+import com.deopraglabs.api_prysme.data.model.ItemProduct;
+import com.deopraglabs.api_prysme.data.model.Quotation;
 import com.deopraglabs.api_prysme.data.vo.QuotationVO;
 import com.deopraglabs.api_prysme.mapper.custom.QuotationMapper;
 import com.deopraglabs.api_prysme.repository.QuotationRepository;
@@ -47,8 +49,11 @@ public class QuotationService {
                     quotationVO
             ))).add(linkTo(methodOn(QuotationController.class).findById(quotationVO.getKey())).withSelfRel());
         } else {
-            final var quotation = quotationRepository.save(quotationMapper.convertFromVO(quotationVO));
-            return quotationMapper.convertToVO(quotationRepository.save(quotation))
+            var quotation = quotationMapper.convertFromVO(quotationVO);
+            quotation.setItems(addQuotationToItems(quotation.getItems(), quotation));
+            quotation = quotationRepository.save(quotation);
+
+            return quotationMapper.convertToVO(quotation)
                     .add(linkTo(methodOn(QuotationController.class).findById(quotation.getId())).withSelfRel());
         }
     }
@@ -71,6 +76,11 @@ public class QuotationService {
     public ResponseEntity<?> delete(long id) {
         logger.info("Deleting quotation: " + id);
         return quotationRepository.deleteById(id) > 0 ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
+    public List<ItemProduct> addQuotationToItems(List<ItemProduct> items, Quotation quotation) {
+        items.forEach(item -> item.setQuotation(quotation));
+        return items;
     }
 
     // Regras de Negócio

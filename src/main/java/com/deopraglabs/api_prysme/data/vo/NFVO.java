@@ -28,8 +28,10 @@ public class NFVO extends RepresentationModel<NFVO> implements Serializable {
     private String nfKey;
     private LocalDateTime issueDate;
     private LocalDateTime dueDate;
-    private CustomerVO customer;
-    private UserVO seller;
+    private long customerId;
+    private String customer;
+    private long sellerId;
+    private String seller;
     private SalesOrderVO salesOrder;
     private List<ItemProductVO> items;
     private BigDecimal totalValue;

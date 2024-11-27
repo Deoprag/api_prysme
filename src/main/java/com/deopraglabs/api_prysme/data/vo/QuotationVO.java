@@ -23,8 +23,10 @@ public class QuotationVO extends RepresentationModel<QuotationVO> implements Ser
 
     @JsonProperty("id")
     private long key;
-    private CustomerVO customer;
-    private UserVO seller;
+    private long customerId;
+    private String customer;
+    private long sellerId;
+    private String seller;
     private LocalDateTime dateTime;
     private QuotationStatus quotationStatus;
     private List<ItemProductVO> items;

@@ -51,6 +51,12 @@ public class CustomRuntimeException {
         }
     }
 
+    public static class ProductNotFoundException extends RuntimeException {
+        public ProductNotFoundException(long id) {
+            super("Product with ID " + id + " not found");
+        }
+    }
+
     public static class ProductCategoryNotFoundException extends RuntimeException {
         public ProductCategoryNotFoundException(long id) {
             super("Product Category with ID " + id + " not found");

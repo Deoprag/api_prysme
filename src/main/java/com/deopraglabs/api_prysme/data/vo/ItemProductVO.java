@@ -1,5 +1,6 @@
 package com.deopraglabs.api_prysme.data.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,11 +15,13 @@ public class ItemProductVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private long id;
-    private ProductVO product;
+    @JsonProperty("id")
+    private long key;
+    private long productId;
+    private String product;
     private BigDecimal quantity;
-    private QuotationVO quotation;
-    private SalesOrderVO salesOrder;
-    private NFVO nf;
+    private long quotationId;
+    private long salesOrderId;
+    private long nfId;
     private BigDecimal price;
 }

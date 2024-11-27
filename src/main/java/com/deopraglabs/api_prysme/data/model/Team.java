@@ -1,10 +1,9 @@
 package com.deopraglabs.api_prysme.data.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -14,7 +13,6 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Data
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor
@@ -33,12 +31,45 @@ public class Team implements Serializable {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
     @JoinColumn(name = "manager_id", unique = true, nullable = false)
     private User manager;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<User> sellers;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @JsonIgnore
+    public User getManager() {
+        return manager;
+    }
+
+    @JsonProperty
+    public void setManager(User manager) {
+        this.manager = manager;
+    }
+
+    @JsonIgnore
+    public List<User> getSellers() {
+        return sellers;
+    }
+
+    @JsonProperty
+    public void setSellers(List<User> sellers) {
+        this.sellers = sellers;
+    }
 }

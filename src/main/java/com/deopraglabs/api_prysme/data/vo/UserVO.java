@@ -38,6 +38,4 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
     private List<TaskVO> tasks;
     private Date createdDate;
     private Date lastModifiedDate;
-    private String createdBy;
-    private String lastModifiedBy;
 }

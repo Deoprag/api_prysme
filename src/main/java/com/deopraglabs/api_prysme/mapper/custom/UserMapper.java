@@ -55,8 +55,6 @@ public class UserMapper {
         vo.setPermissions(user.getPermissions().stream().map(Permission::getDescription).collect(Collectors.toList()));
         vo.setCreatedDate(user.getCreatedDate());
         vo.setLastModifiedDate(user.getLastModifiedDate());
-        vo.setCreatedBy(user.getCreatedBy() != null ? user.getCreatedBy().getUsername() : "");
-        vo.setLastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy().getUsername() : "");
 
         return vo;
     }
@@ -80,8 +78,6 @@ public class UserMapper {
         user.setPermissions(userVO.getPermissions().stream()
                 .map(permissionRepository::findByDescription)
                 .collect(Collectors.toList()));
-        user.setCreatedBy(null);
-        user.setLastModifiedBy(null);
 
         return user;
     }

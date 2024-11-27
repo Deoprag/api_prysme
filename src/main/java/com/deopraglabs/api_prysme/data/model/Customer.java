@@ -80,7 +80,7 @@ public class Customer implements Serializable {
     private Date lastModifiedDate;
 
     @CreatedBy
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private User createdBy;
 

@@ -53,7 +53,7 @@ public class Contact implements Serializable {
     @Column(name = "customer_status", nullable = false)
     private CustomerStatus customerStatus;
 
-    @Column(name = "notes", nullable = false)
+    @Column(name = "notes", nullable = false, length = 1000)
     private String notes;
 
     @Column(name = "contact_date", nullable = false)

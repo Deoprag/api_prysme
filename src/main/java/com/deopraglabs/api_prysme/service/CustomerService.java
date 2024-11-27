@@ -1,6 +1,7 @@
 package com.deopraglabs.api_prysme.service;
 
 import com.deopraglabs.api_prysme.controller.CustomerController;
+import com.deopraglabs.api_prysme.data.model.Customer;
 import com.deopraglabs.api_prysme.data.model.CustomerStatus;
 import com.deopraglabs.api_prysme.data.vo.CustomerVO;
 import com.deopraglabs.api_prysme.mapper.custom.CustomerMapper;
@@ -48,7 +49,7 @@ public class CustomerService {
         }
 
         if (customerVO.getKey() > 0) {
-            var customer = customerRepository.findById(customerVO.getKey()).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(customerVO.getKey()));
+            Customer customer = customerRepository.findById(customerVO.getKey()).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(customerVO.getKey()));
             customer = customerMapper.updateFromVO(customer, customerVO);
             customerRepository.save(customer);
             return customerMapper.convertToVO(customer).add(linkTo(methodOn(CustomerController.class).findById(customerVO.getKey())).withSelfRel());

@@ -28,6 +28,12 @@ public class ContactController {
         return contactService.findAll();
     }
 
+    @GetMapping(value = "/findAllByCustomerId/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<ContactVO> findAllByCustomerId(@PathVariable(value = "id") long id) {
+        return contactService.findAllByCustomerId(id);
+    }
+
     @GetMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ContactVO findById(@PathVariable(value = "id") long id) {

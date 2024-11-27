@@ -65,6 +65,15 @@ public class ContactService {
         return contacts;
     }
 
+    public List<ContactVO> findAllByCustomerId(long customerId) {
+        logger.info("Finding all contacts by customer id");
+        final var customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(customerId));
+        final var contacts = contactMapper.convertToContactVOs(contactRepository.findAllByCustomer(customer));
+        contacts.forEach(contact -> contact.add(linkTo(methodOn(ContactController.class).findById(contact.getKey())).withSelfRel()));
+
+        return contacts;
+    }
+
     public ContactVO findById(long id) {
         logger.info("Finding contact by id: " + id);
         return contactMapper.convertToVO(contactRepository.findById(id)

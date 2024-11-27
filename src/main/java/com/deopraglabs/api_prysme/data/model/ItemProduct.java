@@ -45,6 +45,6 @@ public class ItemProduct implements Serializable {
     @JoinColumn(name = "nf_id")
     private NF nf;
 
-    @Formula("ROUND(quantity * (SELECT p.unit_price FROM product p WHERE p.id = product_id), 2)")
+    @Formula("ROUND(quantity * (SELECT p.price FROM product p WHERE p.id = product_id), 2)")
     private BigDecimal price;
 }

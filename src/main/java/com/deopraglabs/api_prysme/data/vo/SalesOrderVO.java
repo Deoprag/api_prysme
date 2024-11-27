@@ -24,8 +24,10 @@ public class SalesOrderVO extends RepresentationModel<SalesOrderVO> implements S
     @JsonProperty("id")
     private long key;
     private QuotationVO quotation;
-    private CustomerVO customer;
-    private UserVO seller;
+    private long customerId;
+    private String customer;
+    private long sellerId;
+    private String seller;
     private LocalDateTime dateTime;
     private OrderStatus status;
     private List<ItemProductVO> items;

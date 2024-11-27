@@ -12,6 +12,5 @@ public class ApiPrysmeApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ApiPrysmeApplication.class, args);
-        System.out.println(Utils.encryptPassword("a123456*"));
     }
 }

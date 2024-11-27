@@ -9,6 +9,7 @@ import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +60,6 @@ public class ContactMapper {
         contact.setInfo(contactInfoMapper.convertFromVOWithContact(contactVO.getInfo(), contact));
         contact.setCustomerStatus(contactVO.getCustomerStatus());
         contact.setNotes(Utils.isEmpty(contactVO.getNotes()) ? null : contactVO.getNotes());
-        contact.setContactDate(contactVO.getContactDate());
 
         return contact;
     }
