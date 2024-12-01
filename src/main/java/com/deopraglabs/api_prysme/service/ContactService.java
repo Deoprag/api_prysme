@@ -7,7 +7,9 @@ import com.deopraglabs.api_prysme.repository.ContactRepository;
 import com.deopraglabs.api_prysme.repository.CustomerRepository;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.mediatype.hal.HalConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,14 @@ public class ContactService {
     private final ContactMapper contactMapper;
     private final ContactRepository contactRepository;
     private final CustomerRepository customerRepository;
+    private final HalConfiguration applicationJsonHalConfiguration;
 
     @Autowired
-    public ContactService(ContactRepository contactRepository, ContactMapper contactMapper, CustomerRepository customerRepository) {
+    public ContactService(ContactRepository contactRepository, ContactMapper contactMapper, CustomerRepository customerRepository, HalConfiguration applicationJsonHalConfiguration) {
         this.contactRepository = contactRepository;
         this.contactMapper = contactMapper;
         this.customerRepository = customerRepository;
+        this.applicationJsonHalConfiguration = applicationJsonHalConfiguration;
     }
 
     public ContactVO save(ContactVO contactVO) {
@@ -66,12 +70,21 @@ public class ContactService {
     }
 
     public List<ContactVO> findAllByCustomerId(long customerId) {
-        logger.info("Finding all contacts by customer id");
-        final var customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(customerId));
-        final var contacts = contactMapper.convertToContactVOs(contactRepository.findAllByCustomer(customer));
-        contacts.forEach(contact -> contact.add(linkTo(methodOn(ContactController.class).findById(contact.getKey())).withSelfRel()));
+        try {
+            logger.info("Finding all contacts by customer id");
+            final var customer = customerRepository.findById(customerId)
+                    .orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(customerId));
 
-        return contacts;
+            final var contactList = contactRepository.findAllByCustomer(customer);
+
+            final var contacts = contactMapper.convertToContactVOs(contactList.isEmpty() ? new ArrayList<>() : contactList);
+            contacts.forEach(contact -> contact.add(linkTo(methodOn(ContactController.class).findById(contact.getKey())).withSelfRel()));
+
+            return contacts;
+        } catch (Exception e) {
+            logger.info("Error finding contacts by customer id" + e);
+            return new ArrayList<>();
+        }
     }
 
     public ContactVO findById(long id) {

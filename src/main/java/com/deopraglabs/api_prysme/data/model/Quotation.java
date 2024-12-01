@@ -48,10 +48,10 @@ public class Quotation implements Serializable {
     private LocalDateTime dateTime = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "budget_status", nullable = false)
+    @Column(name = "quotation_status")
     private QuotationStatus quotationStatus = QuotationStatus.OPEN;
 
-    @OneToMany(mappedBy = "quotation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "quotation", cascade = CascadeType.ALL)
     private List<ItemProduct> items = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)

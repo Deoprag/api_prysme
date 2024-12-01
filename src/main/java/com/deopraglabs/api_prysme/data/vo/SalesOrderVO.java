@@ -9,7 +9,6 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -23,12 +22,13 @@ public class SalesOrderVO extends RepresentationModel<SalesOrderVO> implements S
 
     @JsonProperty("id")
     private long key;
-    private QuotationVO quotation;
+    private long quotationId;
     private long customerId;
     private String customer;
     private long sellerId;
     private String seller;
-    private LocalDateTime dateTime;
+    private Date dateTime;
+    private String notes;
     private OrderStatus status;
     private List<ItemProductVO> items;
     private Date createdDate;

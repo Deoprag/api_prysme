@@ -1,9 +1,15 @@
 package com.deopraglabs.api_prysme.service;
 
 import com.deopraglabs.api_prysme.controller.NFController;
+import com.deopraglabs.api_prysme.controller.QuotationController;
+import com.deopraglabs.api_prysme.data.model.*;
 import com.deopraglabs.api_prysme.data.vo.NFVO;
+import com.deopraglabs.api_prysme.data.vo.SalesOrderVO;
+import com.deopraglabs.api_prysme.mapper.custom.ItemProductMapper;
 import com.deopraglabs.api_prysme.mapper.custom.NFMapper;
+import com.deopraglabs.api_prysme.repository.ItemProductRepository;
 import com.deopraglabs.api_prysme.repository.NFRepository;
+import com.deopraglabs.api_prysme.utils.Utils;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +31,15 @@ public class NFService {
 
     private final NFMapper nFMapper;
     private final NFRepository nFRepository;
+    private final ItemProductMapper itemProductMapper;
+    private final ItemProductRepository itemProductRepository;
 
     @Autowired
-    public NFService(NFRepository nFRepository, NFMapper nFMapper) {
+    public NFService(NFRepository nFRepository, NFMapper nFMapper, ItemProductMapper itemProductMapper, ItemProductRepository itemProductRepository) {
         this.nFRepository = nFRepository;
         this.nFMapper = nFMapper;
+        this.itemProductMapper = itemProductMapper;
+        this.itemProductRepository = itemProductRepository;
     }
 
     public NFVO save(NFVO nFVO) {
@@ -47,10 +57,40 @@ public class NFService {
                     nFVO
             ))).add(linkTo(methodOn(NFController.class).findById(nFVO.getKey())).withSelfRel());
         } else {
+            nFVO.setNfKey(Utils.generateRandomKey());
             final var nF = nFRepository.save(nFMapper.convertFromVO(nFVO));
+            final List<ItemProduct> updatedItems = itemProductMapper.convertFromItemProductVOs(nFVO.getItems());
+
+            itemProductRepository.deleteAll(nF.getSalesOrder().getItems());
+            nF.getItems().clear();
+            nF.getSalesOrder().getItems().clear();
+
+            final List<ItemProduct> itemsWithNF = addNFToItems(updatedItems, nF);
+            itemProductRepository.saveAll(itemsWithNF);
+
+            nF.setItems(itemsWithNF);
+            nF.getSalesOrder().setItems(itemsWithNF);
+            nF.getSalesOrder().setStatus(OrderStatus.FINALIZED);
+            nF.getSalesOrder().getQuotation().setQuotationStatus(QuotationStatus.CONVERTED_TO_ORDER);
+
             return nFMapper.convertToVO(nFRepository.save(nF))
                     .add(linkTo(methodOn(NFController.class).findById(nF.getId())).withSelfRel());
         }
+    }
+
+    public List<NFVO> findAllByCustomerId(long id) {
+        logger.info("Finding all nFs by customer id " + id);
+        final var nFs = nFMapper.convertToNFVOs(nFRepository.findAllByCustomerId(id));
+        nFs.forEach(salesOrder -> salesOrder.add(linkTo(methodOn(QuotationController.class).findById(salesOrder.getKey())).withSelfRel()));
+
+        return nFs;
+    }
+
+    public List<ItemProduct> addNFToItems(List<ItemProduct> items, NF nf) {
+        items.forEach(item -> item.setNf(nf));
+        items.forEach(item -> item.setSalesOrder(nf.getSalesOrder()));
+        items.forEach(item -> item.setQuotation(nf.getSalesOrder().getQuotation()));
+        return items;
     }
 
     public List<NFVO> findAll() {

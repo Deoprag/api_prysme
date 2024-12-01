@@ -28,6 +28,18 @@ public class SalesOrderController {
         return salesOrderService.findAll();
     }
 
+    @GetMapping(value = "/findAllByCustomerId/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<SalesOrderVO> findAllByCustomerId(@PathVariable(value = "id") long id) {
+        return salesOrderService.findAllByCustomerId(id);
+    }
+
+    @GetMapping(value = "/findAllByTeamId/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<SalesOrderVO> findAllByTeamId(@PathVariable(value = "id") long id) {
+        return salesOrderService.findAllByTeamId(id);
+    }
+
     @GetMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public SalesOrderVO findById(@PathVariable(value = "id") long id) {
@@ -46,6 +58,20 @@ public class SalesOrderController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public SalesOrderVO update(@RequestBody SalesOrderVO salesOrder) {
         return salesOrderService.save(salesOrder);
+    }
+
+    @GetMapping(
+            value = "/approveById/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public SalesOrderVO approveById(@PathVariable(value = "id") long id) {
+        return salesOrderService.approveById(id);
+    }
+
+    @GetMapping(
+            value = "/disapproveById/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public SalesOrderVO disapproveById(@PathVariable(value = "id") long id) {
+        return salesOrderService.disapproveById(id);
     }
 
     @DeleteMapping(value = "/{id}")

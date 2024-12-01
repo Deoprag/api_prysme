@@ -34,6 +34,7 @@ public class CustomerVO extends RepresentationModel<CustomerVO> implements Seria
     private List<String> phoneNumbers = new ArrayList<>();
     private AddressVO address;
     private String seller;
+    private long sellerId;
     private Date createdDate;
     private Date lastModifiedDate;
     private String createdBy;

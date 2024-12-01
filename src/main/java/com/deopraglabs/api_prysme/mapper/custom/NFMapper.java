@@ -1,11 +1,9 @@
 package com.deopraglabs.api_prysme.mapper.custom;
 
-import com.deopraglabs.api_prysme.data.model.ItemProduct;
 import com.deopraglabs.api_prysme.data.model.NF;
-import com.deopraglabs.api_prysme.data.vo.ItemProductVO;
 import com.deopraglabs.api_prysme.data.vo.NFVO;
-import com.deopraglabs.api_prysme.mapper.Mapper;
 import com.deopraglabs.api_prysme.repository.CustomerRepository;
+import com.deopraglabs.api_prysme.repository.SalesOrderRepository;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +19,15 @@ public class NFMapper {
     private final CustomerRepository customerRepository;
     private final SalesOrderMapper salesOrderMapper;
     private final ItemProductMapper itemProductMapper;
+    private final SalesOrderRepository salesOrderRepository;
 
     @Autowired
-    public NFMapper(UserRepository userRepository, CustomerRepository customerRepository, SalesOrderMapper salesOrderMapper, ItemProductMapper itemProductMapper) {
+    public NFMapper(UserRepository userRepository, CustomerRepository customerRepository, SalesOrderMapper salesOrderMapper, ItemProductMapper itemProductMapper, SalesOrderRepository salesOrderRepository) {
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.salesOrderMapper = salesOrderMapper;
         this.itemProductMapper = itemProductMapper;
+        this.salesOrderRepository = salesOrderRepository;
     }
 
     public NFVO convertToVO(NF nF) {
@@ -39,8 +39,9 @@ public class NFMapper {
         vo.setCustomerId(nF.getCustomer().getId());
         vo.setCustomer(nF.getCustomer().getName());
         vo.setSellerId(nF.getSeller().getId());
+        vo.setNfKey(nF.getNfKey());
         vo.setSeller(nF.getSeller().getUsername());
-        vo.setSalesOrder(salesOrderMapper.convertToVO(nF.getSalesOrder()));
+        vo.setSalesOrderId(nF.getSalesOrder().getId());
         vo.setItems(itemProductMapper.convertToItemProductVOs(nF.getItems()));
         vo.setTotalValue(nF.getTotalValue());
         vo.setDiscount(nF.getDiscount());
@@ -62,9 +63,10 @@ public class NFMapper {
     public NF updateFromVO(NF nF, NFVO nFVO) {
         nF.setIssueDate(nFVO.getIssueDate());
         nF.setDueDate(nFVO.getDueDate());
+        nF.setNfKey(nFVO.getNfKey());
         nF.setCustomer(customerRepository.findById(nFVO.getCustomerId()).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(nFVO.getCustomerId())));
         nF.setSeller(userRepository.findById(nFVO.getSellerId()).orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(nFVO.getSellerId())));
-        nF.setSalesOrder(salesOrderMapper.convertFromVO(nFVO.getSalesOrder()));
+        nF.setSalesOrder(salesOrderRepository.findById(nFVO.getSalesOrderId()).orElseThrow(() -> new CustomRuntimeException.SalesOrderNotFoundException(nFVO.getSalesOrderId())));
         nF.setItems(itemProductMapper.convertFromItemProductVOs(nFVO.getItems()));
         nF.setTotalValue(nFVO.getTotalValue());
         nF.setDiscount(nFVO.getDiscount());

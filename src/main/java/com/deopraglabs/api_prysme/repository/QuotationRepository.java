@@ -7,10 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface QuotationRepository extends JpaRepository<Quotation, Long> {
 
     @Modifying
     @Query("DELETE FROM Quotation q WHERE q.id = :id")
     int deleteById(@Param("id") long id);
+
+    List<Quotation> findAllByCustomerId(long id);
 }

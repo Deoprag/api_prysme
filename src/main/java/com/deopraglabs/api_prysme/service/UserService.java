@@ -82,6 +82,23 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
+    public List<UserVO> findAllByManagerId(long id) {
+        logger.info("Finding all users by manager id");
+        final User auxUser = userRepository.findById(id).orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(id));
+
+        final List<User> userAux = new ArrayList<>();
+
+        for (final User user : userRepository.findAll()) {
+            if (user.getTeam().getId() == auxUser.getTeam().getId()) {
+                userAux.add(user);
+            }
+        }
+
+        final var users = userMapper.convertToUserVOs(userAux);
+        users.forEach(user -> user.add(linkTo(methodOn(UserController.class).findById(user.getKey())).withSelfRel()));
+        return users;
+    }
+
     public UserVO findById(long id) {
         logger.info("Finding user by id: " + id);
 
@@ -97,6 +114,13 @@ public class UserService implements UserDetailsService {
         return userRepository.softDeleteById(id, DatabaseUtils.generateRandomValue(id, 11)) > 0
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
+    }
+
+    public ResponseEntity<?> resetPassword(long id, String password) {
+        var user = userRepository.findById(id).orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(id));
+        user.setPassword(Utils.encryptPassword(password));
+        userRepository.save(user);
+        return ResponseEntity.ok().build();
     }
 
     @Override

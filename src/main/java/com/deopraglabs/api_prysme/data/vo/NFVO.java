@@ -32,7 +32,7 @@ public class NFVO extends RepresentationModel<NFVO> implements Serializable {
     private String customer;
     private long sellerId;
     private String seller;
-    private SalesOrderVO salesOrder;
+    private long salesOrderId;
     private List<ItemProductVO> items;
     private BigDecimal totalValue;
     private BigDecimal discount;

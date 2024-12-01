@@ -27,6 +27,12 @@ public class CustomRuntimeException {
         }
     }
 
+    public static class GoalNotFoundException extends RuntimeException {
+        public GoalNotFoundException(long id) {
+            super("Goal with ID " + id + " not found");
+        }
+    }
+
     public static class SellerNotFoundException extends RuntimeException {
         public SellerNotFoundException(long id) {
             super("Seller with ID " + id + " not found");

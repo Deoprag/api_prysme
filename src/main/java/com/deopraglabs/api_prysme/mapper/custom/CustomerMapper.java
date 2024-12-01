@@ -8,6 +8,7 @@ import com.deopraglabs.api_prysme.repository.AddressRepository;
 import com.deopraglabs.api_prysme.repository.PhoneNumberRepository;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.utils.Utils;
+import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,7 @@ public class CustomerMapper {
             if (!vo.getPhoneNumbers().contains(number.getNumber())) vo.getPhoneNumbers().add(number.getNumber());
         }
         vo.setSeller(customer.getSeller().getUsername());
+        vo.setSellerId(customer.getSeller().getId());
         vo.setCreatedDate(customer.getCreatedDate());
         vo.setLastModifiedDate(customer.getLastModifiedDate());
         vo.setCreatedBy(customer.getCreatedBy() != null ? customer.getCreatedBy().getUsername() : "");
@@ -67,13 +69,13 @@ public class CustomerMapper {
         customer.setBirthFoundationDate(customerVO.getBirthFoundationDate());
         customer.setStateRegistration(Utils.isEmpty(customerVO.getStateRegistration()) ? null : Utils.removeSpecialCharacters(customerVO.getStateRegistration()));
         customer.setCustomerStatus(customerVO.getCustomerStatus());
+        customer.setSeller(userRepository.findById(customerVO.getSellerId()).orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(customerVO.getSellerId())));
         customer.setAddress(addressMapper.updateFromVO(
             addressRepository.findById(
                     customerVO.getAddress().getKey()).orElse(Address.builder().customer(customer).build()), customerVO.getAddress()
             )
         );
         customer.getAddress().setCustomer(customer);
-        customer.setSeller(userRepository.findByUsername(customerVO.getSeller()));
         for (final PhoneNumber phoneNumber : phoneNumberRepository.findAllByCustomerId(customer.getId())) {
             if (!customerVO.getPhoneNumbers().contains(phoneNumber.getNumber())) {
                 phoneNumber.setCustomer(null);

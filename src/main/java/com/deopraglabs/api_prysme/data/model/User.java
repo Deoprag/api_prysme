@@ -82,7 +82,7 @@ public class User implements UserDetails, Serializable {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
 

@@ -4,7 +4,9 @@ import com.deopraglabs.api_prysme.controller.QuotationController;
 import com.deopraglabs.api_prysme.data.model.ItemProduct;
 import com.deopraglabs.api_prysme.data.model.Quotation;
 import com.deopraglabs.api_prysme.data.vo.QuotationVO;
+import com.deopraglabs.api_prysme.mapper.custom.ItemProductMapper;
 import com.deopraglabs.api_prysme.mapper.custom.QuotationMapper;
+import com.deopraglabs.api_prysme.repository.ItemProductRepository;
 import com.deopraglabs.api_prysme.repository.QuotationRepository;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import jakarta.transaction.Transactional;
@@ -27,11 +29,15 @@ public class QuotationService {
 
     private final QuotationMapper quotationMapper;
     private final QuotationRepository quotationRepository;
+    private final ItemProductMapper itemProductMapper;
+    private final ItemProductRepository itemProductRepository;
 
     @Autowired
-    public QuotationService(QuotationRepository quotationRepository, QuotationMapper quotationMapper) {
+    public QuotationService(QuotationRepository quotationRepository, QuotationMapper quotationMapper, ItemProductMapper itemProductMapper, ItemProductRepository itemProductRepository) {
         this.quotationRepository = quotationRepository;
         this.quotationMapper = quotationMapper;
+        this.itemProductMapper = itemProductMapper;
+        this.itemProductRepository = itemProductRepository;
     }
 
     public QuotationVO save(QuotationVO quotationVO) {
@@ -43,11 +49,19 @@ public class QuotationService {
         }
 
         if (quotationVO.getKey() > 0) {
-            return quotationMapper.convertToVO(quotationRepository.save(quotationMapper.updateFromVO(
-                    quotationRepository.findById(quotationVO.getKey())
-                            .orElseThrow(() -> new CustomRuntimeException.QuotationNotFoundException(quotationVO.getKey())),
-                    quotationVO
-            ))).add(linkTo(methodOn(QuotationController.class).findById(quotationVO.getKey())).withSelfRel());
+            var quotation = quotationRepository.findById(quotationVO.getKey())
+                    .orElseThrow(() -> new CustomRuntimeException.QuotationNotFoundException(quotationVO.getKey()));
+
+            List<ItemProduct> updatedItems = itemProductMapper.convertFromItemProductVOs(quotationVO.getItems());
+            itemProductRepository.deleteAll(quotation.getItems());
+            quotationMapper.updateFromVO(quotation, quotationVO);
+            quotation.getItems().clear();
+            quotation.getItems().addAll(updatedItems);
+
+            quotation = quotationRepository.save(quotation);
+
+            return quotationMapper.convertToVO(quotation)
+                    .add(linkTo(methodOn(QuotationController.class).findById(quotation.getId())).withSelfRel());
         } else {
             var quotation = quotationMapper.convertFromVO(quotationVO);
             quotation.setItems(addQuotationToItems(quotation.getItems(), quotation));
@@ -56,6 +70,14 @@ public class QuotationService {
             return quotationMapper.convertToVO(quotation)
                     .add(linkTo(methodOn(QuotationController.class).findById(quotation.getId())).withSelfRel());
         }
+    }
+
+    public List<QuotationVO> findAllByCustomerId(long id) {
+        logger.info("Finding all quotations by customer id " + id);
+        final var quotations = quotationMapper.convertToQuotationVOs(quotationRepository.findAllByCustomerId(id));
+        quotations.forEach(quotation -> quotation.add(linkTo(methodOn(QuotationController.class).findById(quotation.getKey())).withSelfRel()));
+
+        return quotations;
     }
 
     public List<QuotationVO> findAll() {
@@ -98,6 +120,6 @@ public class QuotationService {
     }
 
     private void validateUniqueFields(QuotationVO quotationVO, List<String> validations) {
-        
+
     }
 }

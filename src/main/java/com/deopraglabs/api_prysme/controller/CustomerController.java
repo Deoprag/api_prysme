@@ -1,8 +1,10 @@
 package com.deopraglabs.api_prysme.controller;
 
 import com.deopraglabs.api_prysme.data.vo.CustomerVO;
+import com.deopraglabs.api_prysme.data.vo.SalesOrderVO;
 import com.deopraglabs.api_prysme.service.CustomerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +30,19 @@ public class CustomerController {
         return customerService.findAll();
     }
 
+    @GetMapping(value = "/getCustomerCount",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> getCustomerCount() { return customerService.getCustomerCount(); }
+
     @GetMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public CustomerVO findById(@PathVariable(value = "id") long id) {
         return customerService.findById(id);
     }
 
-    @GetMapping(value = "/getCustomerCount",
+    @GetMapping(value = "/findAllBySellerId/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<?> getCustomerCount() { return customerService.getCustomerCount(); }
+    public List<CustomerVO> findAllBySellerId(@PathVariable(value = "id") long id) { return customerService.findAllBySellerId(id); }
 
     @GetMapping(value = "/getNewCustomersCount",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -47,6 +53,12 @@ public class CustomerController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public CustomerVO create(@RequestBody CustomerVO customer) {
         return customerService.save(customer);
+    }
+
+    @GetMapping(value = "/removeFromWallet/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public CustomerVO removeFromWallet(@PathVariable(value = "id") long id) {
+        return customerService.removeFromWallet(id);
     }
 
     @PutMapping(value = "/save",

@@ -1,6 +1,7 @@
 package com.deopraglabs.api_prysme.controller;
 
 import com.deopraglabs.api_prysme.data.vo.NFVO;
+import com.deopraglabs.api_prysme.data.vo.SalesOrderVO;
 import com.deopraglabs.api_prysme.service.NFService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,12 @@ public class NFController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public NFVO update(@RequestBody NFVO nF) {
         return nFService.save(nF);
+    }
+
+    @GetMapping(value = "/findAllByCustomerId/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<NFVO> findAllByCustomerId(@PathVariable(value = "id") long id) {
+        return nFService.findAllByCustomerId(id);
     }
 
     @DeleteMapping(value = "/{id}")

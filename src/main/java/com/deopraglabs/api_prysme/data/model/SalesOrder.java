@@ -48,14 +48,14 @@ public class SalesOrder implements Serializable {
     @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
 
-    @Column(name = "date_time", nullable = false)
-    private LocalDateTime dateTime = LocalDateTime.now();
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private OrderStatus status;
+    @Column(name = "status")
+    private OrderStatus status = OrderStatus.PENDING;
 
-    @OneToMany(mappedBy = "salesOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "notes")
+    private String notes;
+
+    @OneToMany(mappedBy = "salesOrder", cascade = CascadeType.ALL)
     private List<ItemProduct> items = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)

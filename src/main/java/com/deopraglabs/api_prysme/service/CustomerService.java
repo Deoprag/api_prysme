@@ -50,8 +50,11 @@ public class CustomerService {
 
         if (customerVO.getKey() > 0) {
             Customer customer = customerRepository.findById(customerVO.getKey()).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(customerVO.getKey()));
+            var seller = customer.getSeller();
             customer = customerMapper.updateFromVO(customer, customerVO);
+            if (customer.getSeller() != seller) customer.setCustomerStatus(CustomerStatus.NEW);
             customerRepository.save(customer);
+
             return customerMapper.convertToVO(customer).add(linkTo(methodOn(CustomerController.class).findById(customerVO.getKey())).withSelfRel());
         } else {
             final var customer = customerRepository.save(customerMapper.convertFromVO(customerVO));
@@ -63,6 +66,14 @@ public class CustomerService {
     public List<CustomerVO> findAll() {
         logger.info("Finding all customers");
         final var customers = customerMapper.convertToCustomerVOs(customerRepository.findAllByCustomerStatusNot(CustomerStatus.DELETED));
+        customers.forEach(customer -> customer.add(linkTo(methodOn(CustomerController.class).findById(customer.getKey())).withSelfRel()));
+
+        return customers;
+    }
+
+    public List<CustomerVO> findAllBySellerId(long id) {
+        logger.info("Finding all customers by seller: " + id);
+        final var customers = customerMapper.convertToCustomerVOs(customerRepository.findAllBySellerId(id));
         customers.forEach(customer -> customer.add(linkTo(methodOn(CustomerController.class).findById(customer.getKey())).withSelfRel()));
 
         return customers;
@@ -88,6 +99,16 @@ public class CustomerService {
         final HashMap<String, Long> customerCount = new HashMap<>();
         customerCount.put("value", customerRepository.countCustomerByCustomerStatusNot(CustomerStatus.DELETED));
         return ResponseEntity.ok(customerCount);
+    }
+
+    public CustomerVO removeFromWallet(long id) {
+        logger.info("Removing customer from wallet: " + id);
+        final var customer = customerRepository.findById(id).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(id));
+        customer.setSeller(customer.getSeller().getTeam().getManager());
+        customer.setCustomerStatus(CustomerStatus.FINALIZED);
+
+        return customerMapper.convertToVO(customerRepository.save(customer))
+                .add(linkTo(methodOn(CustomerController.class).findById(id)).withSelfRel());
     }
 
     public ResponseEntity<?> getNewCustomersCount() {

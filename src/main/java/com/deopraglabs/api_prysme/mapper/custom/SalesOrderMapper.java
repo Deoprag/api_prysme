@@ -6,6 +6,7 @@ import com.deopraglabs.api_prysme.data.vo.ItemProductVO;
 import com.deopraglabs.api_prysme.data.vo.SalesOrderVO;
 import com.deopraglabs.api_prysme.mapper.Mapper;
 import com.deopraglabs.api_prysme.repository.CustomerRepository;
+import com.deopraglabs.api_prysme.repository.QuotationRepository;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,27 +23,29 @@ public class SalesOrderMapper {
     private final QuotationMapper quotationMapper;
     private final CustomerRepository customerRepository;
     private final ItemProductMapper itemProductMapper;
+    private final QuotationRepository quotationRepository;
 
     @Autowired
-    public SalesOrderMapper(UserRepository userRepository, QuotationMapper quotationMapper, CustomerRepository customerMapper, ItemProductMapper itemProductMapper) {
+    public SalesOrderMapper(UserRepository userRepository, QuotationMapper quotationMapper, CustomerRepository customerMapper, ItemProductMapper itemProductMapper, QuotationRepository quotationRepository) {
         this.userRepository = userRepository;
         this.quotationMapper = quotationMapper;
         this.customerRepository = customerMapper;
         this.itemProductMapper = itemProductMapper;
+        this.quotationRepository = quotationRepository;
     }
 
     public SalesOrderVO convertToVO(SalesOrder salesOrder) {
         final SalesOrderVO vo = new SalesOrderVO();
 
         vo.setKey(salesOrder.getId());
-        vo.setQuotation(quotationMapper.convertToVO(salesOrder.getQuotation()));
+        vo.setQuotationId(salesOrder.getQuotation().getId());
         vo.setCustomerId(salesOrder.getCustomer().getId());
         vo.setCustomer(salesOrder.getCustomer().getName());
         vo.setSellerId(salesOrder.getSeller().getId());
         vo.setSeller(salesOrder.getSeller().getUsername());
-        vo.setDateTime(salesOrder.getDateTime());
         vo.setStatus(salesOrder.getStatus());
         vo.setItems(itemProductMapper.convertToItemProductVOs(salesOrder.getItems()));
+        vo.setNotes(salesOrder.getNotes());
         vo.setCreatedDate(salesOrder.getCreatedDate());
         vo.setLastModifiedDate(salesOrder.getLastModifiedDate());
         vo.setCreatedBy(salesOrder.getCreatedBy() != null ? salesOrder.getCreatedBy().getUsername() : "");
@@ -55,14 +58,14 @@ public class SalesOrderMapper {
         return updateFromVO(new SalesOrder(), vo);
     }
 
-    public SalesOrder updateFromVO(SalesOrder salesOrder, SalesOrderVO salerOrderVO) {
-        salesOrder.setId(salerOrderVO.getKey());
-        salesOrder.setQuotation(quotationMapper.convertFromVO(salerOrderVO.getQuotation()));
-        salesOrder.setCustomer(customerRepository.findById(salerOrderVO.getCustomerId()).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(salerOrderVO.getCustomerId())));
-        salesOrder.setSeller(userRepository.findById(salerOrderVO.getSellerId()).orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(salerOrderVO.getSellerId())));
-        salesOrder.setDateTime(salerOrderVO.getDateTime());
-        salesOrder.setStatus(salerOrderVO.getStatus());
-        salesOrder.setItems(itemProductMapper.convertFromItemProductVOs(salerOrderVO.getItems()));
+    public SalesOrder updateFromVO(SalesOrder salesOrder, SalesOrderVO salesOrderVO) {
+        salesOrder.setId(salesOrderVO.getKey());
+        salesOrder.setQuotation(quotationRepository.findById(salesOrderVO.getQuotationId()).orElseThrow(() -> new CustomRuntimeException.QuotationNotFoundException(salesOrderVO.getQuotationId())));
+        salesOrder.setCustomer(customerRepository.findById(salesOrderVO.getCustomerId()).orElseThrow(() -> new CustomRuntimeException.CustomerNotFoundException(salesOrderVO.getCustomerId())));
+        salesOrder.setSeller(userRepository.findById(salesOrderVO.getSellerId()).orElseThrow(() -> new CustomRuntimeException.UserNotFoundException(salesOrderVO.getSellerId())));
+        salesOrder.setStatus(salesOrderVO.getStatus());
+        salesOrder.setNotes(salesOrderVO.getNotes());
+        salesOrder.setItems(itemProductMapper.convertFromItemProductVOs(salesOrderVO.getItems()));
 
         return salesOrder;
     }

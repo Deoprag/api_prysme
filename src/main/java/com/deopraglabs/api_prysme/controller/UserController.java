@@ -69,6 +69,18 @@ public class UserController {
         return userService.findAllByTeamId(id);
     }
 
+    @GetMapping(value = "/findAllByManagerId/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<UserVO> findAllByManagerId(@PathVariable(value = "id") long id) {
+        return userService.findAllByManagerId(id);
+    }
+
+    @PostMapping(value = "/resetPassword/{id}/{password}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> resetPassword(@PathVariable(value = "id") long id, @PathVariable(value = "password") String password) {
+        return userService.resetPassword(id, password);
+    }
+
     @GetMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Finds an user",

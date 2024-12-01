@@ -23,6 +23,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     List<Customer> findAllByCustomerStatusNot(CustomerStatus customerStatus);
 
+    List<Customer> findAllBySellerId(long id);
+
     @Modifying
     @Transactional
     @Query("""
