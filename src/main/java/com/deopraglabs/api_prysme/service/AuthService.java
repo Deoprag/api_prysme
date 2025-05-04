@@ -1,20 +1,18 @@
 package com.deopraglabs.api_prysme.service;
 
-import com.deopraglabs.api_prysme.data.vo.security.AccountCredentialsVO;
-import com.deopraglabs.api_prysme.data.vo.security.TokenVO;
+import com.deopraglabs.api_prysme.security.dto.AccountCredentialsDTO;
+import com.deopraglabs.api_prysme.security.dto.TokenDTO;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.security.JwtTokenProvider;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -33,7 +31,7 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<?> signIn(AccountCredentialsVO data) {
+    public ResponseEntity<?> signIn(AccountCredentialsDTO data) {
         logger.info("Signing In: " + data.getUsername() + " " + data.getPassword());
         try {
             final var username = data.getUsername();
@@ -43,7 +41,7 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(username, password));
 
             final var user = userRepository.findByUsername(username);
-            var tokenResponse = new TokenVO();
+            var tokenResponse = new TokenDTO();
 
             if (user != null) {
                 tokenResponse = tokenProvider.createAccessToken(username, user.getRoles());
@@ -64,7 +62,7 @@ public class AuthService {
     public ResponseEntity<?> refreshToken(String username, String refreshToken) {
         logger.info("Refreshing token from: " + username);
         final var user = userRepository.findByUsername(username);
-        var tokenResponse = new TokenVO();
+        var tokenResponse = new TokenDTO();
 
         if (user != null) {
             tokenResponse = tokenProvider.refreshToken(refreshToken);

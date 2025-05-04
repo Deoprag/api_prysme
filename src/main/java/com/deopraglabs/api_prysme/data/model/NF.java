@@ -1,5 +1,7 @@
 package com.deopraglabs.api_prysme.data.model;
 
+import com.deopraglabs.api_prysme.data.enums.DiscountType;
+import com.deopraglabs.api_prysme.data.enums.NFStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

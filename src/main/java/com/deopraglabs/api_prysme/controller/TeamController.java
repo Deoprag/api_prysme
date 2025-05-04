@@ -1,7 +1,6 @@
 package com.deopraglabs.api_prysme.controller;
 
-
-import com.deopraglabs.api_prysme.data.vo.TeamVO;
+import com.deopraglabs.api_prysme.data.dto.TeamDTO;
 import com.deopraglabs.api_prysme.service.TeamService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,27 +24,27 @@ public class TeamController {
 
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<TeamVO> findAll() {
+    public List<TeamDTO> findAll() {
         return teamService.findAll();
     }
 
     @GetMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public TeamVO findById(@PathVariable(value = "id") long id) {
+    public TeamDTO findById(@PathVariable(value = "id") long id) {
         return teamService.findById(id);
     }
 
     @PostMapping(value = "/create",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public TeamVO create(@RequestBody TeamVO team) {
+    public TeamDTO create(@RequestBody TeamDTO team) {
         return teamService.save(team);
     }
 
     @PutMapping(value = "/save",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public TeamVO update(@RequestBody TeamVO team) {
+    public TeamDTO update(@RequestBody TeamDTO team) {
         return teamService.save(team);
     }
 

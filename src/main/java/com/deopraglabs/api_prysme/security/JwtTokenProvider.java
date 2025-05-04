@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.deopraglabs.api_prysme.data.vo.security.TokenVO;
+import com.deopraglabs.api_prysme.security.dto.TokenDTO;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,16 +44,16 @@ public class JwtTokenProvider {
         algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
-    public TokenVO createAccessToken(String username, List<String> roles) {
+    public TokenDTO createAccessToken(String username, List<String> roles) {
         final Date now = new Date();
         final Date expiration = new Date(now.getTime() + msValidity);
         final var accessToken = getAccessToken(username, roles, now, expiration);
         final var refreshToken = getRefreshToken(username, roles, now);
 
-        return new TokenVO(username, true, now, expiration, accessToken, refreshToken);
+        return new TokenDTO(username, true, now, expiration, accessToken, refreshToken);
     }
 
-    public TokenVO refreshToken(String refreshToken) {
+    public TokenDTO refreshToken(String refreshToken) {
         if (refreshToken.contains("Bearer ")) refreshToken = refreshToken.substring("Bearer ".length());
         final JWTVerifier verifier = JWT.require(algorithm).build();
         final DecodedJWT decodedJWT = verifier.verify(refreshToken);

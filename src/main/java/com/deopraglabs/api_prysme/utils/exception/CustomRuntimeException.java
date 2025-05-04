@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
+import java.util.UUID;
 
 public class CustomRuntimeException {
     public static class GenericException extends RuntimeException {
@@ -46,7 +47,7 @@ public class CustomRuntimeException {
     }
 
     public static class CustomerNotFoundException extends RuntimeException {
-        public CustomerNotFoundException(long id) {
+        public CustomerNotFoundException(UUID id) {
             super("Customer with ID " + id + " not found");
         }
     }

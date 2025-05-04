@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
@@ -38,8 +39,8 @@ public class User implements UserDetails, Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "username", unique = true, nullable = false, updatable = false, length = 20)
     private String username;
@@ -100,11 +101,11 @@ public class User implements UserDetails, Serializable {
     @LastModifiedDate
     private Date lastModifiedDate;
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
-
-    public void setId(long id) {
+    
+    public void setId(UUID id) {
         this.id = id;
     }
 

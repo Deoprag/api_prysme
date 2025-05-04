@@ -2,8 +2,9 @@ package com.deopraglabs.api_prysme.service;
 
 import com.deopraglabs.api_prysme.controller.QuotationController;
 import com.deopraglabs.api_prysme.controller.SalesOrderController;
+import com.deopraglabs.api_prysme.data.enums.OrderStatus;
+import com.deopraglabs.api_prysme.data.enums.QuotationStatus;
 import com.deopraglabs.api_prysme.data.model.*;
-import com.deopraglabs.api_prysme.data.vo.QuotationVO;
 import com.deopraglabs.api_prysme.data.vo.SalesOrderVO;
 import com.deopraglabs.api_prysme.mapper.custom.ItemProductMapper;
 import com.deopraglabs.api_prysme.mapper.custom.SalesOrderMapper;
@@ -17,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 

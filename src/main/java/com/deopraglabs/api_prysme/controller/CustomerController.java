@@ -1,7 +1,7 @@
 package com.deopraglabs.api_prysme.controller;
 
-import com.deopraglabs.api_prysme.data.vo.CustomerVO;
-import com.deopraglabs.api_prysme.data.vo.SalesOrderVO;
+import com.deopraglabs.api_prysme.data.dto.CustomerDTO;
+import com.deopraglabs.api_prysme.data.dto.SalesOrderDTO;
 import com.deopraglabs.api_prysme.service.CustomerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.websocket.server.PathParam;
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/customer")
@@ -26,7 +27,7 @@ public class CustomerController {
 
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<CustomerVO> findAll() {
+    public List<CustomerDTO> findAll() {
         return customerService.findAll();
     }
 
@@ -36,13 +37,13 @@ public class CustomerController {
 
     @GetMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public CustomerVO findById(@PathVariable(value = "id") long id) {
+    public CustomerDTO findById(@PathVariable(value = "id") UUID id) {
         return customerService.findById(id);
     }
-
+    
     @GetMapping(value = "/findAllBySellerId/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<CustomerVO> findAllBySellerId(@PathVariable(value = "id") long id) { return customerService.findAllBySellerId(id); }
+    public List<CustomerDTO> findAllBySellerId(@PathVariable(value = "id") UUID id) { return customerService.findAllBySellerId(id); }
 
     @GetMapping(value = "/getNewCustomersCount",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -51,25 +52,25 @@ public class CustomerController {
     @PostMapping(value = "/create",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public CustomerVO create(@RequestBody CustomerVO customer) {
+    public CustomerDTO create(@RequestBody CustomerDTO customer) {
         return customerService.save(customer);
     }
 
     @GetMapping(value = "/removeFromWallet/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public CustomerVO removeFromWallet(@PathVariable(value = "id") long id) {
+    public CustomerDTO removeFromWallet(@PathVariable(value = "id") UUID id) {
         return customerService.removeFromWallet(id);
     }
 
     @PutMapping(value = "/save",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public CustomerVO update(@RequestBody CustomerVO customer) {
+    public CustomerDTO update(@RequestBody CustomerDTO customer) {
         return customerService.save(customer);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> delete(@PathVariable long id) {
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
         return customerService.delete(id);
     }
 }

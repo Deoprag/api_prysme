@@ -1,6 +1,6 @@
 package com.deopraglabs.api_prysme.controller;
 
-import com.deopraglabs.api_prysme.data.vo.QuotationVO;
+import com.deopraglabs.api_prysme.data.dto.QuotationDTO;
 import com.deopraglabs.api_prysme.service.QuotationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,33 +24,33 @@ public class QuotationController {
 
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<QuotationVO> findAll() {
+    public List<QuotationDTO> findAll() {
         return quotationService.findAll();
     }
 
     @GetMapping(value = "/findAllByCustomerId/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<QuotationVO> findAllByCustomerId(@PathVariable(value = "id") long id) {
+    public List<QuotationDTO> findAllByCustomerId(@PathVariable(value = "id") long id) {
         return quotationService.findAllByCustomerId(id);
     }
 
     @GetMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public QuotationVO findById(@PathVariable(value = "id") long id) {
+    public QuotationDTO findById(@PathVariable(value = "id") long id) {
         return quotationService.findById(id);
     }
 
     @PostMapping(value = "/create",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public QuotationVO create(@RequestBody QuotationVO quotation) {
+    public QuotationDTO create(@RequestBody QuotationDTO quotation) {
         return quotationService.save(quotation);
     }
 
     @PutMapping(value = "/save",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public QuotationVO update(@RequestBody QuotationVO quotation) {
+    public QuotationDTO update(@RequestBody QuotationDTO quotation) {
         return quotationService.save(quotation);
     }
 

@@ -1,6 +1,6 @@
 package com.deopraglabs.api_prysme.controller;
 
-import com.deopraglabs.api_prysme.data.vo.security.AccountCredentialsVO;
+import com.deopraglabs.api_prysme.security.dto.AccountCredentialsDTO;
 import com.deopraglabs.api_prysme.service.AuthService;
 import com.deopraglabs.api_prysme.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +26,7 @@ public class AuthController {
 
     @Operation(summary = "Authenticates a user and returns a token")
     @PostMapping("/signIn")
-    public ResponseEntity<?> signIn(@RequestBody AccountCredentialsVO data) {
+    public ResponseEntity<?> signIn(@RequestBody AccountCredentialsDTO data) {
         if (data == null || Utils.isEmpty(data.getUsername()) || Utils.isEmpty(data.getPassword())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
         }

@@ -1,8 +1,7 @@
 package com.deopraglabs.api_prysme.service;
 
 import com.deopraglabs.api_prysme.controller.ContactController;
-import com.deopraglabs.api_prysme.data.vo.ContactVO;
-import com.deopraglabs.api_prysme.mapper.custom.ContactMapper;
+import com.deopraglabs.api_prysme.data.dto.ContactDTO;
 import com.deopraglabs.api_prysme.repository.ContactRepository;
 import com.deopraglabs.api_prysme.repository.CustomerRepository;
 import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -26,50 +26,48 @@ public class ContactService {
 
     private final Logger logger = Logger.getLogger(ContactService.class.getName());
 
-    private final ContactMapper contactMapper;
     private final ContactRepository contactRepository;
     private final CustomerRepository customerRepository;
     private final HalConfiguration applicationJsonHalConfiguration;
 
     @Autowired
-    public ContactService(ContactRepository contactRepository, ContactMapper contactMapper, CustomerRepository customerRepository, HalConfiguration applicationJsonHalConfiguration) {
+    public ContactService(ContactRepository contactRepository, CustomerRepository customerRepository, HalConfiguration applicationJsonHalConfiguration) {
         this.contactRepository = contactRepository;
-        this.contactMapper = contactMapper;
         this.customerRepository = customerRepository;
         this.applicationJsonHalConfiguration = applicationJsonHalConfiguration;
     }
 
-    public ContactVO save(ContactVO contactVO) {
-        logger.info("Saving contact: " + contactVO);
-        final List<String> validations = validateContactInfo(contactVO);
+    public ContactDTO save(ContactDTO contactDTO) {
+        logger.info("Saving contact: " + contactDTO);
+        final List<String> validations = validateContactInfo(contactDTO);
 
         if (!validations.isEmpty()) {
             throw new CustomRuntimeException.BRValidationException(validations);
         }
 
-        if (contactVO.getKey() > 0) {
-            return contactMapper.convertToVO(contactRepository.save(contactMapper.updateFromVO(
-                    contactRepository.findById(contactVO.getKey())
-                            .orElseThrow(() -> new CustomRuntimeException.ContactNotFoundException(contactVO.getKey())),
-                    contactVO
-            ))).add(linkTo(methodOn(ContactController.class).findById(contactVO.getKey())).withSelfRel());
+        if (contactDTO.getId() > 0) {
+            return contactMapper.convertToDTO(contactRepository.save(contactMapper.updateFromDTO(
+                    contactRepository.findById(contactDTO.getId())
+                            .orElseThrow(() -> new CustomRuntimeException.ContactNotFoundException(contactDTO.getId())),
+                    contactDTO
+            ))).add(linkTo(methodOn(ContactController.class).findById(contactDTO.getId())).withSelfRel());
         } else {
-            final var contact = contactRepository.save(contactMapper.convertFromVO(contactVO));
+            final var contact = contactRepository.save(contactMapper.convertFromDTO(contactDTO));
             customerRepository.updateCustomerStatus(contact.getCustomer().getId(), contact.getCustomerStatus());
-            return contactMapper.convertToVO(contactRepository.save(contact))
+            return contactMapper.convertToDTO(contactRepository.save(contact))
                     .add(linkTo(methodOn(ContactController.class).findById(contact.getId())).withSelfRel());
         }
     }
 
-    public List<ContactVO> findAll() {
+    public List<ContactDTO> findAll() {
         logger.info("Finding all contacts");
-        final var contacts = contactMapper.convertToContactVOs(contactRepository.findAll());
-        contacts.forEach(contact -> contact.add(linkTo(methodOn(ContactController.class).findById(contact.getKey())).withSelfRel()));
+        final var contacts = contactMapper.convertToContactDTOs(contactRepository.findAll());
+        contacts.forEach(contact -> contact.add(linkTo(methodOn(ContactController.class).findById(contact.getId())).withSelfRel()));
 
         return contacts;
     }
 
-    public List<ContactVO> findAllByCustomerId(long customerId) {
+    public List<ContactDTO> findAllByCustomerId(UUID customerId) {
         try {
             logger.info("Finding all contacts by customer id");
             final var customer = customerRepository.findById(customerId)
@@ -77,8 +75,8 @@ public class ContactService {
 
             final var contactList = contactRepository.findAllByCustomer(customer);
 
-            final var contacts = contactMapper.convertToContactVOs(contactList.isEmpty() ? new ArrayList<>() : contactList);
-            contacts.forEach(contact -> contact.add(linkTo(methodOn(ContactController.class).findById(contact.getKey())).withSelfRel()));
+            final var contacts = contactMapper.convertToContactDTOs(contactList.isEmpty() ? new ArrayList<>() : contactList);
+            contacts.forEach(contact -> contact.add(linkTo(methodOn(ContactController.class).findById(contact.getId())).withSelfRel()));
 
             return contacts;
         } catch (Exception e) {
@@ -87,9 +85,9 @@ public class ContactService {
         }
     }
 
-    public ContactVO findById(long id) {
+    public ContactDTO findById(long id) {
         logger.info("Finding contact by id: " + id);
-        return contactMapper.convertToVO(contactRepository.findById(id)
+        return contactMapper.convertToDTO(contactRepository.findById(id)
                         .orElseThrow(() -> new CustomRuntimeException.ContactNotFoundException(id)))
                 .add(linkTo(methodOn(ContactController.class).findById(id)).withSelfRel());
     }
@@ -100,18 +98,18 @@ public class ContactService {
     }
 
     // Regras de Negócio
-    private List<String> validateContactInfo(ContactVO contactVO) {
+    private List<String> validateContactInfo(ContactDTO contactDTO) {
         final List<String> validations = new ArrayList<>();
 
-        validateBasicFields(contactVO, validations);
-        validateUniqueFields(contactVO, validations);
+        validateBasicFields(contactDTO, validations);
+        validateUniqueFields(contactDTO, validations);
 
         return validations;
     }
 
-    private void validateBasicFields(ContactVO contactVO, List<String> validations) {
+    private DTOid validateBasicFields(ContactDTO contactDTO, List<String> validations) {
     }
 
-    private void validateUniqueFields(ContactVO contactVO, List<String> validations) {
+    private DTOid validateUniqueFields(ContactDTO contactDTO, List<String> validations) {
     }
 }

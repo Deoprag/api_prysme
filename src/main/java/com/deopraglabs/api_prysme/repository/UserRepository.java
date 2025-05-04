@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Modifying
     @Transactional
@@ -25,22 +26,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
             u.credentialsNonExpired = false, \
             u.enabled = false, \
             u.team = null WHERE u.id = :id""")
-    int softDeleteById(long id, String phoneNumber);
+    int softDeleteById(UUID id, String phoneNumber);
 
     @Query("""
             SELECT COUNT(u) \
             FROM User u \
             WHERE u.id = :id \
             AND u.enabled = true""")
-    int isDeleted(long id);
+    int isDeleted(UUID id);
 
     List<User> findAllByEnabled(boolean enabled);
 
     List<User> findAllByTeamId(long teamId);
 
-    User findByEmailAndIdNot(String email, long id);
+    User findByEmailAndIdNot(String email, UUID id);
 
     User findByUsername(String username);
 
-    User findByPhoneNumberAndIdNot(String phoneNumber, long id);
+    User findByPhoneNumberAndIdNot(String phoneNumber, UUID id);
 }

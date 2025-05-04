@@ -2,9 +2,10 @@ package com.deopraglabs.api_prysme.service;
 
 import com.deopraglabs.api_prysme.controller.NFController;
 import com.deopraglabs.api_prysme.controller.QuotationController;
+import com.deopraglabs.api_prysme.data.enums.OrderStatus;
+import com.deopraglabs.api_prysme.data.enums.QuotationStatus;
 import com.deopraglabs.api_prysme.data.model.*;
 import com.deopraglabs.api_prysme.data.vo.NFVO;
-import com.deopraglabs.api_prysme.data.vo.SalesOrderVO;
 import com.deopraglabs.api_prysme.mapper.custom.ItemProductMapper;
 import com.deopraglabs.api_prysme.mapper.custom.NFMapper;
 import com.deopraglabs.api_prysme.repository.ItemProductRepository;
