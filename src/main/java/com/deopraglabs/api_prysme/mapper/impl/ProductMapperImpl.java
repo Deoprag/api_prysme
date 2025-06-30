@@ -1,6 +1,8 @@
 package com.deopraglabs.api_prysme.mapper.impl;
 
 import com.deopraglabs.api_prysme.data.dto.ProductDTO;
+import com.deopraglabs.api_prysme.data.dto.ProductRequestDTO;
+import com.deopraglabs.api_prysme.data.dto.ProductResponseDTO;
 import com.deopraglabs.api_prysme.data.model.Product;
 import com.deopraglabs.api_prysme.mapper.DozerMapper;
 import com.deopraglabs.api_prysme.mapper.Mapper;
@@ -78,6 +80,44 @@ public class ProductMapperImpl implements Mapper<Product, ProductDTO> {
     public List<Product> toEntityList(List<ProductDTO> dtos) {
         return dtos.stream()
                 .map(this::toEntity)
+                .collect(Collectors.toList());
+    }
+
+    public ProductResponseDTO toResponseDTO(Product entity) {
+        final ProductResponseDTO dto = DozerMapper.parseObject(entity, ProductResponseDTO.class);
+        
+        // Set category ID
+        if (entity.getCategory() != null) {
+            dto.setCategoryId(entity.getCategory().getId());
+        }
+        
+        // Set created by and last modified by user IDs
+        if (entity.getCreatedBy() != null) {
+            dto.setCreatedById(entity.getCreatedBy().getId());
+        }
+        
+        if (entity.getLastModifiedBy() != null) {
+            dto.setLastModifiedById(entity.getLastModifiedBy().getId());
+        }
+        
+        return dto;
+    }
+
+    public Product fromRequestDTO(ProductRequestDTO dto) {
+        final Product entity = DozerMapper.parseObject(dto, Product.class);
+        
+        // Set category
+        if (dto.getCategoryId() != null) {
+            categoryRepository.findById(dto.getCategoryId())
+                    .ifPresent(entity::setCategory);
+        }
+        
+        return entity;
+    }
+
+    public List<ProductResponseDTO> toResponseDTOList(List<Product> entities) {
+        return entities.stream()
+                .map(this::toResponseDTO)
                 .collect(Collectors.toList());
     }
 }

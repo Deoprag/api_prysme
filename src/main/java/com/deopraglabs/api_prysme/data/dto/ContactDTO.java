@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContactDTO {
-    private Long id;
+    private UUID id;
     private String name;
     private String role;
     private String department;

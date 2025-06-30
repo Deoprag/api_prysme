@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SalesOrderDTO {
-    private Long id;
+    private UUID id;
     private String orderNumber;
     private LocalDateTime orderDate;
     private LocalDateTime deliveryDate;

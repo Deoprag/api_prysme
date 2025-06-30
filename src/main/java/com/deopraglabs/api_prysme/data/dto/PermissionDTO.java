@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PermissionDTO {
-    private Long id;
+    private UUID id;
     private String name;
     private String description;
 }

@@ -4,21 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GoalDTO {
+public class TaskResponseDTO {
     private UUID id;
     private String title;
     private String description;
-    private BigDecimal targetValue;
-    private BigDecimal currentValue;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String status;
-    private UUID userId;
+    private Date dueDate;
+    private UUID assignedToId;
+    private Date createdDate;
+    private Date lastModifiedDate;
+    private UUID createdById;
+    private UUID lastModifiedById;
 }

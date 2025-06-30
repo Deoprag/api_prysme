@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamGoalDTO {
-    private Long id;
+    private UUID id;
     private String title;
     private String description;
     private BigDecimal targetValue;

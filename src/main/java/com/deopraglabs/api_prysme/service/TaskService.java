@@ -1,12 +1,10 @@
 package com.deopraglabs.api_prysme.service;
 
-import com.deopraglabs.api_prysme.controller.TaskController;
-import com.deopraglabs.api_prysme.data.vo.TaskVO;
-import com.deopraglabs.api_prysme.mapper.custom.TaskMapper;
+import com.deopraglabs.api_prysme.data.dto.TaskRequestDTO;
+import com.deopraglabs.api_prysme.data.dto.TaskResponseDTO;
+import com.deopraglabs.api_prysme.mapper.impl.TaskMapperImpl;
 import com.deopraglabs.api_prysme.repository.TaskRepository;
 import com.deopraglabs.api_prysme.repository.UserRepository;
-import com.deopraglabs.api_prysme.utils.Utils;
-import com.deopraglabs.api_prysme.utils.exception.CustomRuntimeException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.logging.Logger;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 @Transactional
@@ -25,80 +22,64 @@ public class TaskService {
 
     private final Logger logger = Logger.getLogger(TaskService.class.getName());
 
-    private final TaskMapper taskMapper;
+    private final TaskMapperImpl taskMapper;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, UserRepository userRepository) {
+    public TaskService(TaskRepository taskRepository, TaskMapperImpl taskMapper, UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
         this.userRepository = userRepository;
     }
 
-    public TaskVO save(TaskVO taskVO) {
-        logger.info("Saving task: " + taskVO);
-        final List<String> validations = validateTaskInfo(taskVO);
-        taskVO.setDueDate(Utils.resetTime(taskVO.getDueDate()));
-
-        if (!validations.isEmpty()) {
-            throw new CustomRuntimeException.BRValidationException(validations);
-        }
-
-        if (taskVO.getKey() > 0) {
-            return taskMapper.convertToVO(taskRepository.save(taskMapper.updateFromVO(
-                    taskRepository.findById(taskVO.getKey())
-                            .orElseThrow(() -> new CustomRuntimeException.TaskNotFoundException(taskVO.getKey())),
-                    taskVO
-            ))).add(linkTo(methodOn(TaskController.class).findById(taskVO.getKey())).withSelfRel());
-        } else {
-            final var task = taskRepository.save(taskMapper.convertFromVO(taskVO));
-            return taskMapper.convertToVO(taskRepository.save(task))
-                    .add(linkTo(methodOn(TaskController.class).findById(task.getId())).withSelfRel());
-        }
+    public TaskResponseDTO save(TaskRequestDTO taskRequestDTO) {
+        logger.info("Saving task: " + taskRequestDTO);
+        final var entity = taskMapper.fromRequestDTO(taskRequestDTO);
+        final var savedEntity = taskRepository.save(entity);
+        return taskMapper.toResponseDTO(savedEntity);
     }
 
-    public List<TaskVO> findAll() {
+    public TaskResponseDTO update(UUID id, TaskRequestDTO taskRequestDTO) {
+        logger.info("Updating task with id: " + id);
+        final var existingEntity = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+        
+        final var updatedEntity = taskMapper.fromRequestDTO(taskRequestDTO);
+        updatedEntity.setId(id);
+        updatedEntity.setCreatedDate(existingEntity.getCreatedDate());
+        updatedEntity.setCreatedBy(existingEntity.getCreatedBy());
+        
+        final var savedEntity = taskRepository.save(updatedEntity);
+        return taskMapper.toResponseDTO(savedEntity);
+    }
+
+    public List<TaskResponseDTO> findAll() {
         logger.info("Finding all tasks");
-        final var tasks = taskMapper.convertToTaskVOs(taskRepository.findAll());
-        tasks.forEach(task -> task.add(linkTo(methodOn(TaskController.class).findById(task.getKey())).withSelfRel()));
-
-        return tasks;
+        return taskMapper.toResponseDTOList(taskRepository.findAll());
     }
 
-    public TaskVO findById(long id) {
+    public TaskResponseDTO findById(UUID id) {
         logger.info("Finding task by id: " + id);
-        return taskMapper.convertToVO(taskRepository.findById(id)
-                        .orElseThrow(() -> new CustomRuntimeException.TaskNotFoundException(id)))
-                .add(linkTo(methodOn(TaskController.class).findById(id)).withSelfRel());
+        final var entity = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+        return taskMapper.toResponseDTO(entity);
     }
 
-    public List<TaskVO> findAllByUsernameAndDate(String username, String date) {
-        logger.info("Finding all tasks by username: " + username + " and date: " + date);
-        var user = userRepository.findByUsername(username);
-        return taskMapper.convertToTaskVOs(taskRepository.findAllByUserIdAndDueDate(user.getId(), Utils.formatStringToDate(date)));
+    public List<TaskResponseDTO> findAllByUserId(UUID userId) {
+        logger.info("Finding all tasks by user id: " + userId);
+        return taskMapper.toResponseDTOList(taskRepository.findAllByUserId(userId));
     }
 
-    public ResponseEntity<?> delete(long id) {
+    public ResponseEntity<?> delete(UUID id) {
         logger.info("Deleting task: " + id);
-        return taskRepository.deleteById(id) > 0 ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        if (taskRepository.existsById(id)) {
+            taskRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // Regras de Negócio
-    private List<String> validateTaskInfo(TaskVO taskVO) {
-        final List<String> validations = new ArrayList<>();
 
-        validateBasicFields(taskVO, validations);
-        validateUniqueFields(taskVO, validations);
-
-        return validations;
-    }
-
-    private void validateBasicFields(TaskVO taskVO, List<String> validations) {
-
-    }
-
-    private void validateUniqueFields(TaskVO taskVO, List<String> validations) {
-
-    }
 }

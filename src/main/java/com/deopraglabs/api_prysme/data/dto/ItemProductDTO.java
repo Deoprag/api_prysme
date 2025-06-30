@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemProductDTO {
-    private Long id;
+    private UUID id;
     private Integer quantity;
     private BigDecimal unitPrice;
     private BigDecimal discount;

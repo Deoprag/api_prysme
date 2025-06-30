@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NFDTO {
-    private Long id;
+    private UUID id;
     private String nfKey;
     private LocalDateTime issueDate;
     private LocalDateTime dueDate;
