@@ -159,6 +159,47 @@ public class DynamicMapper {
             }
         }
         
+        // Special mappings for specific field names
+        if ("user".equals(entityFieldName)) {
+            for (Field field : dtoFields) {
+                if ("assignedToId".equals(field.getName())) {
+                    return field;
+                }
+            }
+        }
+        
+        if ("manager".equals(entityFieldName)) {
+            for (Field field : dtoFields) {
+                if ("managerId".equals(field.getName()) || "leaderId".equals(field.getName())) {
+                    return field;
+                }
+            }
+        }
+        
+        if ("sellers".equals(entityFieldName)) {
+            for (Field field : dtoFields) {
+                if ("memberIds".equals(field.getName())) {
+                    return field;
+                }
+            }
+        }
+        
+        if ("phoneNumbers".equals(entityFieldName)) {
+            for (Field field : dtoFields) {
+                if ("phoneNumberIds".equals(field.getName())) {
+                    return field;
+                }
+            }
+        }
+        
+        if ("permissions".equals(entityFieldName)) {
+            for (Field field : dtoFields) {
+                if ("permissionIds".equals(field.getName())) {
+                    return field;
+                }
+            }
+        }
+        
         return null;
     }
 

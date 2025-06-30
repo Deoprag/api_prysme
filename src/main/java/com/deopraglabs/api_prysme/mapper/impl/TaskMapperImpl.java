@@ -4,7 +4,7 @@ import com.deopraglabs.api_prysme.data.dto.TaskDTO;
 import com.deopraglabs.api_prysme.data.dto.TaskRequestDTO;
 import com.deopraglabs.api_prysme.data.dto.TaskResponseDTO;
 import com.deopraglabs.api_prysme.data.model.Task;
-import com.deopraglabs.api_prysme.mapper.DozerMapper;
+import com.deopraglabs.api_prysme.mapper.DynamicMapper;
 import com.deopraglabs.api_prysme.mapper.Mapper;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,40 +17,29 @@ import java.util.stream.Collectors;
 public class TaskMapperImpl implements Mapper<Task, TaskDTO> {
 
     private final UserRepository userRepository;
+    private final DynamicMapper dynamicMapper;
 
     @Autowired
-    public TaskMapperImpl(UserRepository userRepository) {
+    public TaskMapperImpl(UserRepository userRepository, DynamicMapper dynamicMapper) {
         this.userRepository = userRepository;
+        this.dynamicMapper = dynamicMapper;
     }
 
     @Override
     public TaskDTO toDTO(Task entity) {
-        final TaskDTO dto = DozerMapper.parseObject(entity, TaskDTO.class);
-        
-        // Set assigned user ID
-        if (entity.getUser() != null) {
-            dto.setAssignedToId(entity.getUser().getId());
-        }
-        
-        // Set created by user ID
-        if (entity.getCreatedBy() != null) {
-            dto.setCreatedById(entity.getCreatedBy().getId());
-        }
-        
-        return dto;
+        return dynamicMapper.toDTO(entity, TaskDTO.class);
     }
     
     @Override
     public Task toEntity(TaskDTO dto) {
-        final Task entity = DozerMapper.parseObject(dto, Task.class);
+        Task entity = dynamicMapper.toEntity(dto, Task.class);
         
-        // Set assigned user
+        // Resolve entity references from IDs
         if (dto.getAssignedToId() != null) {
             userRepository.findById(dto.getAssignedToId())
                     .ifPresent(entity::setUser);
         }
         
-        // Set created by user
         if (dto.getCreatedById() != null) {
             userRepository.findById(dto.getCreatedById())
                     .ifPresent(entity::setCreatedBy);
@@ -61,7 +50,7 @@ public class TaskMapperImpl implements Mapper<Task, TaskDTO> {
 
     @Override
     public List<TaskDTO> toDTOList(List<Task> entities) {
-        return DozerMapper.parseListObjects(entities, TaskDTO.class);
+        return dynamicMapper.toDTOList(entities, TaskDTO.class);
     }
 
     @Override
@@ -72,30 +61,13 @@ public class TaskMapperImpl implements Mapper<Task, TaskDTO> {
     }
 
     public TaskResponseDTO toResponseDTO(Task entity) {
-        final TaskResponseDTO dto = DozerMapper.parseObject(entity, TaskResponseDTO.class);
-        
-        // Set assigned user ID
-        if (entity.getUser() != null) {
-            dto.setAssignedToId(entity.getUser().getId());
-        }
-        
-        // Set created by user ID
-        if (entity.getCreatedBy() != null) {
-            dto.setCreatedById(entity.getCreatedBy().getId());
-        }
-        
-        // Set last modified by user ID
-        if (entity.getLastModifiedBy() != null) {
-            dto.setLastModifiedById(entity.getLastModifiedBy().getId());
-        }
-        
-        return dto;
+        return dynamicMapper.toDTO(entity, TaskResponseDTO.class);
     }
 
     public Task fromRequestDTO(TaskRequestDTO dto) {
-        final Task entity = DozerMapper.parseObject(dto, Task.class);
+        Task entity = dynamicMapper.toEntity(dto, Task.class);
         
-        // Set assigned user
+        // Resolve entity references from IDs
         if (dto.getAssignedToId() != null) {
             userRepository.findById(dto.getAssignedToId())
                     .ifPresent(entity::setUser);
@@ -105,8 +77,6 @@ public class TaskMapperImpl implements Mapper<Task, TaskDTO> {
     }
 
     public List<TaskResponseDTO> toResponseDTOList(List<Task> entities) {
-        return entities.stream()
-                .map(this::toResponseDTO)
-                .collect(Collectors.toList());
+        return dynamicMapper.toDTOList(entities, TaskResponseDTO.class);
     }
 }

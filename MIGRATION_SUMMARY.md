@@ -48,6 +48,10 @@ This document summarizes the comprehensive migration of the API Prysme applicati
 - ✅ `GoalRequestDTO`
 - ✅ `PermissionRequestDTO`
 - ✅ `ProductCategoryRequestDTO`
+- ✅ `CustomerRequestDTO`
+- ✅ `QuotationRequestDTO`
+- ✅ `SalesOrderRequestDTO`
+- ✅ `NFRequestDTO`
 
 **Created Response DTOs (for read operations):**
 - ✅ `ProductResponseDTO`
@@ -57,12 +61,20 @@ This document summarizes the comprehensive migration of the API Prysme applicati
 - ✅ `GoalResponseDTO`
 - ✅ `PermissionResponseDTO`
 - ✅ `ProductCategoryResponseDTO`
+- ✅ `CustomerResponseDTO`
+- ✅ `QuotationResponseDTO`
+- ✅ `SalesOrderResponseDTO`
+- ✅ `NFResponseDTO`
 
 ### 4. Mapper Implementation Updates
 
 **Updated Mapper Implementations:**
 - ✅ `ProductMapperImpl` - Added `toResponseDTO()`, `fromRequestDTO()`, and `toResponseDTOList()` methods
 - ✅ `TaskMapperImpl` - Added request/response mapping methods, fixed field mappings to match actual model relationships
+- ✅ `UserMapperImpl` - Complete refactoring with dynamic mapper integration
+- ✅ `TeamMapperImpl` - Complete refactoring with dynamic mapper integration
+- ✅ `GoalMapperImpl` - Complete refactoring with dynamic mapper integration
+- ✅ `DynamicMapper` - **NEW** Dynamic mapping utility that automatically converts between DTOs and models, handling nested objects by converting them to ID references
 
 **Pattern Implemented:**
 ```java
@@ -80,6 +92,8 @@ public class XxxMapperImpl implements Mapper<Entity, DTO> {
 **Services Updated:**
 - ✅ `ProductService` - Complete refactoring to use request/response DTOs
 - ✅ `TaskService` - Complete refactoring to use request/response DTOs
+- ✅ `UserService` - Complete refactoring to use request/response DTOs
+- ✅ `TeamService` - Complete refactoring to use request/response DTOs
 
 **Changes Made:**
 - Removed dependencies on custom mappers (which were missing)
@@ -101,9 +115,7 @@ public ResponseEntity<?> delete(UUID id) { ... }
 ## Remaining Work
 
 **Services to Update (Following Same Pattern):**
-- ❌ `UserService`
-- ❌ `TeamService`
-- ❌ `GoalService`
+- ❌ `GoalService` - 50% complete (mapper done, service needs updating)
 - ❌ `PermissionService`
 - ❌ `ProductCategoryService`
 - ❌ `CustomerService`

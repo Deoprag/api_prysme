@@ -6,16 +6,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuotationRequestDTO {
+public class QuotationResponseDTO {
+    private UUID id;
     private UUID customerId;
     private UUID sellerId;
     private LocalDateTime dateTime;
     private QuotationStatus quotationStatus;
     private List<UUID> itemIds;
+    private Date createdDate;
+    private Date lastModifiedDate;
+    private UUID createdById;
+    private UUID lastModifiedById;
 }

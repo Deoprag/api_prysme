@@ -1,8 +1,10 @@
 package com.deopraglabs.api_prysme.mapper.impl;
 
 import com.deopraglabs.api_prysme.data.dto.GoalDTO;
+import com.deopraglabs.api_prysme.data.dto.GoalRequestDTO;
+import com.deopraglabs.api_prysme.data.dto.GoalResponseDTO;
 import com.deopraglabs.api_prysme.data.model.Goal;
-import com.deopraglabs.api_prysme.mapper.DozerMapper;
+import com.deopraglabs.api_prysme.mapper.DynamicMapper;
 import com.deopraglabs.api_prysme.mapper.Mapper;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,38 +17,37 @@ import java.util.stream.Collectors;
 public class GoalMapperImpl implements Mapper<Goal, GoalDTO> {
 
     private final UserRepository userRepository;
+    private final DynamicMapper dynamicMapper;
 
     @Autowired
-    public GoalMapperImpl(UserRepository userRepository) {
+    public GoalMapperImpl(UserRepository userRepository, DynamicMapper dynamicMapper) {
         this.userRepository = userRepository;
+        this.dynamicMapper = dynamicMapper;
     }
 
     @Override
     public GoalDTO toDTO(Goal entity) {
-        final GoalDTO dto = DozerMapper.parseObject(entity, GoalDTO.class);
-        
-        // Map additional fields
-        dto.setTitle(entity.getGoal());
-        
-        // Set user ID
-        if (entity.getSeller() != null) {
-            dto.setUserId(entity.getSeller().getId());
-        }
-        
-        return dto;
+        return dynamicMapper.toDTO(entity, GoalDTO.class);
     }
-    
+
     @Override
     public Goal toEntity(GoalDTO dto) {
-        final Goal entity = DozerMapper.parseObject(dto, Goal.class);
+        Goal entity = dynamicMapper.toEntity(dto, Goal.class);
         
-        // Map additional fields
-        entity.setGoal(dto.getTitle());
-        
-        // Set user
-        if (dto.getUserId() != null) {
-            userRepository.findById(dto.getUserId())
+        // Resolve entity references from IDs
+        if (dto.getSellerId() != null) {
+            userRepository.findById(dto.getSellerId())
                     .ifPresent(entity::setSeller);
+        }
+        
+        if (dto.getCreatedById() != null) {
+            userRepository.findById(dto.getCreatedById())
+                    .ifPresent(entity::setCreatedBy);
+        }
+        
+        if (dto.getLastModifiedById() != null) {
+            userRepository.findById(dto.getLastModifiedById())
+                    .ifPresent(entity::setLastModifiedBy);
         }
         
         return entity;
@@ -54,7 +55,7 @@ public class GoalMapperImpl implements Mapper<Goal, GoalDTO> {
 
     @Override
     public List<GoalDTO> toDTOList(List<Goal> entities) {
-        return DozerMapper.parseListObjects(entities, GoalDTO.class);
+        return dynamicMapper.toDTOList(entities, GoalDTO.class);
     }
 
     @Override
@@ -62,5 +63,25 @@ public class GoalMapperImpl implements Mapper<Goal, GoalDTO> {
         return dtos.stream()
                 .map(this::toEntity)
                 .collect(Collectors.toList());
+    }
+
+    public GoalResponseDTO toResponseDTO(Goal entity) {
+        return dynamicMapper.toDTO(entity, GoalResponseDTO.class);
+    }
+
+    public Goal fromRequestDTO(GoalRequestDTO dto) {
+        Goal entity = dynamicMapper.toEntity(dto, Goal.class);
+        
+        // Resolve entity references from IDs
+        if (dto.getSellerId() != null) {
+            userRepository.findById(dto.getSellerId())
+                    .ifPresent(entity::setSeller);
+        }
+        
+        return entity;
+    }
+
+    public List<GoalResponseDTO> toResponseDTOList(List<Goal> entities) {
+        return dynamicMapper.toDTOList(entities, GoalResponseDTO.class);
     }
 }
