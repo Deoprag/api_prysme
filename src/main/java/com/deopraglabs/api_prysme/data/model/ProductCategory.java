@@ -1,4 +1,4 @@
-package com.deopraglabs.api_prysme.data.model;
+THIS SHOULD BE A LINTER ERRORpackage com.deopraglabs.api_prysme.data.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
