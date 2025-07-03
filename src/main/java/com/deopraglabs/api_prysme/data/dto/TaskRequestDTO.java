@@ -4,11 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCategoryDTO {
-    private UUID id;
-    private String name;
+public class TaskRequestDTO {
+    private String title;
     private String description;
+    private Date dueDate;
+    private UUID assignedToId;
 }

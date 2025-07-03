@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -25,8 +26,8 @@ public class Address implements Serializable {
 
     @Id
     @JsonIgnore
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "street", nullable = false)
     private String street;

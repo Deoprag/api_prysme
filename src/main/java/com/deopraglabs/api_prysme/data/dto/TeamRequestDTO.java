@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCategoryDTO {
-    private UUID id;
+public class TeamRequestDTO {
     private String name;
-    private String description;
+    private UUID managerId;
 }

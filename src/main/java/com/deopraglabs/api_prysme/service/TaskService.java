@@ -1,8 +1,8 @@
 package com.deopraglabs.api_prysme.service;
 
-import com.deopraglabs.api_prysme.controller.TaskController;
-import com.deopraglabs.api_prysme.data.vo.TaskVO;
-import com.deopraglabs.api_prysme.mapper.custom.TaskMapper;
+import com.deopraglabs.api_prysme.data.dto.TaskRequestDTO;
+import com.deopraglabs.api_prysme.data.dto.TaskResponseDTO;
+import com.deopraglabs.api_prysme.mapper.impl.TaskMapperImpl;
 import com.deopraglabs.api_prysme.repository.TaskRepository;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import com.deopraglabs.api_prysme.utils.Utils;
@@ -14,10 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.logging.Logger;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 @Transactional
@@ -25,80 +24,111 @@ public class TaskService {
 
     private final Logger logger = Logger.getLogger(TaskService.class.getName());
 
-    private final TaskMapper taskMapper;
+    private final TaskMapperImpl taskMapper;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, UserRepository userRepository) {
+    public TaskService(TaskRepository taskRepository, TaskMapperImpl taskMapper, UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
         this.userRepository = userRepository;
     }
 
-    public TaskVO save(TaskVO taskVO) {
-        logger.info("Saving task: " + taskVO);
-        final List<String> validations = validateTaskInfo(taskVO);
-        taskVO.setDueDate(Utils.resetTime(taskVO.getDueDate()));
+    public TaskResponseDTO save(TaskRequestDTO taskRequestDTO) {
+        logger.info("Saving task: " + taskRequestDTO);
+        final List<String> validations = validateTaskInfo(taskRequestDTO, null);
+        
+        // Reset time for due date
+        if (taskRequestDTO.getDueDate() != null) {
+            taskRequestDTO.setDueDate(Utils.resetTime(taskRequestDTO.getDueDate()));
+        }
 
         if (!validations.isEmpty()) {
             throw new CustomRuntimeException.BRValidationException(validations);
         }
 
-        if (taskVO.getKey() > 0) {
-            return taskMapper.convertToVO(taskRepository.save(taskMapper.updateFromVO(
-                    taskRepository.findById(taskVO.getKey())
-                            .orElseThrow(() -> new CustomRuntimeException.TaskNotFoundException(taskVO.getKey())),
-                    taskVO
-            ))).add(linkTo(methodOn(TaskController.class).findById(taskVO.getKey())).withSelfRel());
+        final var entity = taskMapper.fromRequestDTO(taskRequestDTO);
+        final var savedEntity = taskRepository.save(entity);
+        return taskMapper.toResponseDTO(savedEntity);
+    }
+
+    public TaskResponseDTO update(UUID id, TaskRequestDTO taskRequestDTO) {
+        logger.info("Updating task with id: " + id);
+        final var existingEntity = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+                
+        final List<String> validations = validateTaskInfo(taskRequestDTO, id);
+        
+        // Reset time for due date
+        if (taskRequestDTO.getDueDate() != null) {
+            taskRequestDTO.setDueDate(Utils.resetTime(taskRequestDTO.getDueDate()));
+        }
+
+        if (!validations.isEmpty()) {
+            throw new CustomRuntimeException.BRValidationException(validations);
+        }
+        
+        final var updatedEntity = taskMapper.fromRequestDTO(taskRequestDTO);
+        updatedEntity.setId(id);
+        updatedEntity.setCreatedDate(existingEntity.getCreatedDate());
+        updatedEntity.setCreatedBy(existingEntity.getCreatedBy());
+        
+        final var savedEntity = taskRepository.save(updatedEntity);
+        return taskMapper.toResponseDTO(savedEntity);
+    }
+
+    public List<TaskResponseDTO> findAll() {
+        logger.info("Finding all tasks");
+        return taskMapper.toResponseDTOList(taskRepository.findAll());
+    }
+
+    public TaskResponseDTO findById(UUID id) {
+        logger.info("Finding task by id: " + id);
+        final var entity = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+        return taskMapper.toResponseDTO(entity);
+    }
+
+    public List<TaskResponseDTO> findAllByUserId(UUID userId) {
+        logger.info("Finding all tasks by user id: " + userId);
+        return taskMapper.toResponseDTOList(taskRepository.findAllByUserId(userId));
+    }
+
+    public ResponseEntity<?> delete(UUID id) {
+        logger.info("Deleting task: " + id);
+        if (taskRepository.existsById(id)) {
+            taskRepository.deleteById(id);
+            return ResponseEntity.ok().build();
         } else {
-            final var task = taskRepository.save(taskMapper.convertFromVO(taskVO));
-            return taskMapper.convertToVO(taskRepository.save(task))
-                    .add(linkTo(methodOn(TaskController.class).findById(task.getId())).withSelfRel());
+            return ResponseEntity.notFound().build();
         }
     }
 
-    public List<TaskVO> findAll() {
-        logger.info("Finding all tasks");
-        final var tasks = taskMapper.convertToTaskVOs(taskRepository.findAll());
-        tasks.forEach(task -> task.add(linkTo(methodOn(TaskController.class).findById(task.getKey())).withSelfRel()));
-
-        return tasks;
-    }
-
-    public TaskVO findById(long id) {
-        logger.info("Finding task by id: " + id);
-        return taskMapper.convertToVO(taskRepository.findById(id)
-                        .orElseThrow(() -> new CustomRuntimeException.TaskNotFoundException(id)))
-                .add(linkTo(methodOn(TaskController.class).findById(id)).withSelfRel());
-    }
-
-    public List<TaskVO> findAllByUsernameAndDate(String username, String date) {
-        logger.info("Finding all tasks by username: " + username + " and date: " + date);
-        var user = userRepository.findByUsername(username);
-        return taskMapper.convertToTaskVOs(taskRepository.findAllByUserIdAndDueDate(user.getId(), Utils.formatStringToDate(date)));
-    }
-
-    public ResponseEntity<?> delete(long id) {
-        logger.info("Deleting task: " + id);
-        return taskRepository.deleteById(id) > 0 ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
-    }
-
-    // Regras de Negócio
-    private List<String> validateTaskInfo(TaskVO taskVO) {
+    // Business Rules - Restored and adapted for DTOs
+    private List<String> validateTaskInfo(TaskRequestDTO taskRequestDTO, UUID existingTaskId) {
         final List<String> validations = new ArrayList<>();
 
-        validateBasicFields(taskVO, validations);
-        validateUniqueFields(taskVO, validations);
+        validateBasicFields(taskRequestDTO, validations);
+        validateUniqueFields(taskRequestDTO, validations, existingTaskId);
 
         return validations;
     }
 
-    private void validateBasicFields(TaskVO taskVO, List<String> validations) {
-
+    private void validateBasicFields(TaskRequestDTO taskRequestDTO, List<String> validations) {
+        Utils.checkField(validations, Utils.isEmpty(taskRequestDTO.getTitle()), "Title is required");
+        Utils.checkField(validations, Utils.isEmpty(taskRequestDTO.getDescription()), "Description is required");
+        Utils.checkField(validations, taskRequestDTO.getDueDate() == null, "Due date is required");
+        Utils.checkField(validations, taskRequestDTO.getAssignedToId() == null, "Assigned user is required");
     }
 
-    private void validateUniqueFields(TaskVO taskVO, List<String> validations) {
-
+    private void validateUniqueFields(TaskRequestDTO taskRequestDTO, List<String> validations, UUID existingTaskId) {
+        // Add any unique field validations if needed
+        // For example, if task titles should be unique per user:
+        // if (taskRepository.existsByTitleAndUserIdAndIdNot(taskRequestDTO.getTitle(), taskRequestDTO.getAssignedToId(), existingTaskId)) {
+        //     validations.add("A task with this title already exists for this user");
+        // }
     }
+
+
 }

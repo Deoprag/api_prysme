@@ -4,14 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PhoneNumberDTO {
-    private UUID id;
-    private String number;
-    private String type;
-    private UUID contactInfoId;
+public class GoalRequestDTO {
+    private BigDecimal goal;
+    private UUID sellerId;
+    private Date startDate;
+    private Date endDate;
 }

@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -25,8 +26,8 @@ public class PhoneNumber implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "number", nullable = false, unique = true)
     private String number;

@@ -4,22 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
+public class TaskResponseDTO {
     private UUID id;
-    private String name;
+    private String title;
     private String description;
-    private BigDecimal price;
-    private boolean active;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
-    private UUID categoryId;
+    private Date dueDate;
+    private UUID assignedToId;
+    private Date createdDate;
+    private Date lastModifiedDate;
     private UUID createdById;
     private UUID lastModifiedById;
 }

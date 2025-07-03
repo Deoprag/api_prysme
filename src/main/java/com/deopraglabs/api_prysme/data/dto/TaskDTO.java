@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskDTO {
-    private Long id;
+    private UUID id;
     private String title;
     private String description;
     private LocalDateTime dueDate;
@@ -19,5 +19,4 @@ public class TaskDTO {
     private String status;
     private UUID assignedToId;
     private UUID createdById;
-    private UUID customerId;
 }

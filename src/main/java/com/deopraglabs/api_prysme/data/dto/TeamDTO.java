@@ -5,14 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamDTO {
-    private Long id;
+    private UUID id;
     private String name;
     private String description;
-    private Long leaderId;
-    private List<Long> memberIds;
+    private UUID leaderId;
+    private List<UUID> memberIds;
 }

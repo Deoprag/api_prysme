@@ -1,9 +1,11 @@
 package com.deopraglabs.api_prysme.mapper.impl;
 
 import com.deopraglabs.api_prysme.data.dto.TeamDTO;
+import com.deopraglabs.api_prysme.data.dto.TeamRequestDTO;
+import com.deopraglabs.api_prysme.data.dto.TeamResponseDTO;
 import com.deopraglabs.api_prysme.data.model.Team;
 import com.deopraglabs.api_prysme.data.model.User;
-import com.deopraglabs.api_prysme.mapper.DozerMapper;
+import com.deopraglabs.api_prysme.mapper.DynamicMapper;
 import com.deopraglabs.api_prysme.mapper.Mapper;
 import com.deopraglabs.api_prysme.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,51 +19,27 @@ import java.util.stream.Collectors;
 public class TeamMapperImpl implements Mapper<Team, TeamDTO> {
 
     private final UserRepository userRepository;
+    private final DynamicMapper dynamicMapper;
 
     @Autowired
-    public TeamMapperImpl(UserRepository userRepository) {
+    public TeamMapperImpl(UserRepository userRepository, DynamicMapper dynamicMapper) {
         this.userRepository = userRepository;
+        this.dynamicMapper = dynamicMapper;
     }
 
     @Override
     public TeamDTO toDTO(Team entity) {
-        final TeamDTO dto = DozerMapper.parseObject(entity, TeamDTO.class);
-        
-        // Set leader/manager ID
-        if (entity.getManager() != null) {
-            dto.setLeaderId(entity.getManager().getId());
-        }
-        
-        // Set member IDs from sellers
-        if (entity.getSellers() != null && !entity.getSellers().isEmpty()) {
-            dto.setMemberIds(entity.getSellers().stream()
-                    .map(User::getId)
-                    .collect(Collectors.toList()));
-        } else {
-            dto.setMemberIds(new ArrayList<>());
-        }
-        
-        return dto;
+        return dynamicMapper.toDTO(entity, TeamDTO.class);
     }
-    
+
     @Override
     public Team toEntity(TeamDTO dto) {
-        final Team entity = DozerMapper.parseObject(dto, Team.class);
+        Team entity = dynamicMapper.toEntity(dto, Team.class);
         
-        // Set manager/leader
+        // Resolve entity references from IDs
         if (dto.getLeaderId() != null) {
             userRepository.findById(dto.getLeaderId())
                     .ifPresent(entity::setManager);
-        }
-        
-        // Set sellers/members
-        if (dto.getMemberIds() != null && !dto.getMemberIds().isEmpty()) {
-            final List<User> members = dto.getMemberIds().stream()
-                    .map(id -> userRepository.findById(id).orElse(null))
-                    .filter(user -> user != null)
-                    .collect(Collectors.toList());
-            
-            entity.setSellers(members);
         }
         
         return entity;
@@ -69,7 +47,7 @@ public class TeamMapperImpl implements Mapper<Team, TeamDTO> {
 
     @Override
     public List<TeamDTO> toDTOList(List<Team> entities) {
-        return DozerMapper.parseListObjects(entities, TeamDTO.class);
+        return dynamicMapper.toDTOList(entities, TeamDTO.class);
     }
 
     @Override
@@ -77,5 +55,25 @@ public class TeamMapperImpl implements Mapper<Team, TeamDTO> {
         return dtos.stream()
                 .map(this::toEntity)
                 .collect(Collectors.toList());
+    }
+
+    public TeamResponseDTO toResponseDTO(Team entity) {
+        return dynamicMapper.toDTO(entity, TeamResponseDTO.class);
+    }
+
+    public Team fromRequestDTO(TeamRequestDTO dto) {
+        Team entity = dynamicMapper.toEntity(dto, Team.class);
+        
+        // Resolve entity references from IDs
+        if (dto.getManagerId() != null) {
+            userRepository.findById(dto.getManagerId())
+                    .ifPresent(entity::setManager);
+        }
+        
+        return entity;
+    }
+
+    public List<TeamResponseDTO> toResponseDTOList(List<Team> entities) {
+        return dynamicMapper.toDTOList(entities, TeamResponseDTO.class);
     }
 }

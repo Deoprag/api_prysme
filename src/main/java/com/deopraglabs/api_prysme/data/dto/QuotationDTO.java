@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuotationDTO {
-    private Long id;
+    private UUID id;
     private String quotationNumber;
     private LocalDateTime issueDate;
     private LocalDateTime validUntil;

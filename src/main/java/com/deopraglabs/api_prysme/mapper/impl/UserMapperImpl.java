@@ -1,9 +1,10 @@
 package com.deopraglabs.api_prysme.mapper.impl;
 
 import com.deopraglabs.api_prysme.data.dto.UserDTO;
-import com.deopraglabs.api_prysme.data.model.Permission;
+import com.deopraglabs.api_prysme.data.dto.UserRequestDTO;
+import com.deopraglabs.api_prysme.data.dto.UserResponseDTO;
 import com.deopraglabs.api_prysme.data.model.User;
-import com.deopraglabs.api_prysme.mapper.DozerMapper;
+import com.deopraglabs.api_prysme.mapper.DynamicMapper;
 import com.deopraglabs.api_prysme.mapper.Mapper;
 import com.deopraglabs.api_prysme.repository.PermissionRepository;
 import com.deopraglabs.api_prysme.repository.TeamRepository;
@@ -18,81 +19,80 @@ public class UserMapperImpl implements Mapper<User, UserDTO> {
 
     private final TeamRepository teamRepository;
     private final PermissionRepository permissionRepository;
+    private final DynamicMapper dynamicMapper;
 
     @Autowired
-    public UserMapperImpl(TeamRepository teamRepository, PermissionRepository permissionRepository) {
+    public UserMapperImpl(TeamRepository teamRepository, PermissionRepository permissionRepository, DynamicMapper dynamicMapper) {
         this.teamRepository = teamRepository;
         this.permissionRepository = permissionRepository;
+        this.dynamicMapper = dynamicMapper;
     }
 
     @Override
     public UserDTO toDTO(User entity) {
-        final UserDTO dto = DozerMapper.parseObject(entity, UserDTO.class);
-        
-        // Set fullName from firstName and lastName
-        dto.setFullName(entity.getFirstName() + " " + entity.getLastName());
-        
-        // Set active status based on enabled field
-        dto.setActive(entity.isEnabled());
-        
-        // Set team ID
-        if (entity.getTeam() != null) {
-            dto.setTeamId(entity.getTeam().getId());
-        }
-        
-        // Set permission IDs
-        if (entity.getPermissions() != null) {
-            dto.setPermissionIds(entity.getPermissions().stream()
-                    .map(Permission::getId)
-                    .collect(Collectors.toList()));
-        }
-        
-        return dto;
+        return dynamicMapper.toDTO(entity, UserDTO.class);
     }
-    
+
     @Override
     public User toEntity(UserDTO dto) {
-        final User entity = DozerMapper.parseObject(dto, User.class);
+        User entity = dynamicMapper.toEntity(dto, User.class);
         
-        // Set enabled field based on active status
-        entity.setEnabled(dto.getActive() != null ? dto.getActive() : true);
-        
-        // Handle team assignment
+        // Resolve entity references from IDs
         if (dto.getTeamId() != null) {
             teamRepository.findById(dto.getTeamId())
                     .ifPresent(entity::setTeam);
         }
         
-        // Handle permissions
         if (dto.getPermissionIds() != null && !dto.getPermissionIds().isEmpty()) {
-            final List<Permission> permissions = permissionRepository.findAllById(dto.getPermissionIds());
+            List<com.deopraglabs.api_prysme.data.model.Permission> permissions = dto.getPermissionIds().stream()
+                    .map(permissionRepository::findById)
+                    .filter(opt -> opt.isPresent())
+                    .map(opt -> opt.get())
+                    .collect(Collectors.toList());
             entity.setPermissions(permissions);
-        }
-        
-        // Parse fullName into firstName and lastName if needed
-        if (entity.getFirstName() == null && entity.getLastName() == null && dto.getFullName() != null) {
-            final String[] names = dto.getFullName().split(" ");
-            if (names.length > 1) {
-                entity.setFirstName(names[0]);
-                entity.setLastName(names[names.length - 1]);
-            } else {
-                entity.setFirstName(dto.getFullName());
-                entity.setLastName("");
-            }
         }
         
         return entity;
     }
 
     @Override
-    public List<UserDTO> toDTOList(final List<User> entities) {
-        return DozerMapper.parseListObjects(entities, UserDTO.class);
+    public List<UserDTO> toDTOList(List<User> entities) {
+        return dynamicMapper.toDTOList(entities, UserDTO.class);
     }
-    
+
     @Override
-    public List<User> toEntityList(final List<UserDTO> dtos) {
+    public List<User> toEntityList(List<UserDTO> dtos) {
         return dtos.stream()
                 .map(this::toEntity)
                 .collect(Collectors.toList());
+    }
+
+    public UserResponseDTO toResponseDTO(User entity) {
+        return dynamicMapper.toDTO(entity, UserResponseDTO.class);
+    }
+
+    public User fromRequestDTO(UserRequestDTO dto) {
+        User entity = dynamicMapper.toEntity(dto, User.class);
+        
+        // Resolve entity references from IDs
+        if (dto.getTeamId() != null) {
+            teamRepository.findById(dto.getTeamId())
+                    .ifPresent(entity::setTeam);
+        }
+        
+        if (dto.getPermissionIds() != null && !dto.getPermissionIds().isEmpty()) {
+            List<com.deopraglabs.api_prysme.data.model.Permission> permissions = dto.getPermissionIds().stream()
+                    .map(permissionRepository::findById)
+                    .filter(opt -> opt.isPresent())
+                    .map(opt -> opt.get())
+                    .collect(Collectors.toList());
+            entity.setPermissions(permissions);
+        }
+        
+        return entity;
+    }
+
+    public List<UserResponseDTO> toResponseDTOList(List<User> entities) {
+        return dynamicMapper.toDTOList(entities, UserResponseDTO.class);
     }
 }

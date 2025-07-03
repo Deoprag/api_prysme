@@ -1,5 +1,7 @@
 package com.deopraglabs.api_prysme.data.dto;
 
+import com.deopraglabs.api_prysme.data.enums.DiscountType;
+import com.deopraglabs.api_prysme.data.enums.NFStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,20 +14,17 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NFDTO {
-    private UUID id;
+public class NFRequestDTO {
     private String nfKey;
     private LocalDateTime issueDate;
     private LocalDateTime dueDate;
     private UUID customerId;
     private UUID sellerId;
-    private Long salesOrderId;
-    private List<Long> itemProductIds;
+    private UUID salesOrderId;
+    private List<UUID> itemIds;
     private BigDecimal totalValue;
     private BigDecimal discount;
-    private String discountType;
-    private String status;
+    private DiscountType discountType;
+    private NFStatus status;
     private String observations;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
 }
