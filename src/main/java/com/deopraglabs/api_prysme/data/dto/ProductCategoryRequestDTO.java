@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCategoryDTO {
-    private UUID id;
+public class ProductCategoryRequestDTO {
     private String name;
-    private String description;
 }
